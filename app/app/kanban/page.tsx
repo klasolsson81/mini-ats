@@ -12,6 +12,8 @@ export async function generateMetadata() {
 
 export default async function KanbanPage() {
   const supabase = await createClient();
+  const t = await getTranslations('kanban');
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -53,10 +55,10 @@ export default async function KanbanPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          Kanban
+          {t('title')}
         </h1>
-        <p className="mt-2 text-gray-600">
-          Hantera kandidater genom rekryteringsprocessen
+        <p className="mt-2 text-gray-700">
+          {t('subtitle')}
         </p>
       </div>
 

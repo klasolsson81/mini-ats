@@ -92,6 +92,7 @@
   },
   "kanban": {
     "title": "Kanban",
+    "subtitle": "Manage candidates through the recruitment process",
     "filterByJob": "Filter by job",
     "searchCandidates": "Search candidates",
     "allJobs": "All jobs",
@@ -110,8 +111,12 @@
   },
   "admin": {
     "title": "Admin",
+    "pageTitle": "Admin Panel",
+    "subtitle": "Manage tenants and users",
     "createUser": "Create user",
     "createTenant": "Create tenant",
+    "createNewTenant": "Create New Tenant",
+    "existingTenants": "Existing Tenants",
     "newTenantAndUser": "New Tenant + User",
     "tenantName": "Tenant name",
     "firstUser": "First user:",
@@ -125,7 +130,9 @@
     "stopImpersonating": "Stop impersonating",
     "userCreated": "User created",
     "tenantCreated": "Tenant created",
-    "errorOccurred": "An error occurred"
+    "errorOccurred": "An error occurred",
+    "users": "users",
+    "noTenants": "No tenants yet."
   },
   "footer": {
     "privacy": "Privacy Policy",

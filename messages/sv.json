@@ -92,6 +92,7 @@
   },
   "kanban": {
     "title": "Kanban",
+    "subtitle": "Hantera kandidater genom rekryteringsprocessen",
     "filterByJob": "Filtrera efter jobb",
     "searchCandidates": "Sök kandidater",
     "allJobs": "Alla jobb",
@@ -110,8 +111,12 @@
   },
   "admin": {
     "title": "Admin",
+    "pageTitle": "Admin Panel",
+    "subtitle": "Hantera kunder och användare",
     "createUser": "Skapa användare",
     "createTenant": "Skapa kund",
+    "createNewTenant": "Skapa Ny Kund",
+    "existingTenants": "Befintliga Kunder",
     "newTenantAndUser": "Ny Kund + Användare",
     "tenantName": "Kundnamn",
     "firstUser": "Första användaren:",
@@ -125,7 +130,9 @@
     "stopImpersonating": "Sluta agera som",
     "userCreated": "Användare skapad",
     "tenantCreated": "Kund skapad",
-    "errorOccurred": "Ett fel uppstod"
+    "errorOccurred": "Ett fel uppstod",
+    "users": "användare",
+    "noTenants": "Inga kunder än."
   },
   "footer": {
     "privacy": "Integritetspolicy",

@@ -12,6 +12,8 @@ export async function generateMetadata() {
 
 export default async function AdminPage() {
   const supabase = await createClient();
+  const t = await getTranslations('admin');
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -41,10 +43,10 @@ export default async function AdminPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          Admin Panel
+          {t('pageTitle')}
         </h1>
-        <p className="mt-2 text-gray-600">
-          Hantera kunder och användare
+        <p className="mt-2 text-gray-700">
+          {t('subtitle')}
         </p>
       </div>
 
@@ -52,7 +54,7 @@ export default async function AdminPage() {
         {/* Create Tenant */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-900">
-            Skapa Ny Kund
+            {t('createNewTenant')}
           </h2>
           <CreateTenantForm />
         </div>
@@ -60,7 +62,7 @@ export default async function AdminPage() {
         {/* Existing Tenants */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-900">
-            Befintliga Kunder
+            {t('existingTenants')}
           </h2>
           <div className="space-y-3">
             {tenants && tenants.length > 0 ? (
@@ -70,13 +72,13 @@ export default async function AdminPage() {
                   className="rounded-lg border border-gray-200 bg-white p-4"
                 >
                   <h3 className="font-semibold text-gray-900">{tenant.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    {tenant.profiles?.[0]?.count || 0} användare
+                  <p className="text-sm text-gray-600">
+                    {tenant.profiles?.[0]?.count || 0} {t('users')}
                   </p>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500">Inga kunder än.</p>
+              <p className="text-sm text-gray-600">{t('noTenants')}</p>
             )}
           </div>
         </div>

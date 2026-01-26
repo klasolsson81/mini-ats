@@ -12,7 +12,8 @@ export function LanguageSwitcher() {
   function handleChange(locale: Locale) {
     startTransition(async () => {
       await setLocale(locale);
-      router.refresh();
+      // Force full page reload to ensure client components get new translations
+      window.location.reload();
     });
   }
 
