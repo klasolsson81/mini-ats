@@ -272,9 +272,14 @@ MIT License - feel free to use this project however you like!
 
 Contributions welcome! Please open an issue or PR.
 
-## 📧 Contact
+## 👨‍💻 Author
 
-For questions or support: privacy@miniats.se
+**Klas Olsson**
+
+- 🌐 Portfolio: [klasolsson.se](https://klasolsson.se)
+- 📧 Email: klasolsson81@gmail.com
+- 💼 LinkedIn: [linkedin.com/in/klasolsson81](https://www.linkedin.com/in/klasolsson81/)
+- 🐙 GitHub: [@klasolsson81](https://github.com/klasolsson81)
 
 ---
 
