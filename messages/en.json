@@ -1,0 +1,108 @@
+{
+  "common": {
+    "appName": "Mini ATS",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "actions": "Actions",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "close": "Close"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "invalidCredentials": "Invalid credentials",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "jobs": "Jobs",
+    "candidates": "Candidates",
+    "kanban": "Kanban",
+    "admin": "Admin",
+    "users": "Users"
+  },
+  "jobs": {
+    "title": "Jobs",
+    "createJob": "Create job",
+    "editJob": "Edit job",
+    "jobTitle": "Job title",
+    "description": "Description",
+    "status": "Status",
+    "open": "Open",
+    "closed": "Closed",
+    "noJobs": "No jobs yet. Create your first job!",
+    "jobCreated": "Job created",
+    "jobUpdated": "Job updated",
+    "jobDeleted": "Job deleted",
+    "deleteConfirm": "Are you sure you want to delete this job?"
+  },
+  "candidates": {
+    "title": "Candidates",
+    "createCandidate": "Create candidate",
+    "editCandidate": "Edit candidate",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "linkedinUrl": "LinkedIn URL",
+    "notes": "Notes",
+    "noCandidates": "No candidates yet. Add your first candidate!",
+    "candidateCreated": "Candidate created",
+    "candidateUpdated": "Candidate updated",
+    "candidateDeleted": "Candidate deleted",
+    "deleteConfirm": "Are you sure you want to delete this candidate?",
+    "attachToJob": "Attach to job",
+    "selectJob": "Select job",
+    "selectStage": "Select stage"
+  },
+  "kanban": {
+    "title": "Kanban",
+    "filterByJob": "Filter by job",
+    "searchCandidates": "Search candidates",
+    "allJobs": "All jobs",
+    "moveToStage": "Move to stage",
+    "noCandidate": "No candidates in this stage",
+    "stages": {
+      "sourced": "Sourced",
+      "applied": "Applied",
+      "screening": "Screening",
+      "interview": "Interview",
+      "offer": "Offer",
+      "hired": "Hired",
+      "rejected": "Rejected"
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "createUser": "Create user",
+    "createTenant": "Create tenant",
+    "tenantName": "Tenant name",
+    "userRole": "Role",
+    "roleAdmin": "Admin",
+    "roleCustomer": "Customer",
+    "impersonate": "Impersonate",
+    "stopImpersonating": "Stop impersonating",
+    "userCreated": "User created",
+    "tenantCreated": "Tenant created"
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "allRightsReserved": "All rights reserved"
+  }
+}

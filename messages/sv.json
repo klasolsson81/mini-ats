@@ -1,0 +1,108 @@
+{
+  "common": {
+    "appName": "Mini ATS",
+    "loading": "Laddar...",
+    "error": "Ett fel uppstod",
+    "success": "Lyckades!",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Radera",
+    "edit": "Redigera",
+    "create": "Skapa",
+    "search": "Sök",
+    "filter": "Filtrera",
+    "all": "Alla",
+    "actions": "Åtgärder",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "submit": "Skicka",
+    "close": "Stäng"
+  },
+  "auth": {
+    "login": "Logga in",
+    "logout": "Logga ut",
+    "email": "E-post",
+    "password": "Lösenord",
+    "signIn": "Logga in",
+    "signOut": "Logga ut",
+    "invalidCredentials": "Ogiltiga inloggningsuppgifter",
+    "emailRequired": "E-post krävs",
+    "passwordRequired": "Lösenord krävs"
+  },
+  "nav": {
+    "dashboard": "Översikt",
+    "jobs": "Jobb",
+    "candidates": "Kandidater",
+    "kanban": "Kanban",
+    "admin": "Admin",
+    "users": "Användare"
+  },
+  "jobs": {
+    "title": "Jobb",
+    "createJob": "Skapa jobb",
+    "editJob": "Redigera jobb",
+    "jobTitle": "Jobbtitel",
+    "description": "Beskrivning",
+    "status": "Status",
+    "open": "Öppen",
+    "closed": "Stängd",
+    "noJobs": "Inga jobb än. Skapa ditt första jobb!",
+    "jobCreated": "Jobb skapat",
+    "jobUpdated": "Jobb uppdaterat",
+    "jobDeleted": "Jobb raderat",
+    "deleteConfirm": "Är du säker på att du vill radera detta jobb?"
+  },
+  "candidates": {
+    "title": "Kandidater",
+    "createCandidate": "Skapa kandidat",
+    "editCandidate": "Redigera kandidat",
+    "fullName": "Fullständigt namn",
+    "email": "E-post",
+    "phone": "Telefon",
+    "linkedinUrl": "LinkedIn URL",
+    "notes": "Anteckningar",
+    "noCandidates": "Inga kandidater än. Lägg till din första kandidat!",
+    "candidateCreated": "Kandidat skapad",
+    "candidateUpdated": "Kandidat uppdaterad",
+    "candidateDeleted": "Kandidat raderad",
+    "deleteConfirm": "Är du säker på att du vill radera denna kandidat?",
+    "attachToJob": "Koppla till jobb",
+    "selectJob": "Välj jobb",
+    "selectStage": "Välj steg"
+  },
+  "kanban": {
+    "title": "Kanban",
+    "filterByJob": "Filtrera efter jobb",
+    "searchCandidates": "Sök kandidater",
+    "allJobs": "Alla jobb",
+    "moveToStage": "Flytta till steg",
+    "noCandidate": "Inga kandidater i detta steg",
+    "stages": {
+      "sourced": "Sourcad",
+      "applied": "Ansökt",
+      "screening": "Screening",
+      "interview": "Intervju",
+      "offer": "Erbjudande",
+      "hired": "Anställd",
+      "rejected": "Avvisad"
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "createUser": "Skapa användare",
+    "createTenant": "Skapa kund",
+    "tenantName": "Kundnamn",
+    "userRole": "Roll",
+    "roleAdmin": "Admin",
+    "roleCustomer": "Kund",
+    "impersonate": "Agera som",
+    "stopImpersonating": "Sluta agera som",
+    "userCreated": "Användare skapad",
+    "tenantCreated": "Kund skapad"
+  },
+  "footer": {
+    "privacy": "Integritetspolicy",
+    "cookies": "Cookiepolicy",
+    "allRightsReserved": "Alla rättigheter förbehållna"
+  }
+}
