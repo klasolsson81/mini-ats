@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
-import { locales, type Locale } from '@/i18n';
+import { locales, type Locale } from '@/lib/constants/locales';
 
 export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
