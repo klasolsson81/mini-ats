@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { KanbanCard } from './kanban-card';
+import { useDroppable } from '@dnd-kit/core';
 
 interface Candidate {
   id: string;
@@ -31,6 +32,9 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
   const t = useTranslations();
+  const { setNodeRef, isOver } = useDroppable({
+    id: stage,
+  });
 
   const stageColors: Record<string, string> = {
     sourced: 'bg-gray-100 border-gray-300',
@@ -43,8 +47,12 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
   };
 
   return (
-    <div className="flex-shrink-0 w-80">
-      <div className={`rounded-lg border-2 ${stageColors[stage]} p-4`}>
+    <div className="flex flex-col" ref={setNodeRef}>
+      <div
+        className={`flex flex-col rounded-lg border-2 ${stageColors[stage]} p-4 h-full min-h-[600px] transition-all ${
+          isOver ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+        }`}
+      >
         {/* Column Header */}
         <div className="mb-4">
           <h3 className="font-semibold text-gray-900">
@@ -54,7 +62,7 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
         </div>
 
         {/* Cards */}
-        <div className="space-y-3">
+        <div className="flex-1 space-y-3 overflow-y-auto">
           {candidates.length === 0 ? (
             <p className="text-sm text-gray-500 text-center py-8">
               {t('kanban.noCandidate')}

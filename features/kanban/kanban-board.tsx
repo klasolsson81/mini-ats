@@ -5,8 +5,19 @@ import { useTranslations } from 'next-intl';
 import { Select } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
-import { STAGE_ORDER } from '@/lib/constants/stages';
+import { STAGE_ORDER, type Stage } from '@/lib/constants/stages';
 import { KanbanColumn } from './kanban-column';
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { updateCandidateStage } from '@/lib/actions/candidates';
+import { toast } from 'sonner';
 
 interface Candidate {
   id: string;
@@ -38,6 +49,34 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   const t = useTranslations();
   const [selectedJobId, setSelectedJobId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px movement required to start drag
+      },
+    })
+  );
+
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (!over || active.id === over.id) return;
+
+    const jobCandidateId = active.id as string;
+    const newStage = over.id as Stage;
+
+    // Optimistic update would go here
+    const result = await updateCandidateStage(jobCandidateId, newStage);
+
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success('Stage uppdaterad!');
+    }
+  }
 
   const filteredCandidates = useMemo(() => {
     let filtered = jobCandidates;
@@ -104,8 +143,13 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
       </div>
 
       {/* Kanban Board */}
-      <div className="overflow-x-auto pb-4">
-        <div className="inline-flex gap-4 min-w-full">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        onDragStart={(event) => setActiveId(event.active.id as string)}
+      >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
           {STAGE_ORDER.map((stage) => (
             <KanbanColumn
               key={stage}
@@ -114,7 +158,7 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
             />
           ))}
         </div>
-      </div>
+      </DndContext>
     </div>
   );
 }

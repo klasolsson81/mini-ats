@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
-import { Mail, Linkedin, Briefcase } from 'lucide-react';
+import { Mail, Linkedin, Briefcase, GripVertical } from 'lucide-react';
 import { STAGE_ORDER } from '@/lib/constants/stages';
 import { updateCandidateStage } from '@/lib/actions/candidates';
 import { toast } from 'sonner';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 
 interface Candidate {
   id: string;
@@ -39,6 +41,11 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentStage, setCurrentStage] = useState(jobCandidate.stage);
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: jobCandidate.id,
+    });
+
   async function handleStageChange(newStage: string) {
     if (newStage === currentStage) return;
 
@@ -57,13 +64,31 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
     setIsUpdating(false);
   }
 
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   return (
-    <Card className="bg-white hover:shadow-md transition-shadow">
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className="bg-white hover:shadow-md transition-shadow"
+    >
       <CardContent className="p-4 space-y-3">
-        {/* Candidate Name */}
-        <h4 className="font-semibold text-gray-900">
-          {jobCandidate.candidates.full_name}
-        </h4>
+        {/* Drag Handle + Candidate Name */}
+        <div className="flex items-start gap-2">
+          <button
+            {...listeners}
+            {...attributes}
+            className="touch-none cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 mt-0.5"
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
+          <h4 className="flex-1 font-semibold text-gray-900">
+            {jobCandidate.candidates.full_name}
+          </h4>
+        </div>
 
         {/* Job Title */}
         <div className="flex items-center gap-2 text-sm text-gray-600">
