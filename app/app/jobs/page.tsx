@@ -13,6 +13,8 @@ export async function generateMetadata() {
 
 export default async function JobsPage() {
   const supabase = await createClient();
+  const t = await getTranslations('jobs');
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -40,10 +42,10 @@ export default async function JobsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Jobb
+            {t('title')}
           </h1>
-          <p className="mt-2 text-gray-600">
-            Hantera dina jobbposter och rekryteringar
+          <p className="mt-2 text-gray-700">
+            {t('subtitle')}
           </p>
         </div>
         <CreateJobButton />

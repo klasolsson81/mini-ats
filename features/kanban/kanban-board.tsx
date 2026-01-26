@@ -74,7 +74,7 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success('Stage uppdaterad!');
+      toast.success(t('kanban.stageUpdated'));
     }
   }
 

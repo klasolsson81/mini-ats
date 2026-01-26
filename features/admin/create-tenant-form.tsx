@@ -36,10 +36,10 @@ export function CreateTenantForm() {
         throw new Error(result.error || 'Failed to create tenant');
       }
 
-      toast.success('Kund och användare skapade!');
+      toast.success(t('admin.tenantCreated'));
       e.currentTarget.reset();
     } catch (error: any) {
-      toast.error(error.message || 'Ett fel uppstod');
+      toast.error(error.message || t('admin.errorOccurred'));
     } finally {
       setIsLoading(false);
     }
@@ -48,16 +48,16 @@ export function CreateTenantForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ny Kund + Användare</CardTitle>
+        <CardTitle>{t('admin.newTenantAndUser')}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="tenant_name"
-              className="text-sm font-medium leading-none text-gray-700"
+              className="text-sm font-semibold leading-none text-gray-900"
             >
-              Kundnamn *
+              {t('admin.tenantName')} *
             </label>
             <Input
               id="tenant_name"
@@ -69,17 +69,17 @@ export function CreateTenantForm() {
           </div>
 
           <div className="border-t border-gray-200 pt-4">
-            <p className="text-sm font-medium text-gray-700 mb-3">
-              Första användaren:
+            <p className="text-sm font-semibold text-gray-900 mb-3">
+              {t('admin.firstUser')}
             </p>
 
             <div className="space-y-3">
               <div className="space-y-2">
                 <label
                   htmlFor="user_name"
-                  className="text-sm font-medium leading-none text-gray-700"
+                  className="text-sm font-semibold leading-none text-gray-900"
                 >
-                  Namn *
+                  {t('admin.userName')} *
                 </label>
                 <Input
                   id="user_name"
@@ -93,9 +93,9 @@ export function CreateTenantForm() {
               <div className="space-y-2">
                 <label
                   htmlFor="user_email"
-                  className="text-sm font-medium leading-none text-gray-700"
+                  className="text-sm font-semibold leading-none text-gray-900"
                 >
-                  E-post *
+                  {t('admin.userEmail')} *
                 </label>
                 <Input
                   id="user_email"
@@ -110,9 +110,9 @@ export function CreateTenantForm() {
               <div className="space-y-2">
                 <label
                   htmlFor="user_password"
-                  className="text-sm font-medium leading-none text-gray-700"
+                  className="text-sm font-semibold leading-none text-gray-900"
                 >
-                  Lösenord *
+                  {t('admin.userPassword')} *
                 </label>
                 <Input
                   id="user_password"
@@ -128,7 +128,7 @@ export function CreateTenantForm() {
           </div>
 
           <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? t('common.loading') : 'Skapa Kund & Användare'}
+            {isLoading ? t('common.loading') : t('admin.createTenant')}
           </Button>
         </form>
       </CardContent>

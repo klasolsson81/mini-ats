@@ -59,7 +59,7 @@ export function EditCandidateDialog({
         <div className="space-y-2">
           <label
             htmlFor="full_name"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.fullName')} *
           </label>
@@ -75,7 +75,7 @@ export function EditCandidateDialog({
         <div className="space-y-2">
           <label
             htmlFor="email"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.email')}
           </label>
@@ -91,7 +91,7 @@ export function EditCandidateDialog({
         <div className="space-y-2">
           <label
             htmlFor="phone"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.phone')}
           </label>
@@ -107,7 +107,7 @@ export function EditCandidateDialog({
         <div className="space-y-2">
           <label
             htmlFor="linkedin_url"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.linkedinUrl')}
           </label>
@@ -123,7 +123,7 @@ export function EditCandidateDialog({
         <div className="space-y-2">
           <label
             htmlFor="notes"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.notes')}
           </label>

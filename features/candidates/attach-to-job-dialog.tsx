@@ -39,7 +39,7 @@ export function AttachToJobDialog({
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success('Kandidat kopplad till jobb!');
+      toast.success(t('candidates.attachSuccess'));
       onClose();
     }
 
@@ -53,9 +53,8 @@ export function AttachToJobDialog({
           <DialogTitle>{t('candidates.attachToJob')}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-gray-600">
-            Inga öppna jobb hittades. Skapa ett jobb först innan du kopplar
-            kandidater.
+          <p className="text-sm text-gray-700">
+            {t('candidates.noJobsAvailable')}
           </p>
           <div className="flex justify-end pt-4">
             <Button onClick={onClose}>{t('common.close')}</Button>
@@ -72,19 +71,19 @@ export function AttachToJobDialog({
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="text-sm text-gray-600">
-          Koppla <strong>{candidate.full_name}</strong> till ett jobb
+        <div className="text-sm text-gray-700">
+          {t('candidates.attachDescription', { name: candidate.full_name })}
         </div>
 
         <div className="space-y-2">
           <label
             htmlFor="job_id"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.selectJob')}
           </label>
           <Select id="job_id" name="job_id" required disabled={isLoading}>
-            <option value="">Välj jobb...</option>
+            <option value="">{t('candidates.selectJobPlaceholder')}</option>
             {jobs.map((job) => (
               <option key={job.id} value={job.id}>
                 {job.title}
@@ -96,7 +95,7 @@ export function AttachToJobDialog({
         <div className="space-y-2">
           <label
             htmlFor="stage"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('candidates.selectStage')}
           </label>
@@ -119,7 +118,7 @@ export function AttachToJobDialog({
             {t('common.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? t('common.loading') : 'Koppla'}
+            {isLoading ? t('common.loading') : t('candidates.attachToJob')}
           </Button>
         </div>
       </form>

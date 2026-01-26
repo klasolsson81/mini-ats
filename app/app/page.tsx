@@ -16,6 +16,8 @@ export async function generateMetadata() {
 
 export default async function DashboardPage() {
   const supabase = await createClient();
+  const t = await getTranslations('dashboard');
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -69,18 +71,18 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          {profile?.role === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
+          {isAdmin ? t('adminTitle') : t('title')}
         </h1>
-        <p className="mt-2 text-gray-600">
-          Välkommen tillbaka, {profile?.full_name}!
+        <p className="mt-2 text-gray-700">
+          {t('welcome', { name: profile?.full_name })}
         </p>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Totalt Jobb
+            <CardTitle className="text-sm font-medium text-gray-700">
+              {t('totalJobs')}
             </CardTitle>
             <Briefcase className="h-4 w-4 text-gray-400" />
           </CardHeader>
@@ -91,8 +93,8 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Totalt Kandidater
+            <CardTitle className="text-sm font-medium text-gray-700">
+              {t('totalCandidates')}
             </CardTitle>
             <Users className="h-4 w-4 text-gray-400" />
           </CardHeader>
@@ -103,8 +105,8 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Aktiva i Pipeline
+            <CardTitle className="text-sm font-medium text-gray-700">
+              {t('activeInPipeline')}
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-gray-400" />
           </CardHeader>
@@ -117,22 +119,22 @@ export default async function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Snabbstart</CardTitle>
+            <CardTitle>{t('quickStart')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <Link href="/app/kanban">
               <Button variant="outline" className="w-full justify-start">
-                Visa Kanban
+                {t('viewKanban')}
               </Button>
             </Link>
             <Link href="/app/jobs">
               <Button variant="outline" className="w-full justify-start">
-                Hantera Jobb
+                {t('manageJobs')}
               </Button>
             </Link>
             <Link href="/app/candidates">
               <Button variant="outline" className="w-full justify-start">
-                Hantera Kandidater
+                {t('manageCandidates')}
               </Button>
             </Link>
           </CardContent>
@@ -141,12 +143,12 @@ export default async function DashboardPage() {
         {isAdmin && (
           <Card>
             <CardHeader>
-              <CardTitle>Admin</CardTitle>
+              <CardTitle>{t('adminPanel')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Link href="/app/admin">
                 <Button variant="outline" className="w-full justify-start">
-                  Hantera Användare & Kunder
+                  {t('manageUsersAndTenants')}
                 </Button>
               </Link>
             </CardContent>

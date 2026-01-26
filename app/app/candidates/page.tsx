@@ -13,6 +13,8 @@ export async function generateMetadata() {
 
 export default async function CandidatesPage() {
   const supabase = await createClient();
+  const t = await getTranslations('candidates');
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -50,10 +52,10 @@ export default async function CandidatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Kandidater
+            {t('title')}
           </h1>
-          <p className="mt-2 text-gray-600">
-            Hantera kandidater och deras profiler
+          <p className="mt-2 text-gray-700">
+            {t('subtitle')}
           </p>
         </div>
         <CreateCandidateButton />

@@ -37,8 +37,23 @@
     "admin": "Admin",
     "users": "Användare"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "adminTitle": "Admin Dashboard",
+    "welcome": "Välkommen tillbaka, {name}!",
+    "totalJobs": "Totalt Jobb",
+    "totalCandidates": "Totalt Kandidater",
+    "activeInPipeline": "Aktiva i Pipeline",
+    "quickStart": "Snabbstart",
+    "viewKanban": "Visa Kanban",
+    "manageJobs": "Hantera Jobb",
+    "manageCandidates": "Hantera Kandidater",
+    "adminPanel": "Admin",
+    "manageUsersAndTenants": "Hantera Användare & Kunder"
+  },
   "jobs": {
     "title": "Jobb",
+    "subtitle": "Hantera öppna och stängda positioner",
     "createJob": "Skapa jobb",
     "editJob": "Redigera jobb",
     "jobTitle": "Jobbtitel",
@@ -54,6 +69,7 @@
   },
   "candidates": {
     "title": "Kandidater",
+    "subtitle": "Hantera kandidater och deras profiler",
     "createCandidate": "Skapa kandidat",
     "editCandidate": "Redigera kandidat",
     "fullName": "Fullständigt namn",
@@ -67,8 +83,12 @@
     "candidateDeleted": "Kandidat raderad",
     "deleteConfirm": "Är du säker på att du vill radera denna kandidat?",
     "attachToJob": "Koppla till jobb",
+    "attachSuccess": "Kandidat kopplad till jobb",
     "selectJob": "Välj jobb",
-    "selectStage": "Välj steg"
+    "selectJobPlaceholder": "Välj jobb...",
+    "selectStage": "Välj steg",
+    "noJobsAvailable": "Inga öppna jobb hittades. Skapa ett jobb först innan du kopplar kandidater.",
+    "attachDescription": "Koppla {name} till ett jobb"
   },
   "kanban": {
     "title": "Kanban",
@@ -77,6 +97,7 @@
     "allJobs": "Alla jobb",
     "moveToStage": "Flytta till steg",
     "noCandidate": "Inga kandidater i detta steg",
+    "stageUpdated": "Stage uppdaterad",
     "stages": {
       "sourced": "Sourcad",
       "applied": "Ansökt",
@@ -91,14 +112,20 @@
     "title": "Admin",
     "createUser": "Skapa användare",
     "createTenant": "Skapa kund",
+    "newTenantAndUser": "Ny Kund + Användare",
     "tenantName": "Kundnamn",
+    "firstUser": "Första användaren:",
+    "userName": "Namn",
+    "userEmail": "E-post",
+    "userPassword": "Lösenord",
     "userRole": "Roll",
     "roleAdmin": "Admin",
     "roleCustomer": "Kund",
     "impersonate": "Agera som",
     "stopImpersonating": "Sluta agera som",
     "userCreated": "Användare skapad",
-    "tenantCreated": "Kund skapad"
+    "tenantCreated": "Kund skapad",
+    "errorOccurred": "Ett fel uppstod"
   },
   "footer": {
     "privacy": "Integritetspolicy",

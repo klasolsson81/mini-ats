@@ -55,7 +55,7 @@ export function EditJobDialog({ job, open, onClose }: EditJobDialogProps) {
         <div className="space-y-2">
           <label
             htmlFor="title"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('jobs.jobTitle')}
           </label>
@@ -71,7 +71,7 @@ export function EditJobDialog({ job, open, onClose }: EditJobDialogProps) {
         <div className="space-y-2">
           <label
             htmlFor="description"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('jobs.description')}
           </label>
@@ -88,7 +88,7 @@ export function EditJobDialog({ job, open, onClose }: EditJobDialogProps) {
         <div className="space-y-2">
           <label
             htmlFor="status"
-            className="text-sm font-medium leading-none text-gray-700"
+            className="text-sm font-semibold leading-none text-gray-900"
           >
             {t('jobs.status')}
           </label>

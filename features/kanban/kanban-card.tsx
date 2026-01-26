@@ -57,7 +57,7 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
       // Revert on error
       setCurrentStage(jobCandidate.stage);
     } else {
-      toast.success('Stage uppdaterad!');
+      toast.success(t('kanban.stageUpdated'));
       setCurrentStage(newStage);
     }
 

@@ -37,8 +37,23 @@
     "admin": "Admin",
     "users": "Users"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "adminTitle": "Admin Dashboard",
+    "welcome": "Welcome back, {name}!",
+    "totalJobs": "Total Jobs",
+    "totalCandidates": "Total Candidates",
+    "activeInPipeline": "Active in Pipeline",
+    "quickStart": "Quick Start",
+    "viewKanban": "View Kanban",
+    "manageJobs": "Manage Jobs",
+    "manageCandidates": "Manage Candidates",
+    "adminPanel": "Admin",
+    "manageUsersAndTenants": "Manage Users & Tenants"
+  },
   "jobs": {
     "title": "Jobs",
+    "subtitle": "Manage open and closed positions",
     "createJob": "Create job",
     "editJob": "Edit job",
     "jobTitle": "Job title",
@@ -54,6 +69,7 @@
   },
   "candidates": {
     "title": "Candidates",
+    "subtitle": "Manage candidates and their profiles",
     "createCandidate": "Create candidate",
     "editCandidate": "Edit candidate",
     "fullName": "Full name",
@@ -67,8 +83,12 @@
     "candidateDeleted": "Candidate deleted",
     "deleteConfirm": "Are you sure you want to delete this candidate?",
     "attachToJob": "Attach to job",
+    "attachSuccess": "Candidate attached to job",
     "selectJob": "Select job",
-    "selectStage": "Select stage"
+    "selectJobPlaceholder": "Select job...",
+    "selectStage": "Select stage",
+    "noJobsAvailable": "No open jobs found. Create a job first before attaching candidates.",
+    "attachDescription": "Attach {name} to a job"
   },
   "kanban": {
     "title": "Kanban",
@@ -77,6 +97,7 @@
     "allJobs": "All jobs",
     "moveToStage": "Move to stage",
     "noCandidate": "No candidates in this stage",
+    "stageUpdated": "Stage updated",
     "stages": {
       "sourced": "Sourced",
       "applied": "Applied",
@@ -91,14 +112,20 @@
     "title": "Admin",
     "createUser": "Create user",
     "createTenant": "Create tenant",
+    "newTenantAndUser": "New Tenant + User",
     "tenantName": "Tenant name",
+    "firstUser": "First user:",
+    "userName": "Name",
+    "userEmail": "Email",
+    "userPassword": "Password",
     "userRole": "Role",
     "roleAdmin": "Admin",
     "roleCustomer": "Customer",
     "impersonate": "Impersonate",
     "stopImpersonating": "Stop impersonating",
     "userCreated": "User created",
-    "tenantCreated": "Tenant created"
+    "tenantCreated": "Tenant created",
+    "errorOccurred": "An error occurred"
   },
   "footer": {
     "privacy": "Privacy Policy",
