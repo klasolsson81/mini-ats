@@ -31,7 +31,7 @@ export async function createCandidate(data: CandidateFormData) {
 
   const validated = candidateSchema.safeParse(data);
   if (!validated.success) {
-    return { error: validated.error.errors[0].message };
+    return { error: validated.error.issues[0].message };
   }
 
   if (!profile.tenant_id) {
@@ -60,7 +60,7 @@ export async function updateCandidate(id: string, data: CandidateFormData) {
 
   const validated = candidateSchema.safeParse(data);
   if (!validated.success) {
-    return { error: validated.error.errors[0].message };
+    return { error: validated.error.issues[0].message };
   }
 
   const { error } = await supabase

@@ -27,7 +27,7 @@ export async function createJob(data: JobFormData) {
 
   const validated = jobSchema.safeParse(data);
   if (!validated.success) {
-    return { error: validated.error.errors[0].message };
+    return { error: validated.error.issues[0].message };
   }
 
   if (!profile.tenant_id) {
@@ -52,7 +52,7 @@ export async function updateJob(id: string, data: JobFormData) {
 
   const validated = jobSchema.safeParse(data);
   if (!validated.success) {
-    return { error: validated.error.errors[0].message };
+    return { error: validated.error.issues[0].message };
   }
 
   const { error } = await supabase
