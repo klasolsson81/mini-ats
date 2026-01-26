@@ -83,6 +83,40 @@ Write comments that explain **why** or clarify behavior, not conversation histor
 - Always show user feedback: loading, success, error states.
 - Validate forms on client + enforce constraints server-side.
 
+### UI/UX Quality & Accessibility
+**Color Contrast & Readability:**
+- Use sufficient color contrast for text (WCAG AA minimum)
+- Labels: `text-gray-900` with `font-semibold` (not `text-gray-600` or `text-gray-700`)
+- Body text: `text-gray-700` minimum (not `text-gray-500` or lighter)
+- Subtitles: `text-gray-700` (not `text-gray-600`)
+
+❌ **BAD - Poor contrast:**
+```tsx
+<label className="text-sm font-medium text-gray-600">
+  {t('jobs.title')}
+</label>
+```
+
+✅ **GOOD - Good contrast:**
+```tsx
+<label className="text-sm font-semibold text-gray-900">
+  {t('jobs.title')}
+</label>
+```
+
+**Responsive Design:**
+- Test on all screen sizes (mobile, tablet, laptop, desktop, ultrawide)
+- Use responsive grid/flex layouts (no fixed widths unless necessary)
+- Avoid horizontal scroll on any screen size
+- Use Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+
+**Visual Hierarchy:**
+- H1: `text-3xl font-bold text-gray-900`
+- Subtitles: `text-gray-700` (not lighter)
+- Form labels: `text-sm font-semibold text-gray-900`
+- Body text: `text-sm text-gray-700`
+- Muted text: `text-xs text-gray-600` (only for secondary info)
+
 ### Security
 - Never expose Supabase **service role key** to the client.
 - Use **RLS** to enforce tenant boundaries.
@@ -260,6 +294,67 @@ And be structured to add more languages easily.
 - Provide a simple language switcher in the UI.
 - Default language: Swedish.
 - Use a proven library (recommended: `next-intl`).
+
+### CRITICAL: No Hardcoded Text (Mandatory)
+**NEVER hardcode user-facing text in any language.**
+
+❌ **BAD - Hardcoded text:**
+```tsx
+<h1>Kandidater</h1>
+<p>Hantera kandidater och deras profiler</p>
+<Button>Skapa kandidat</Button>
+toast.success('Kandidat skapad!');
+```
+
+✅ **GOOD - Use translations:**
+```tsx
+<h1>{t('candidates.title')}</h1>
+<p>{t('candidates.subtitle')}</p>
+<Button>{t('candidates.createCandidate')}</Button>
+toast.success(t('candidates.candidateCreated'));
+```
+
+### Translation Best Practices
+
+1. **Add translations FIRST**, then use them in code
+   - Update `messages/sv.json` and `messages/en.json`
+   - Then reference with `t('key')`
+
+2. **Use translations everywhere:**
+   - Page titles and subtitles
+   - Button labels
+   - Form labels and placeholders
+   - Toast notifications (success/error)
+   - Dialog titles and descriptions
+   - Empty states
+   - Validation messages
+
+3. **Translation key structure:**
+   ```json
+   {
+     "candidates": {
+       "title": "Kandidater",
+       "subtitle": "Hantera kandidater och deras profiler",
+       "createCandidate": "Skapa kandidat",
+       "candidateCreated": "Kandidat skapad",
+       "noCandidates": "Inga kandidater än"
+     }
+   }
+   ```
+
+4. **Parameterized translations:**
+   ```tsx
+   // In translation file:
+   "welcome": "Välkommen tillbaka, {name}!"
+
+   // In component:
+   {t('dashboard.welcome', { name: profile?.full_name })}
+   ```
+
+5. **Before committing code:**
+   - Search for hardcoded Swedish/English strings
+   - Check all `toast.success()` and `toast.error()` calls
+   - Verify all labels, buttons, and headings use `t()`
 
 ### Optional (future language placeholder)
 Add folder structure for more languages (e.g. `tr` or `ar`) even if translations are partial.
@@ -451,7 +546,9 @@ All core features have been implemented and deployed to Vercel.
 - ✅ Swedish (sv) and English (en) support
 - ✅ next-intl implementation
 - ✅ Language switcher component
-- ✅ All UI text translated
+- ✅ All UI text translated (no hardcoded text)
+- ✅ Parameterized translations for dynamic content
+- ✅ Toast messages fully translated
 
 **GDPR & Privacy**
 - ✅ Privacy Policy page (Swedish)
@@ -466,6 +563,8 @@ All core features have been implemented and deployed to Vercel.
 - ✅ Error handling with user feedback
 - ✅ Empty states
 - ✅ Consistent component library
+- ✅ WCAG AA color contrast compliance
+- ✅ Proper visual hierarchy (labels, headings, body text)
 
 ### Bugs Fixed
 
@@ -475,6 +574,8 @@ All core features have been implemented and deployed to Vercel.
 4. **i18n Build Error** - Separated locale constants from server-only code
 5. **Kanban Layout** - Changed from fixed-width to responsive grid
 6. **Drag & Drop** - Implemented full drag & drop with visual feedback
+7. **Hardcoded Text** - Removed all hardcoded Swedish/English strings, added proper translations
+8. **Color Contrast** - Improved label readability (text-gray-900, font-semibold throughout app)
 
 ### Deployment
 - ✅ GitHub: https://github.com/klasolsson81/mini-ats
