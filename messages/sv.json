@@ -100,13 +100,13 @@
     "noCandidate": "Inga kandidater i detta steg",
     "stageUpdated": "Stage uppdaterad",
     "stages": {
-      "sourced": "Sourcad",
-      "applied": "Ansökt",
-      "screening": "Screening",
+      "sourced": "Hittad",
+      "applied": "Ansökan",
+      "screening": "Urval",
       "interview": "Intervju",
       "offer": "Erbjudande",
       "hired": "Anställd",
-      "rejected": "Avvisad"
+      "rejected": "Avslagen"
     }
   },
   "admin": {
