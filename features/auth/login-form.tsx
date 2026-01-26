@@ -22,16 +22,12 @@ export function LoginForm() {
     setIsLoading(true);
     setError(null);
 
-    try {
-      const result = await login(formData);
-      if (result?.error) {
-        setError(result.error);
-      }
-    } catch (err) {
-      setError(t('common.error'));
-    } finally {
+    const result = await login(formData);
+    if (result?.error) {
+      setError(result.error);
       setIsLoading(false);
     }
+    // If successful, redirect() is called and component unmounts
   }
 
   return (

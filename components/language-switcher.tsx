@@ -2,14 +2,17 @@
 
 import { useTransition } from 'react';
 import { locales, type Locale } from '@/lib/constants/locales';
+import { setLocale } from '@/lib/actions/locale';
+import { useRouter } from 'next/navigation';
 
 export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function handleChange(locale: Locale) {
-    startTransition(() => {
-      document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000`;
-      window.location.reload();
+    startTransition(async () => {
+      await setLocale(locale);
+      router.refresh();
     });
   }
 
