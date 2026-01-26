@@ -204,34 +204,34 @@ Document RLS in `README.md`.
 
 ## 7) MVP Build Checklist (No Bugs / Customer-Ready)
 **Definition of MVP Done (v0.1):**
-- [ ] Login works (customer + admin)
-- [ ] Customer can create a job
-- [ ] Customer can create a candidate with LinkedIn link
-- [ ] Customer can attach candidate to a job + stage
-- [ ] Kanban displays all candidates grouped by stage
-- [ ] Filtering works (job + name)
-- [ ] Admin can create customer accounts (server-side secure)
-- [ ] Multi-tenant isolation is enforced with RLS (critical)
-- [ ] All forms validated (required fields)
-- [ ] Empty states + loading states + error states everywhere
-- [ ] No console errors in browser
-- [ ] Deployed on Vercel and usable via live URL
-- [ ] README contains setup + assumptions
+- [x] Login works (customer + admin)
+- [x] Customer can create a job
+- [x] Customer can create a candidate with LinkedIn link
+- [x] Customer can attach candidate to a job + stage
+- [x] Kanban displays all candidates grouped by stage
+- [x] Filtering works (job + name)
+- [x] Admin can create customer accounts (server-side secure)
+- [x] Multi-tenant isolation is enforced with RLS (critical)
+- [x] All forms validated (required fields)
+- [x] Empty states + loading states + error states everywhere
+- [x] No console errors in browser
+- [x] Deployed on Vercel and usable via live URL
+- [x] README contains setup + assumptions
 
 **MVP smoke tests (manual + automated):**
-- [ ] Customer A cannot see Customer B data
-- [ ] Admin can see both
-- [ ] Job creation -> candidate creation -> appears on kanban
-- [ ] Filter works correctly
-- [ ] Update stage works and persists
+- [x] Customer A cannot see Customer B data (RLS enforced)
+- [x] Admin can see both (is_admin() function in RLS)
+- [x] Job creation -> candidate creation -> appears on kanban
+- [x] Filter works correctly (job + name search)
+- [x] Update stage works and persists (via drag & drop + dropdown)
 
 ---
 
 ## 8) Extended Features (Only after MVP is stable)
 Add features that increase product value quickly.
 
-### “Impressive but realistic” extensions
-- [ ] Drag & drop Kanban
+### "Impressive but realistic" extensions
+- [x] Drag & drop Kanban (implemented with @dnd-kit)
 - [ ] Candidate timeline / activity log
 - [ ] Notes per candidate & per stage changes
 - [ ] Job pipeline metrics (count per stage)
@@ -241,10 +241,10 @@ Add features that increase product value quickly.
 - [ ] Audit log for admin actions (minimal)
 
 ### UI/UX polish
-- [ ] Responsive layout for laptop/tablet
-- [ ] Toast notifications
-- [ ] Keyboard-friendly forms
-- [ ] Better spacing/typography
+- [x] Responsive layout for laptop/tablet (1-7 columns based on screen size)
+- [x] Toast notifications (Sonner)
+- [x] Keyboard-friendly forms
+- [x] Better spacing/typography
 - [ ] Dark mode (optional)
 
 ---
@@ -413,10 +413,86 @@ A feature is done only if:
 - It works end-to-end
 - It respects tenant access rules
 - It has error handling + validation
-- It’s tested (unit or e2e where appropriate)
-- It’s translated (sv/en)
-- It’s deployed and demoable
+- It's tested (unit or e2e where appropriate)
+- It's translated (sv/en)
+- It's deployed and demoable
 
 ---
 
-**Now build the MVP. Ship it fast. Then iterate.**
+## 18) Implementation Status (Updated 2026-01-27)
+
+### MVP Complete ✅
+All core features have been implemented and deployed to Vercel.
+
+### Key Implementations
+
+**Database & Backend**
+- Supabase Postgres with complete schema (tenants, profiles, jobs, candidates, job_candidates)
+- Row-Level Security (RLS) policies enforcing multi-tenant isolation
+- Helper functions: `current_user_id()`, `current_tenant_id()`, `is_admin()`
+- Server actions for all mutations (auth, jobs, candidates, stage updates)
+
+**Authentication**
+- Email/password login via Supabase Auth
+- Protected routes with middleware
+- Role-based access (admin vs customer)
+- Session management
+
+**Features Implemented**
+- ✅ Jobs CRUD (create, read, update, delete)
+- ✅ Candidates CRUD with LinkedIn integration
+- ✅ Kanban board with responsive grid layout (1-7 columns)
+- ✅ Drag & drop functionality (@dnd-kit)
+- ✅ Filtering by job and candidate name
+- ✅ Admin panel for creating tenants and users
+- ✅ Stage updates via drag & drop or dropdown
+
+**Internationalization**
+- ✅ Swedish (sv) and English (en) support
+- ✅ next-intl implementation
+- ✅ Language switcher component
+- ✅ All UI text translated
+
+**GDPR & Privacy**
+- ✅ Privacy Policy page (Swedish)
+- ✅ Cookie Policy page (Swedish)
+- ✅ Footer with policy links
+- ✅ Minimal cookie usage (auth only)
+
+**UI/UX**
+- ✅ Responsive design (mobile to ultrawide)
+- ✅ Toast notifications (Sonner)
+- ✅ Loading states on all forms
+- ✅ Error handling with user feedback
+- ✅ Empty states
+- ✅ Consistent component library
+
+### Bugs Fixed
+
+1. **Login Error Flash** - Removed try-catch that was catching redirect() error
+2. **Language Switcher** - Implemented server action for locale cookie setting
+3. **Zod Validation** - Fixed API usage (error.issues vs error.errors)
+4. **i18n Build Error** - Separated locale constants from server-only code
+5. **Kanban Layout** - Changed from fixed-width to responsive grid
+6. **Drag & Drop** - Implemented full drag & drop with visual feedback
+
+### Deployment
+- ✅ GitHub: https://github.com/klasolsson81/mini-ats
+- ✅ Vercel: Auto-deployment configured
+- ✅ Supabase: Production database with RLS enabled
+
+### Demo Accounts
+- Admin: admin@devotion.ventures / admin123
+- Customer (DevCo): customer@devco.se / customer123
+
+### Next Steps (Optional Enhancements)
+- Candidate timeline/activity log
+- Notes per stage change
+- Job pipeline metrics dashboard
+- Invite additional users per tenant
+- CSV import for bulk candidates
+- Audit log for admin actions
+
+---
+
+**MVP Status: COMPLETE & DEPLOYED** 🚀
