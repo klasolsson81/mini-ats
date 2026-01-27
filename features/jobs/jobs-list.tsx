@@ -56,14 +56,12 @@ export function JobsList({ jobs }: JobsListProps) {
             key={job.id}
             className="group relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
           >
-            {/* Glass card background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-cyan-50/40 to-white/30 backdrop-blur-xl" />
-
-            {/* Subtle inner glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent" />
-
-            {/* Border effect */}
-            <div className="absolute inset-0 rounded-2xl border border-white/60 shadow-lg shadow-blue-100/40 group-hover:shadow-xl group-hover:shadow-cyan-100/50 group-hover:border-cyan-200/60 transition-all duration-300" />
+            {/* Gradient border */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 p-[1.5px]">
+              <div className="absolute inset-[1.5px] rounded-[14px] bg-gradient-to-br from-blue-50 via-cyan-50/90 to-white/95 backdrop-blur-xl" />
+            </div>
+            {/* Hover glow */}
+            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg shadow-cyan-300/50" />
 
             {/* Content */}
             <div className="relative p-5 space-y-4">
