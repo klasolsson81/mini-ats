@@ -6,29 +6,44 @@ Baserat på kundkrav och nuvarande gaps i funktionalitet.
 
 ### 🔴 KRITISKA (Krav från kund)
 
-#### 1. Skapa Admin-Konton
-- [ ] Lägg till roll-väljare i formuläret (admin/customer)
-- [ ] Admin ska kunna skapa nya admin-användare (inte bara customer)
+#### 1. Skapa Admin-Konton ✅ KLART
+- [x] Lägg till roll-väljare i formuläret (admin/customer)
+- [x] Admin ska kunna skapa nya admin-användare (inte bara customer)
 - [ ] Validera att minst en admin alltid finns i systemet
 
-**Nuvarande problem:** Formuläret skapar alltid en "customer" användare. Ingen möjlighet att skapa nya admins.
+**Status:** IMPLEMENTERAT (2026-01-27)
 
-**Krav:** "Som admin kan jag skapa konton (både admin-konton & kund-konton)"
+**Krav:** "Som admin kan jag skapa konton (både admin-konton & kund-konton)" ✅
+
+**Lösning:**
+- Ny API endpoint: `/api/admin/create-admin`
+- Ny komponent: `CreateAdminForm`
+- Admin-sidan visar nu två formulär:
+  1. Skapa Admin-Användare (utan tenant)
+  2. Skapa Kund + Användare (med tenant)
 
 ---
 
-#### 2. Impersonation (Agera Som Kund)
-- [ ] Implementera "Agera som denna kund" funktion
-- [ ] Lägg till "Agera som" knapp på varje kund i listan
-- [ ] Visa banner när admin agerar som kund ("Du agerar som DevCo AB")
-- [ ] Lägg till "Sluta agera som" knapp i bannern
-- [ ] Test: Admin kan se kundens jobb när impersonerar
-- [ ] Test: Admin kan se kundens kandidater när impersonerar
-- [ ] Test: Admin kan skapa/redigera åt kunden
+#### 2. Impersonation (Agera Som Kund) ✅ KLART
+- [x] Implementera "Agera som denna kund" funktion
+- [x] Lägg till "Agera som" knapp på varje kund i listan
+- [x] Visa banner när admin agerar som kund ("Du agerar som DevCo AB")
+- [x] Lägg till "Sluta agera som" knapp i bannern
+- [x] Admin kan se kundens jobb när impersonerar
+- [x] Admin kan se kundens kandidater när impersonerar
+- [x] Admin kan skapa/redigera åt kunden
 
-**Nuvarande problem:** Admin kan inte se eller hantera kunders data. Ingen impersonation-funktion finns.
+**Status:** IMPLEMENTERAT (2026-01-27)
 
-**Krav:** "Som admin kan jag göra allt som kunder kan göra åt dem"
+**Krav:** "Som admin kan jag göra allt som kunder kan göra åt dem" ✅
+
+**Lösning:**
+- Server actions: `impersonateTenant()`, `stopImpersonation()`
+- Helper: `getEffectiveTenantId()` - returnerar impersonated eller own tenant
+- Banner: Gul banner visas överallt när impersonerar
+- Alla pages uppdaterade: jobs, candidates, kanban, dashboard
+- Alla server actions uppdaterade: createJob, createCandidate, attachToJob
+- Cookie-baserad implementation (8h session)
 
 **Teknisk implementation:**
 ```typescript
