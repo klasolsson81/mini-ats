@@ -683,15 +683,32 @@ All core features have been implemented and deployed to Vercel.
 - ✅ Browser tab titles include "- Mini ATS" suffix
 - ✅ Footer copyright updated with Klas Olsson + portfolio link (https://klasolsson.se)
 - ✅ Candidates page shows job assignments and stages (color-coded badges)
+- ✅ Swedish error messages for authentication
 
-**Security:**
+**Security & Authentication:**
 - ✅ Force password change on first login for admin-created accounts
 - ✅ Change password page (`/change-password`) with professional UX:
   - Password strength indicators (min 8 chars, letters, numbers)
   - Password visibility toggles (show/hide)
   - Confirm password matching validation
   - Welcome message for first-time users
+  - Loading overlays during transitions
 - ✅ Middleware and app layout redirect logic
 - ✅ All admin create-user API endpoints set `must_change_password` flag
+- ✅ SECURITY DEFINER fix for infinite recursion in RLS
+- ✅ Swedish translations for all auth error messages
+
+**Critical Fixes:**
+- ✅ Fixed infinite recursion in `is_admin()` function
+  - Added SECURITY DEFINER to bypass RLS
+  - Prevents "stack depth limit exceeded" error
+  - Migration: 20260127_fix_infinite_recursion.sql
+- ✅ Admin users can now see all data correctly
+
+**Known Issues (MVP v0.1):**
+- ⚠️ Brief black screen (1-3 sec) during authentication redirects
+  - Cosmetic only - functionality works correctly
+  - Tracked for v0.2 improvement
+  - See KNOWN_ISSUES.md for details and planned fix
 
 ---

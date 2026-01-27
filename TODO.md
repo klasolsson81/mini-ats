@@ -297,7 +297,123 @@ När impersonation är implementerad:
 
 ---
 
+## 🔧 Known Issues (MVP v0.1)
+
+### UI/UX - Black Screen During Redirects
+
+**Status:** Tracked for v0.2
+**Severity:** Minor (cosmetic only)
+
+**Description:**
+- Brief (1-3 seconds) black screen visible during authentication redirects
+- Occurs after login and after password change
+- Functionality works correctly, only visual experience affected
+
+**Affected Flows:**
+1. After clicking "Logga in" → redirect to /app or /change-password
+2. After changing password → redirect to /app
+
+**Technical Cause:**
+- `window.location.href` full page reload shows blank state
+- Fullscreen overlays attempt to cover but timing varies by browser
+- Next.js server-side redirects faster than client can render overlay
+
+**Planned Fix (v0.2):**
+- Server-side session refresh without full page reload
+- React Suspense boundaries for smoother transitions
+- Investigate Next.js router.refresh() with proper session handling
+
+**Current Workaround:**
+- Users experience brief blank screen but transitions complete successfully
+- All functionality works correctly
+- Data loads properly after transition
+
+**See:** KNOWN_ISSUES.md for full details
+
+---
+
+## 🎯 Completed Features (MVP v0.1)
+
+### ✅ Force Password Change on First Login
+**Status:** IMPLEMENTERAT (2026-01-27)
+
+**Features:**
+- [x] Admin-created accounts must change password on first login
+- [x] Professional password change UI with strength indicators
+- [x] Password requirements: min 8 chars, letters + numbers
+- [x] Visual feedback: show/hide toggles, strength checks
+- [x] Middleware redirect logic
+- [x] Database column: must_change_password
+- [x] All admin APIs set flag on user creation
+- [x] Swedish error message translations
+
+**Implementation:**
+- Migration: `20260127_add_must_change_password.sql`
+- Page: `/change-password`
+- Component: `ChangePasswordForm`
+- Action: `lib/actions/change-password.ts`
+- Middleware: Updated to allow /change-password route
+
+---
+
+### ✅ Infinite Recursion Fix (CRITICAL)
+**Status:** FIXED (2026-01-27)
+
+**Problem:**
+- RLS policies called `is_admin()` which read profiles table
+- Reading profiles triggered RLS policies again
+- Caused infinite loop: "stack depth limit exceeded"
+- Admin users couldn't see any data
+
+**Solution:**
+- Added `SECURITY DEFINER` to `is_admin()` and `current_tenant_id()`
+- Functions now bypass RLS when checking permissions
+- Prevents circular dependency
+
+**Migration:**
+- `20260127_fix_infinite_recursion.sql`
+
+**Impact:**
+- Admin users can now see all data correctly
+- No more stack overflow errors
+- RLS still enforces security correctly
+
+---
+
+### ✅ Swedish Error Messages
+**Status:** IMPLEMENTERAT (2026-01-27)
+
+**Translations:**
+- "Invalid login credentials" → "Felaktigt användarnamn eller lösenord"
+- "Too many requests" → "För många inloggningsförsök..."
+- "Email not confirmed" → "E-postadressen är inte bekräftad"
+- Password change errors also translated
+
+**Implementation:**
+- `translateAuthError()` helper in `lib/actions/auth.ts`
+- `translateAuthError()` helper in `lib/actions/change-password.ts`
+
+---
+
+### ✅ Candidates Page - Show Job Assignments
+**Status:** IMPLEMENTERAT (2026-01-27)
+
+**Features:**
+- [x] Shows which jobs candidate is attached to
+- [x] Displays current stage for each job
+- [x] Color-coded stage badges (matches Kanban colors)
+- [x] Visual hierarchy: job info at top of card
+
+**Implementation:**
+- Extended query with job_candidates relation
+- New interface: CandidateWithJobs
+- Stage color mapping function
+
+---
+
 **Skapad:** 2026-01-27
 **Senast uppdaterad:** 2026-01-27
-**Status:** Admin panel & impersonation KLART ✅
+**Status:** MVP v0.1 KLART ✅
 **Prioritet:** Hög (kundkrav) - UPPFYLLT ✅
+
+**Known Issues:** Se KNOWN_ISSUES.md för detaljer

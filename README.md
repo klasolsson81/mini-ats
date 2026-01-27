@@ -99,9 +99,12 @@ A functional MVP demonstrating end-to-end flow for a simple ATS: manage jobs, ca
 
 ### Known Limitations in v0.1 (Intentional MVP Choices)
 
-**Design & Polish:**
-- UI is functional but not final-polished (layout/spacing refined in next iteration)
-- Focus on working flow and correct data handling
+**UI/UX:**
+- Brief (1-3 seconds) black screen may appear during authentication redirects
+  - After login and after password change
+  - Cosmetic only - functionality works correctly
+  - Tracked for v0.2 improvement
+  - See KNOWN_ISSUES.md for details
 
 **User Management:**
 - No user activation/deactivation yet
@@ -111,6 +114,8 @@ A functional MVP demonstrating end-to-end flow for a simple ATS: manage jobs, ca
 **Audit Logging:**
 - Level 1 (impersonation) complete
 - Level 2 (user/tenant management) planned for production
+
+**See KNOWN_ISSUES.md for complete list of known issues and planned fixes.**
 
 ### Demo / Quick Verification (Smoke Test)
 
@@ -541,7 +546,8 @@ Contributions welcome! Please open an issue or PR.
 
 - **CLAUDE.md** - Complete build instructions and architecture
 - **SECURITY.md** - Security best practices and production checklist
-- **TODO.md** - Feature roadmap and audit logging levels
+- **TODO.md** - Feature roadmap and completed features
+- **KNOWN_ISSUES.md** - Known issues and limitations (including black screen during redirects)
 - **lib/utils/RESTRICTIONS_README.md** - Operation restrictions guide
 - **supabase/migrations/README.md** - Database migration instructions
 
