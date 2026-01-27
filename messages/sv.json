@@ -138,7 +138,16 @@
     "errorOccurred": "Ett fel uppstod",
     "users": "användare",
     "noTenants": "Inga kunder än.",
-    "adminDescription": "Admin-användare har tillgång till hela systemet och kan hantera alla kunder."
+    "adminDescription": "Admin-användare har tillgång till hela systemet och kan hantera alla kunder.",
+    "tenantDetails": "Kunddetaljer",
+    "backToAdmin": "Tillbaka till Admin",
+    "tenantDetailsSubtitle": "Hantera användare och statistik för denna kund",
+    "tenantUsers": "Användare",
+    "addUser": "Lägg till användare",
+    "noUsers": "Inga användare än.",
+    "totalJobs": "Totalt Jobb",
+    "totalCandidates": "Totalt Kandidater",
+    "activeInPipeline": "Aktiva i Pipeline"
   },
   "footer": {
     "privacy": "Integritetspolicy",

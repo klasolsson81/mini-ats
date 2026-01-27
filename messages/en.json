@@ -138,7 +138,16 @@
     "errorOccurred": "An error occurred",
     "users": "users",
     "noTenants": "No tenants yet.",
-    "adminDescription": "Admin users have access to the entire system and can manage all tenants."
+    "adminDescription": "Admin users have access to the entire system and can manage all tenants.",
+    "tenantDetails": "Tenant Details",
+    "backToAdmin": "Back to Admin",
+    "tenantDetailsSubtitle": "Manage users and statistics for this tenant",
+    "tenantUsers": "Users",
+    "addUser": "Add user",
+    "noUsers": "No users yet.",
+    "totalJobs": "Total Jobs",
+    "totalCandidates": "Total Candidates",
+    "activeInPipeline": "Active in Pipeline"
   },
   "footer": {
     "privacy": "Privacy Policy",

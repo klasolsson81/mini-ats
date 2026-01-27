@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { CreateTenantForm } from '@/features/admin/create-tenant-form';
 import { CreateAdminForm } from '@/features/admin/create-admin-form';
 import { ImpersonateButton } from '@/components/impersonate-button';
+import Link from 'next/link';
 
 export async function generateMetadata() {
   const t = await getTranslations('admin');
@@ -80,18 +81,23 @@ export default async function AdminPage() {
             tenants.map((tenant: any) => (
               <div
                 key={tenant.id}
-                className="rounded-lg border border-gray-200 bg-white p-4 space-y-3"
+                className="rounded-lg border border-gray-200 bg-white overflow-hidden"
               >
-                <div>
+                <Link
+                  href={`/app/admin/tenants/${tenant.id}`}
+                  className="block p-4 hover:bg-gray-50 transition-colors"
+                >
                   <h3 className="font-semibold text-gray-900">{tenant.name}</h3>
                   <p className="text-sm text-gray-600">
                     {tenant.profiles?.[0]?.count || 0} {t('users')}
                   </p>
+                </Link>
+                <div className="px-4 pb-4">
+                  <ImpersonateButton
+                    tenantId={tenant.id}
+                    tenantName={tenant.name}
+                  />
                 </div>
-                <ImpersonateButton
-                  tenantId={tenant.id}
-                  tenantName={tenant.name}
-                />
               </div>
             ))
           ) : (
