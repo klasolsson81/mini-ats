@@ -5,9 +5,9 @@
   --background: #f5f7fa;
   --foreground: #2d3748;
 
-  /* Glassmorphism - more transparent and subtle */
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.9);
+  /* Glassmorphism - transparent with tech feel */
+  --glass-bg: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.5);
 
   /* Primary - softer blue/cyan */
   --primary: #5eb8d1;
