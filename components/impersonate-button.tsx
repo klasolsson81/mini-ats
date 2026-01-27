@@ -27,9 +27,9 @@ export function ImpersonateButton({
     <button
       onClick={handleImpersonate}
       disabled={isPending}
-      className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-medium transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-medium transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      <UserCheck className="h-4 w-4" />
+      <UserCheck className="h-3.5 w-3.5" />
       {t('actAs')}
     </button>
   );
