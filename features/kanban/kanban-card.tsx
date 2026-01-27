@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
-import { Mail, Linkedin, Briefcase, GripVertical } from 'lucide-react';
+import { Mail, Linkedin, Briefcase } from 'lucide-react';
 import { STAGE_ORDER } from '@/lib/constants/stages';
 import { updateCandidateStage } from '@/lib/actions/candidates';
 import { toast } from 'sonner';
@@ -34,9 +34,10 @@ interface JobCandidate {
 
 interface KanbanCardProps {
   jobCandidate: JobCandidate;
+  isOverlay?: boolean;
 }
 
-export function KanbanCard({ jobCandidate }: KanbanCardProps) {
+export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps) {
   const t = useTranslations();
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentStage, setCurrentStage] = useState(jobCandidate.stage);
@@ -44,6 +45,7 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: jobCandidate.id,
+      disabled: isOverlay, // Disable drag on overlay clone
     });
 
   async function handleStageChange(newStage: string) {
@@ -66,25 +68,25 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.3 : 1,
   };
 
   return (
     <Card
       ref={setNodeRef}
-      style={style}
-      className="bg-white hover:shadow-md transition-shadow"
+      style={isOverlay ? undefined : style}
+      // Apply drag listeners to entire card (not just handle)
+      {...(!isOverlay ? listeners : {})}
+      {...(!isOverlay ? attributes : {})}
+      className={`bg-white transition-shadow ${
+        isOverlay
+          ? 'shadow-2xl rotate-3 cursor-grabbing'
+          : 'hover:shadow-md cursor-grab active:cursor-grabbing'
+      }`}
     >
       <CardContent className="p-4 space-y-3">
-        {/* Drag Handle + Candidate Name */}
+        {/* Candidate Name */}
         <div className="flex items-start gap-2">
-          <button
-            {...listeners}
-            {...attributes}
-            className="touch-none cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 mt-0.5"
-          >
-            <GripVertical className="h-4 w-4" />
-          </button>
           <h4 className="flex-1 font-semibold text-gray-900">
             {jobCandidate.candidates.full_name}
           </h4>
@@ -110,6 +112,9 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
+              // Prevent drag when clicking links
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <Linkedin className="h-3 w-3 flex-shrink-0" />
               <span className="truncate">LinkedIn</span>
@@ -118,7 +123,12 @@ export function KanbanCard({ jobCandidate }: KanbanCardProps) {
         </div>
 
         {/* Stage Selector */}
-        <div className="pt-2">
+        <div
+          className="pt-2"
+          // Prevent drag when interacting with dropdown
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Select
             value={currentStage}
             onChange={(e) => handleStageChange(e.target.value)}

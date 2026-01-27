@@ -50,7 +50,7 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
     <div className="flex flex-col" ref={setNodeRef}>
       <div
         className={`flex flex-col rounded-lg border-2 ${stageColors[stage]} p-4 h-full min-h-[600px] transition-all ${
-          isOver ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+          isOver ? 'ring-2 ring-blue-500 ring-offset-2 bg-opacity-80' : ''
         }`}
       >
         {/* Column Header */}
@@ -61,8 +61,8 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
           <p className="text-sm text-gray-600">{candidates.length}</p>
         </div>
 
-        {/* Cards */}
-        <div className="flex-1 space-y-3 overflow-y-auto">
+        {/* Cards - overflow-y-auto keeps scrolling, but overflow-x-visible prevents clipping drag overlay */}
+        <div className="flex-1 space-y-3 overflow-y-auto overflow-x-visible">
           {candidates.length === 0 ? (
             <p className="text-sm text-gray-500 text-center py-8">
               {t('kanban.noCandidate')}

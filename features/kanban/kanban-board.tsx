@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { STAGE_ORDER, type Stage } from '@/lib/constants/stages';
 import { KanbanColumn } from './kanban-column';
+import { KanbanCard } from './kanban-card';
 import {
   DndContext,
   DragEndEvent,
@@ -113,6 +114,12 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     return grouped;
   }, [filteredCandidates]);
 
+  // Find the active job candidate for DragOverlay
+  const activeJobCandidate = useMemo(() => {
+    if (!activeId) return null;
+    return filteredCandidates.find((jc) => jc.id === activeId) || null;
+  }, [activeId, filteredCandidates]);
+
   return (
     <div className="space-y-6">
       {/* Filters */}
@@ -158,6 +165,13 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
             />
           ))}
         </div>
+
+        {/* DragOverlay: Renders dragged card above everything */}
+        <DragOverlay dropAnimation={null}>
+          {activeJobCandidate ? (
+            <KanbanCard jobCandidate={activeJobCandidate} isOverlay />
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   );
