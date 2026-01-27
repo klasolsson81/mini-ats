@@ -9,6 +9,7 @@
     "delete": "Radera",
     "edit": "Redigera",
     "create": "Skapa",
+    "creating": "Skapar...",
     "search": "Sök",
     "filter": "Filtrera",
     "all": "Alla",
@@ -144,10 +145,15 @@
     "tenantDetailsSubtitle": "Hantera användare och statistik för denna kund",
     "tenantUsers": "Användare",
     "addUser": "Lägg till användare",
+    "addUserToTenantTitle": "Lägg till användare till {tenant}",
+    "userAddedToTenant": "Användare tillagd till kund",
     "noUsers": "Inga användare än.",
     "totalJobs": "Totalt Jobb",
     "totalCandidates": "Totalt Kandidater",
-    "activeInPipeline": "Aktiva i Pipeline"
+    "activeInPipeline": "Aktiva i Pipeline",
+    "cancel": "Avbryt",
+    "create": "Skapa",
+    "creating": "Skapar..."
   },
   "footer": {
     "privacy": "Integritetspolicy",

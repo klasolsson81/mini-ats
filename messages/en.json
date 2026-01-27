@@ -9,6 +9,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
+    "creating": "Creating...",
     "search": "Search",
     "filter": "Filter",
     "all": "All",
@@ -144,10 +145,15 @@
     "tenantDetailsSubtitle": "Manage users and statistics for this tenant",
     "tenantUsers": "Users",
     "addUser": "Add user",
+    "addUserToTenantTitle": "Add user to {tenant}",
+    "userAddedToTenant": "User added to tenant",
     "noUsers": "No users yet.",
     "totalJobs": "Total Jobs",
     "totalCandidates": "Total Candidates",
-    "activeInPipeline": "Active in Pipeline"
+    "activeInPipeline": "Active in Pipeline",
+    "cancel": "Cancel",
+    "create": "Create",
+    "creating": "Creating..."
   },
   "footer": {
     "privacy": "Privacy Policy",

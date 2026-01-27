@@ -4,6 +4,7 @@ import { redirect, notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImpersonateButton } from '@/components/impersonate-button';
+import { AddUserToTenantForm } from '@/features/admin/add-user-to-tenant-form';
 import Link from 'next/link';
 import { ArrowLeft, Briefcase, Users, TrendingUp, User } from 'lucide-react';
 
@@ -144,9 +145,7 @@ export default async function TenantDetailPage({
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>{t('tenantUsers')}</CardTitle>
-            <Button size="sm" disabled>
-              {t('addUser')}
-            </Button>
+            <AddUserToTenantForm tenantId={tenant.id} tenantName={tenant.name} />
           </div>
         </CardHeader>
         <CardContent>
