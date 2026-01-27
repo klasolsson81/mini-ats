@@ -2,7 +2,8 @@
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useTransition, useState } from 'react';
 import { cn } from '@/lib/utils/cn';
 import {
   LayoutDashboard,
@@ -11,6 +12,7 @@ import {
   Kanban as KanbanIcon,
   Settings,
   LogOut,
+  Loader2,
 } from 'lucide-react';
 import { Profile } from '@/lib/types/database';
 import { logout } from '@/lib/actions/auth';
@@ -25,6 +27,9 @@ interface SidebarProps {
 export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   const t = useTranslations();
   const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
 
   const isAdmin = profile.role === 'admin';
 
@@ -73,27 +78,45 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
             ? pathname === item.href
             : pathname.startsWith(item.href);
 
+          const isNavigating = isPending && pendingHref === item.href;
+
+          const handleNavigate = (e: React.MouseEvent) => {
+            e.preventDefault();
+            if (isActive || isPending) return; // Don't navigate if already on page or navigating
+
+            setPendingHref(item.href);
+            startTransition(() => {
+              router.push(item.href);
+            });
+          };
+
           return (
-            <Link
+            <button
               key={item.name}
-              href={item.href}
+              onClick={handleNavigate}
+              disabled={isPending}
               className={cn(
-                'group flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 isActive
                   ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
+                isPending && 'opacity-50 cursor-wait'
               )}
             >
-              <item.icon
-                className={cn(
-                  'mr-3 h-5 w-5 flex-shrink-0',
-                  isActive
-                    ? 'text-blue-600'
-                    : 'text-gray-400 group-hover:text-gray-500'
-                )}
-              />
+              {isNavigating ? (
+                <Loader2 className="mr-3 h-5 w-5 flex-shrink-0 animate-spin text-blue-600" />
+              ) : (
+                <item.icon
+                  className={cn(
+                    'mr-3 h-5 w-5 flex-shrink-0',
+                    isActive
+                      ? 'text-blue-600'
+                      : 'text-gray-400 group-hover:text-gray-500'
+                  )}
+                />
+              )}
               {item.name}
-            </Link>
+            </button>
           );
         })}
       </nav>

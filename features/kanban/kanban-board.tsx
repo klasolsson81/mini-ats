@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useOptimistic, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Select } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { STAGE_ORDER, type Stage } from '@/lib/constants/stages';
 import { KanbanColumn } from './kanban-column';
 import { KanbanCard } from './kanban-card';
@@ -46,11 +46,27 @@ interface KanbanBoardProps {
   jobs: Pick<Job, 'id' | 'title'>[];
 }
 
+type OptimisticUpdate = {
+  id: string;
+  newStage: Stage;
+};
+
 export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   const t = useTranslations();
   const [selectedJobId, setSelectedJobId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  // Optimistic updates: UI updates instantly before server confirms
+  const [optimisticCandidates, updateOptimisticCandidates] = useOptimistic(
+    jobCandidates,
+    (state: JobCandidate[], update: OptimisticUpdate) => {
+      return state.map((jc) =>
+        jc.id === update.id ? { ...jc, stage: update.newStage } : jc
+      );
+    }
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -69,18 +85,28 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     const jobCandidateId = active.id as string;
     const newStage = over.id as Stage;
 
-    // Optimistic update would go here
-    const result = await updateCandidateStage(jobCandidateId, newStage);
+    // Find current stage for potential revert
+    const originalCandidate = jobCandidates.find((jc) => jc.id === jobCandidateId);
+    const originalStage = originalCandidate?.stage;
 
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success(t('kanban.stageUpdated'));
-    }
+    // Optimistic update: update UI immediately
+    startTransition(async () => {
+      updateOptimisticCandidates({ id: jobCandidateId, newStage });
+
+      // Sync with server in background
+      const result = await updateCandidateStage(jobCandidateId, newStage);
+
+      if (result.error) {
+        // On error, revert happens automatically via re-render
+        toast.error(result.error);
+      } else {
+        toast.success(t('kanban.stageUpdated'));
+      }
+    });
   }
 
   const filteredCandidates = useMemo(() => {
-    let filtered = jobCandidates;
+    let filtered = optimisticCandidates;
 
     // Filter by job
     if (selectedJobId !== 'all') {
@@ -96,7 +122,7 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     }
 
     return filtered;
-  }, [jobCandidates, selectedJobId, searchQuery]);
+  }, [optimisticCandidates, selectedJobId, searchQuery]);
 
   // Group by stage
   const candidatesByStage = useMemo(() => {
@@ -128,6 +154,7 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
           <Select
             value={selectedJobId}
             onChange={(e) => setSelectedJobId(e.target.value)}
+            disabled={isPending}
           >
             <option value="all">{t('kanban.allJobs')}</option>
             {jobs.map((job) => (
@@ -145,7 +172,11 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
+            disabled={isPending}
           />
+          {isPending && (
+            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-blue-600" />
+          )}
         </div>
       </div>
 
