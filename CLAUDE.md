@@ -5,6 +5,25 @@ Goal: ship a usable first version fast, then iterate. Prioritize correctness, se
 
 ---
 
+## 🚨 CURRENT DEVELOPMENT STATUS (2026-01-27)
+
+**Development Mode:** LOCAL TESTING ONLY
+- ✅ First partial delivery sent to customer (deployed version on Vercel)
+- 🛠️ Continuing development locally on `localhost:3000`
+- ❌ **DO NOT PUSH TO GITHUB** until final MVP is ready
+- 📦 When satisfied, push all commits at once for final MVP deployment
+
+**Workflow:**
+1. Make changes and test on `http://localhost:3000`
+2. Commit locally: `git commit -m "message"`
+3. **DO NOT** run `git push`
+4. When all changes approved → Push everything to GitHub for final deployment
+
+**Reason:**
+Customer is currently testing the deployed version. We don't want to update it until final MVP is complete.
+
+---
+
 ## 0) Prime Directive (Most Important)
 **Ship a working, stable MVP in 48 hours**, deployed and testable by a real customer, then improve it throughout the week.
 If a decision is unclear, make a reasonable assumption, document it in `README.md` under **Assumptions**, and proceed.
