@@ -8,7 +8,7 @@ import Link from 'next/link';
 export async function generateMetadata() {
   const t = await getTranslations('admin');
   return {
-    title: t('allUsers'),
+    title: `${t('allUsers')} - Mini ATS`,
   };
 }
 

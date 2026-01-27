@@ -13,7 +13,7 @@ import { PipelineStats } from '@/features/dashboard/pipeline-stats';
 export async function generateMetadata() {
   const t = await getTranslations('nav');
   return {
-    title: t('dashboard'),
+    title: `${t('dashboard')} - Mini ATS`,
   };
 }
 

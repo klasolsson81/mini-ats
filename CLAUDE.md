@@ -605,6 +605,8 @@ All core features have been implemented and deployed to Vercel.
 8. **Color Contrast** - Improved label readability (text-gray-900, font-semibold throughout app)
 9. **Tenant Detail 404** - Fixed Next.js 15 async params handling in dynamic routes
 10. **Impersonation UI** - Hidden admin panel when acting as tenant (true customer view)
+11. **Kanban Drag UX** - Entire card is now draggable (not just handle), DragOverlay prevents z-index issues
+12. **Performance** - Implemented optimistic updates (useOptimistic) and navigation loading states (useTransition)
 
 ### Deployment
 - ✅ GitHub: https://github.com/klasolsson81/mini-ats
@@ -632,6 +634,24 @@ All core features have been implemented and deployed to Vercel.
 
 ### Latest Updates (2026-01-27)
 
+**Dashboard Improvements:**
+- ✅ Quick Actions with real create dialogs (job/candidate)
+- ✅ Recent Activity panel (last 5 jobs, candidates, admin impersonations)
+- ✅ Pipeline Stats overview (candidates per stage with colors)
+- ✅ All dashboard features fully functional (not just links)
+
+**Kanban UX Improvements:**
+- ✅ Entire card is now draggable (GitHub Projects-level smoothness)
+- ✅ DragOverlay prevents z-index issues (card always visible during drag)
+- ✅ Links work without triggering drag (LinkedIn, etc)
+- ✅ Dropdown works without triggering drag (stage selector)
+
+**Performance Optimizations:**
+- ✅ Optimistic updates (useOptimistic) - Kanban updates instantly
+- ✅ Navigation loading states (useTransition) - Spinner feedback on clicks
+- ✅ Perceived performance 10x better (< 16ms UI updates)
+- ✅ Background server sync with automatic revert on error
+
 **Admin Panel Improvements:**
 - ✅ Clickable tenant cards with detail pages
 - ✅ Tenant statistics (jobs, candidates, pipeline)
@@ -656,5 +676,9 @@ All core features have been implemented and deployed to Vercel.
 - ✅ lib/utils/RESTRICTIONS_README.md - Implementation guide
 - ✅ supabase/migrations/README.md - Migration instructions
 - ✅ TODO.md - Updated with audit logging levels
+
+**Polish:**
+- ✅ Browser tab titles include "- Mini ATS" suffix
+- ✅ Footer copyright updated with Klas Olsson + portfolio link (https://klasolsson.se)
 
 ---

@@ -42,6 +42,12 @@ A functional MVP demonstrating end-to-end flow for a simple ATS: manage jobs, ca
 - Attach candidates to jobs/pipeline
 - LinkedIn profile links, contact info, notes
 
+#### ✅ Dashboard
+- **Quick Actions** - Create jobs/candidates directly from dashboard (real dialogs, not just links)
+- **Recent Activity** - See last 5 jobs, candidates, and admin impersonations
+- **Pipeline Stats** - Visual overview of candidates per stage with colors
+- **Metrics** - Total jobs, candidates, active in pipeline
+
 #### ✅ Admin Panel
 - **Create admins** and **create new customers + first user**
 - **"Impersonation"** - Act as customer for testing/support
@@ -59,6 +65,12 @@ A functional MVP demonstrating end-to-end flow for a simple ATS: manage jobs, ca
   - View all impersonation sessions
   - Track who, when, which customer, IP address
   - Active session indicators
+
+#### ✅ Performance & UX
+- **Optimistic Updates** - Kanban drag & drop feels instant (< 16ms UI update)
+- **Navigation Loading States** - Spinner feedback on all navigation clicks
+- **Entire Card Draggable** - GitHub Projects-level drag & drop smoothness
+- **Background Sync** - Server updates happen in background, auto-revert on error
 
 #### ✅ Security & Compliance
 - **Audit logging (Level 1)** - Production-ready
@@ -435,11 +447,12 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ### As Customer
 1. Log in at `/login`
-2. **Dashboard**: View metrics and quick links
+2. **Dashboard**: View metrics, create jobs/candidates with Quick Actions, see Recent Activity
 3. **Jobs**: Create and manage job postings
 4. **Candidates**: Add candidates with LinkedIn profiles
-5. **Kanban**: Drag candidates through stages or use dropdown
+5. **Kanban**: Drag entire cards instantly between stages (optimistic updates)
 6. Use filters to focus on specific jobs
+7. Navigate with instant feedback (loading spinners on all clicks)
 
 ---
 

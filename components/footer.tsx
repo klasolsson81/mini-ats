@@ -10,7 +10,16 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-gray-600">
-            © {currentYear} Mini ATS. {t('footer.allRightsReserved')}.
+            © {currentYear}{' '}
+            <a
+              href="https://klasolsson.se"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-900 hover:underline"
+            >
+              Klas Olsson
+            </a>
+            . {t('footer.allRightsReserved')}.
           </p>
           <div className="flex gap-6">
             <Link

@@ -8,7 +8,7 @@ import { getEffectiveTenantId } from '@/lib/utils/tenant';
 export async function generateMetadata() {
   const t = await getTranslations('jobs');
   return {
-    title: t('title'),
+    title: `${t('title')} - Mini ATS`,
   };
 }
 

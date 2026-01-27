@@ -7,7 +7,7 @@ import { Shield, Clock, User, Building2 } from 'lucide-react';
 export async function generateMetadata() {
   const t = await getTranslations('admin');
   return {
-    title: t('auditLogs'),
+    title: `${t('auditLogs')} - Mini ATS`,
   };
 }
 
