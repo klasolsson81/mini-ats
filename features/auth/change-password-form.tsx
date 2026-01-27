@@ -51,20 +51,36 @@ export function ChangePasswordForm() {
       setIsLoading(false);
     } else {
       toast.success('Lösenord uppdaterat!');
-      // Show redirecting overlay
+      // Show redirecting overlay and ensure it's rendered before redirect
       setIsRedirecting(true);
-      // Use window.location for full page reload to ensure session is refreshed
-      setTimeout(() => {
-        window.location.href = '/app';
-      }, 800);
+      // Use requestAnimationFrame to ensure the overlay is painted before redirect
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Use window.location for full page reload to ensure session is refreshed
+          setTimeout(() => {
+            window.location.href = '/app';
+          }, 300);
+        });
+      });
     }
   }
 
   return (
     <>
-      {/* Fullscreen redirecting overlay */}
+      {/* Fullscreen redirecting overlay with high priority rendering */}
       {isRedirecting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-white"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'white',
+            zIndex: 9999
+          }}
+        >
           <div className="text-center">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
             <p className="text-lg font-semibold text-gray-900">

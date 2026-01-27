@@ -31,7 +31,23 @@ export function LoginForm() {
   }
 
   return (
-    <Card>
+    <>
+      {/* Fullscreen loading overlay during login */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
+            <p className="text-lg font-semibold text-gray-900">
+              Loggar in...
+            </p>
+            <p className="mt-2 text-sm text-gray-600">
+              Förbereder din session
+            </p>
+          </div>
+        </div>
+      )}
+
+      <Card>
       <CardHeader>
         <CardTitle>{t('auth.login')}</CardTitle>
         <CardDescription>
@@ -85,5 +101,6 @@ export function LoginForm() {
         </form>
       </CardContent>
     </Card>
+    </>
   );
 }
