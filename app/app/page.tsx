@@ -195,7 +195,7 @@ export default async function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <QuickActions />
 
-        {isAdmin && (
+        {isAdmin && !tenantId && (
           <Card>
             <CardHeader>
               <CardTitle>{t('adminPanel')}</CardTitle>
