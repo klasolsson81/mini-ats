@@ -67,17 +67,17 @@ export function QuickActions() {
                 <button
                   key={action.key}
                   onClick={action.onClick}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-white/30 hover:bg-white/50 transition-all duration-200 group border border-white/30 hover:border-white/50 hover:shadow-sm"
+                  className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-white/40 via-cyan-50/30 to-blue-50/40 hover:from-white/60 hover:via-cyan-100/40 hover:to-blue-100/50 transition-all duration-300 group border border-cyan-200/30 hover:border-cyan-300/50 hover:shadow-md hover:shadow-cyan-100/50"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-md`}>
                       <Icon className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium text-gray-800 group-hover:text-gray-900">
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                       {action.label}
                     </span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                  <ChevronRight className="w-4 h-4 text-cyan-400 group-hover:text-cyan-600 transition-colors" />
                 </button>
               );
             })}

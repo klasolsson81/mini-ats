@@ -70,7 +70,7 @@ export function PipelineStats({ stats }: PipelineStatsProps) {
   });
 
   return (
-    <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-6 max-w-5xl">
+    <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-6 max-w-6xl">
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

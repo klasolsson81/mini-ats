@@ -4,7 +4,7 @@ import { useState, useMemo, useOptimistic, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Select } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, Filter } from 'lucide-react';
 import { STAGE_ORDER, type Stage } from '@/lib/constants/stages';
 import { KanbanColumn } from './kanban-column';
 import { KanbanCard } from './kanban-card';
@@ -58,7 +58,6 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Optimistic updates: UI updates instantly before server confirms
   const [optimisticCandidates, updateOptimisticCandidates] = useOptimistic(
     jobCandidates,
     (state: JobCandidate[], update: OptimisticUpdate) => {
@@ -71,7 +70,7 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px movement required to start drag
+        distance: 8,
       },
     })
   );
@@ -85,19 +84,15 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     const jobCandidateId = active.id as string;
     const newStage = over.id as Stage;
 
-    // Find current stage for potential revert
     const originalCandidate = jobCandidates.find((jc) => jc.id === jobCandidateId);
     const originalStage = originalCandidate?.stage;
 
-    // Optimistic update: update UI immediately
     startTransition(async () => {
       updateOptimisticCandidates({ id: jobCandidateId, newStage });
 
-      // Sync with server in background
       const result = await updateCandidateStage(jobCandidateId, newStage);
 
       if (result.error) {
-        // On error, revert happens automatically via re-render
         toast.error(result.error);
       } else {
         toast.success(t('kanban.stageUpdated'));
@@ -108,12 +103,10 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   const filteredCandidates = useMemo(() => {
     let filtered = optimisticCandidates;
 
-    // Filter by job
     if (selectedJobId !== 'all') {
       filtered = filtered.filter((jc) => jc.job_id === selectedJobId);
     }
 
-    // Filter by search query (candidate name)
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((jc) =>
@@ -124,7 +117,6 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     return filtered;
   }, [optimisticCandidates, selectedJobId, searchQuery]);
 
-  // Group by stage
   const candidatesByStage = useMemo(() => {
     const grouped: Record<string, JobCandidate[]> = {};
     STAGE_ORDER.forEach((stage) => {
@@ -140,7 +132,6 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     return grouped;
   }, [filteredCandidates]);
 
-  // Find the active job candidate for DragOverlay
   const activeJobCandidate = useMemo(() => {
     if (!activeId) return null;
     return filteredCandidates.find((jc) => jc.id === activeId) || null;
@@ -148,36 +139,49 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Filters */}
-      <div className="glass-card">
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="w-full sm:w-64">
-            <Select
-              value={selectedJobId}
-              onChange={(e) => setSelectedJobId(e.target.value)}
-              disabled={isPending}
-            >
-              <option value="all">{t('kanban.allJobs')}</option>
-              {jobs.map((job) => (
-                <option key={job.id} value={job.id}>
-                  {job.title}
-                </option>
-              ))}
-            </Select>
+      {/* Filters - Tech style */}
+      <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+              <Filter className="w-5 h-5 text-white" />
+            </div>
+            <div className="w-48">
+              <Select
+                value={selectedJobId}
+                onChange={(e) => setSelectedJobId(e.target.value)}
+                disabled={isPending}
+                className="bg-white/50 border-cyan-200/50 backdrop-blur-sm"
+              >
+                <option value="all">{t('kanban.allJobs')}</option>
+                {jobs.map((job) => (
+                  <option key={job.id} value={job.id}>
+                    {job.title}
+                  </option>
+                ))}
+              </Select>
+            </div>
           </div>
 
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cyan-500" />
             <Input
               placeholder={t('kanban.searchCandidates')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-9 bg-gradient-to-r from-white/50 via-cyan-50/30 to-blue-50/40 border-cyan-200/50 backdrop-blur-sm focus:border-cyan-400/50 focus:ring-cyan-400/30"
               disabled={isPending}
             />
             {isPending && (
-              <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-[var(--primary)]" />
+              <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-cyan-500" />
             )}
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span className="bg-white/50 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/30">
+              {filteredCandidates.length} {t('candidates.title').toLowerCase()}
+            </span>
           </div>
         </div>
       </div>
@@ -199,7 +203,6 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
           ))}
         </div>
 
-        {/* DragOverlay: Renders dragged card above everything */}
         <DragOverlay dropAnimation={null}>
           {activeJobCandidate ? (
             <KanbanCard jobCandidate={activeJobCandidate} isOverlay />

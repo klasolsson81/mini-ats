@@ -155,7 +155,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 max-w-4xl">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 max-w-5xl">
         <KpiCard
           title={t('totalJobs')}
           value={jobsCount}
@@ -180,7 +180,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick Actions & Admin Panel */}
-      <div className="grid gap-4 sm:grid-cols-2 max-w-3xl">
+      <div className="grid gap-4 sm:grid-cols-2 max-w-4xl">
         <QuickActions />
 
         {isAdmin && !tenantId && (
