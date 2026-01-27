@@ -28,7 +28,17 @@ export default async function CandidatesPage() {
 
   const query = supabase
     .from('candidates')
-    .select('*')
+    .select(`
+      *,
+      job_candidates (
+        id,
+        stage,
+        jobs (
+          id,
+          title
+        )
+      )
+    `)
     .order('created_at', { ascending: false });
 
   if (tenantId) {

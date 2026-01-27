@@ -11,8 +11,19 @@ import { toast } from 'sonner';
 import { EditCandidateDialog } from './edit-candidate-dialog';
 import { AttachToJobDialog } from './attach-to-job-dialog';
 
+interface CandidateWithJobs extends Candidate {
+  job_candidates?: Array<{
+    id: string;
+    stage: string;
+    jobs: {
+      id: string;
+      title: string;
+    } | null;
+  }>;
+}
+
 interface CandidatesListProps {
-  candidates: Candidate[];
+  candidates: CandidateWithJobs[];
   jobs: Pick<Job, 'id' | 'title'>[];
 }
 
@@ -49,13 +60,23 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
           <h3 className="mt-4 text-lg font-semibold text-gray-900">
             {t('candidates.noCandidates')}
           </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Kom igång genom att lägga till din första kandidat.
-          </p>
         </CardContent>
       </Card>
     );
   }
+
+  const getStageColor = (stage: string) => {
+    const colors: Record<string, string> = {
+      sourced: 'bg-gray-100 text-gray-800 border-gray-300',
+      applied: 'bg-blue-100 text-blue-800 border-blue-300',
+      screening: 'bg-purple-100 text-purple-800 border-purple-300',
+      interview: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      offer: 'bg-green-100 text-green-800 border-green-300',
+      hired: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+      rejected: 'bg-red-100 text-red-800 border-red-300',
+    };
+    return colors[stage] || 'bg-gray-100 text-gray-800 border-gray-300';
+  };
 
   return (
     <>
@@ -72,6 +93,30 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
+              {/* Job assignments - NEW! */}
+              {candidate.job_candidates && candidate.job_candidates.length > 0 && (
+                <div className="space-y-2 pb-2 border-b border-gray-200">
+                  {candidate.job_candidates.map((jc) => (
+                    <div key={jc.id} className="space-y-1">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Briefcase className="h-3.5 w-3.5 flex-shrink-0 text-gray-500" />
+                        <span className="font-medium text-gray-900 truncate">
+                          {jc.jobs?.title || 'Unknown Job'}
+                        </span>
+                      </div>
+                      <div className="ml-5">
+                        <span
+                          className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${getStageColor(jc.stage)}`}
+                        >
+                          {t(`kanban.stages.${jc.stage}`)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Contact info */}
               {candidate.email && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Mail className="h-4 w-4 flex-shrink-0" />
@@ -100,6 +145,8 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
                   {candidate.notes}
                 </p>
               )}
+
+              {/* Actions */}
               <div className="flex gap-2 pt-2">
                 <Button
                   variant="outline"
