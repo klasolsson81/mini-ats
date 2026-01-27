@@ -29,6 +29,11 @@ export default async function AppLayout({
     redirect('/login');
   }
 
+  // Force password change on first login
+  if (profile.must_change_password) {
+    redirect('/change-password');
+  }
+
   const impersonation = await getImpersonationStatus();
 
   return (

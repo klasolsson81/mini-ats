@@ -28,7 +28,12 @@
     "signOut": "Sign out",
     "invalidCredentials": "Invalid credentials",
     "emailRequired": "Email is required",
-    "passwordRequired": "Password is required"
+    "passwordRequired": "Password is required",
+    "changePassword": "Change Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "updatePassword": "Update Password",
+    "loading": "Loading..."
   },
   "nav": {
     "dashboard": "Dashboard",

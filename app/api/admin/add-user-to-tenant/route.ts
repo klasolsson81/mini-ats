@@ -74,6 +74,7 @@ export async function POST(request: Request) {
     role: 'customer',
     full_name: user_name,
     email: user_email,
+    must_change_password: true,
   });
 
   if (profileError) {

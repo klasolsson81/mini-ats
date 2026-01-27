@@ -73,6 +73,11 @@ A functional MVP demonstrating end-to-end flow for a simple ATS: manage jobs, ca
 - **Background Sync** - Server updates happen in background, auto-revert on error
 
 #### ✅ Security & Compliance
+- **Force password change on first login**
+  - Admin-created accounts must change password on first login
+  - Professional password strength validation (min 8 chars, letters, numbers)
+  - Visual password strength indicators
+  - Secure password visibility toggles
 - **Audit logging (Level 1)** - Production-ready
   - Automatic logging of admin impersonation
   - Database table: `impersonation_logs`
@@ -194,6 +199,7 @@ npm install
 3. Run migrations in order:
    - `supabase/migrations/20260126000000_initial_schema.sql`
    - `supabase/migrations/20260127_add_impersonation_audit_log.sql`
+   - `supabase/migrations/20260127_add_must_change_password.sql`
 
 See `supabase/migrations/README.md` for detailed instructions.
 
@@ -357,6 +363,8 @@ See `lib/utils/RESTRICTIONS_README.md` for implementation guide.
 
 ### Authentication
 - Supabase Auth with secure session management
+- Forced password change on first login for admin-created accounts
+- Password strength validation (min 8 chars, letters, numbers)
 - Server-side validation on all mutations
 - CSRF protection via Next.js
 - Impersonation uses secure httpOnly cookies
@@ -439,11 +447,12 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ### As Admin
 1. Log in at `/login`
 2. Go to **Admin** panel
-3. **Create tenant** + first customer user
-4. **View Audit Logs** to track impersonation
-5. **Act as tenant** to test customer experience
-6. **View all users** across all tenants
-7. Repeat for each customer organization
+3. **Create tenant** + first customer user (or create standalone admin)
+4. New users will be forced to change password on first login
+5. **View Audit Logs** to track impersonation
+6. **Act as tenant** to test customer experience
+7. **View all users** across all tenants
+8. Repeat for each customer organization
 
 ### As Customer
 1. Log in at `/login`

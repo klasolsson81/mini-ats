@@ -28,7 +28,12 @@
     "signOut": "Logga ut",
     "invalidCredentials": "Ogiltiga inloggningsuppgifter",
     "emailRequired": "E-post krävs",
-    "passwordRequired": "Lösenord krävs"
+    "passwordRequired": "Lösenord krävs",
+    "changePassword": "Byt lösenord",
+    "newPassword": "Nytt lösenord",
+    "confirmPassword": "Bekräfta lösenord",
+    "updatePassword": "Uppdatera lösenord",
+    "loading": "Laddar..."
   },
   "nav": {
     "dashboard": "Översikt",

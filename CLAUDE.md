@@ -669,7 +669,9 @@ All core features have been implemented and deployed to Vercel.
 
 **Database:**
 - ✅ Migration: `impersonation_logs` table with RLS
+- ✅ Migration: `must_change_password` column in profiles table
 - ✅ Ready to run: `supabase/migrations/20260127_add_impersonation_audit_log.sql`
+- ✅ Ready to run: `supabase/migrations/20260127_add_must_change_password.sql`
 
 **Documentation:**
 - ✅ SECURITY.md - Best practices and production checklist
@@ -680,5 +682,16 @@ All core features have been implemented and deployed to Vercel.
 **Polish:**
 - ✅ Browser tab titles include "- Mini ATS" suffix
 - ✅ Footer copyright updated with Klas Olsson + portfolio link (https://klasolsson.se)
+- ✅ Candidates page shows job assignments and stages (color-coded badges)
+
+**Security:**
+- ✅ Force password change on first login for admin-created accounts
+- ✅ Change password page (`/change-password`) with professional UX:
+  - Password strength indicators (min 8 chars, letters, numbers)
+  - Password visibility toggles (show/hide)
+  - Confirm password matching validation
+  - Welcome message for first-time users
+- ✅ Middleware and app layout redirect logic
+- ✅ All admin create-user API endpoints set `must_change_password` flag
 
 ---
