@@ -35,7 +35,7 @@ export function JobsList({ jobs }: JobsListProps) {
 
   if (jobs.length === 0) {
     return (
-      <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-12">
+      <div className="rounded-2xl bg-gradient-to-br from-blue-100/40 via-cyan-50/30 to-white/20 backdrop-blur-xl border border-white/50 shadow-xl shadow-blue-100/30 p-12">
         <div className="flex flex-col items-center justify-center">
           <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center mb-4 shadow-lg">
             <Briefcase className="h-8 w-8 text-white" />
@@ -50,35 +50,40 @@ export function JobsList({ jobs }: JobsListProps) {
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-2">
         {jobs.map((job) => (
           <div
             key={job.id}
-            className="group relative rounded-2xl bg-gradient-to-br from-white/50 via-blue-50/30 to-cyan-50/40 backdrop-blur-md border border-cyan-200/30 p-5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-100/50 hover:border-cyan-300/50 hover:-translate-y-1"
+            className="group relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
           >
-            {/* Gradient accent line at top */}
-            <div className="absolute top-0 left-4 right-4 h-1 rounded-b-full bg-gradient-to-r from-cyan-400 to-blue-500 opacity-60" />
+            {/* Glass card background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-cyan-50/40 to-white/30 backdrop-blur-xl" />
 
-            <div className="space-y-4 pt-2">
+            {/* Subtle inner glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent" />
+
+            {/* Border effect */}
+            <div className="absolute inset-0 rounded-2xl border border-white/60 shadow-lg shadow-blue-100/40 group-hover:shadow-xl group-hover:shadow-cyan-100/50 group-hover:border-cyan-200/60 transition-all duration-300" />
+
+            {/* Content */}
+            <div className="relative p-5 space-y-4">
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 space-y-2">
                   <h3 className="font-bold text-lg text-gray-900">
                     {job.title}
                   </h3>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                        job.status === 'open'
-                          ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white shadow-sm'
-                          : 'bg-gray-200 text-gray-600'
-                      }`}
-                    >
-                      {job.status === 'open' ? t('jobs.open') : t('jobs.closed')}
-                    </span>
-                  </div>
+                  <span
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                      job.status === 'open'
+                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-sm shadow-emerald-200/50'
+                        : 'bg-gray-200/80 text-gray-600'
+                    }`}
+                  >
+                    {job.status === 'open' ? t('jobs.open') : t('jobs.closed')}
+                  </span>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-200/50">
                   <Briefcase className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -89,10 +94,10 @@ export function JobsList({ jobs }: JobsListProps) {
               </p>
 
               {/* Actions */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setEditingJob(job)}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-medium transition-all duration-200 hover:shadow-md hover:shadow-blue-200/50"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-blue-200/50 hover:shadow-lg hover:shadow-blue-300/50"
                 >
                   <Edit className="h-4 w-4" />
                   {t('common.edit')}
@@ -100,7 +105,7 @@ export function JobsList({ jobs }: JobsListProps) {
                 <button
                   onClick={() => handleDelete(job.id, job.title)}
                   disabled={isDeleting === job.id}
-                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white text-sm font-medium transition-all duration-200 hover:shadow-md hover:shadow-red-200/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white text-sm font-medium transition-all duration-200 shadow-md shadow-rose-200/50 hover:shadow-lg hover:shadow-rose-300/50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
