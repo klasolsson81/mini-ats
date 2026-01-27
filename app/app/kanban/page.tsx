@@ -25,8 +25,8 @@ export default async function KanbanPage() {
 
   const { tenantId, isAdmin } = await getEffectiveTenantId();
 
-  // Fetch jobs for filter
-  const jobsQuery = supabase.from('jobs').select('id, title').eq('status', 'open');
+  // Fetch jobs for filter (include all jobs, not just open)
+  const jobsQuery = supabase.from('jobs').select('id, title').order('title');
   if (tenantId) {
     jobsQuery.eq('tenant_id', tenantId);
   } else if (!isAdmin) {

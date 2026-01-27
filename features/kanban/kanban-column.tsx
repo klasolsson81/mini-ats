@@ -111,7 +111,7 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
         </div>
 
         {/* Cards */}
-        <div className="flex-1 space-y-3 overflow-y-auto overflow-x-visible pr-1">
+        <div className="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
           {candidates.length === 0 ? (
             <div className="flex items-center justify-center h-32 rounded-xl border-2 border-dashed border-gray-300/50 bg-white/20">
               <p className="text-sm text-gray-400">
