@@ -8,7 +8,11 @@ import { AddUserToTenantForm } from '@/features/admin/add-user-to-tenant-form';
 import Link from 'next/link';
 import { ArrowLeft, Briefcase, Users, TrendingUp, User } from 'lucide-react';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const t = await getTranslations('admin');
   return {
     title: t('tenantDetails'),
@@ -18,8 +22,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 export default async function TenantDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
   const t = await getTranslations('admin');
 
@@ -46,7 +51,7 @@ export default async function TenantDetailPage({
   const { data: tenant, error: tenantError } = await supabase
     .from('tenants')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (tenantError || !tenant) {
@@ -57,24 +62,24 @@ export default async function TenantDetailPage({
   const { data: users } = await supabase
     .from('profiles')
     .select('*')
-    .eq('tenant_id', params.id)
+    .eq('tenant_id', id)
     .order('created_at', { ascending: false });
 
   // Fetch statistics
   const { count: jobsCount } = await supabase
     .from('jobs')
     .select('id', { count: 'exact' })
-    .eq('tenant_id', params.id);
+    .eq('tenant_id', id);
 
   const { count: candidatesCount } = await supabase
     .from('candidates')
     .select('id', { count: 'exact' })
-    .eq('tenant_id', params.id);
+    .eq('tenant_id', id);
 
   const { count: activeCount } = await supabase
     .from('job_candidates')
     .select('id', { count: 'exact' })
-    .eq('tenant_id', params.id)
+    .eq('tenant_id', id)
     .not('stage', 'in', '(hired,rejected)');
 
   return (
