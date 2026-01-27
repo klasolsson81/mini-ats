@@ -6,7 +6,7 @@ import { CreateAdminForm } from '@/features/admin/create-admin-form';
 import { ImpersonateButton } from '@/components/impersonate-button';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Users } from 'lucide-react';
+import { Users, Shield } from 'lucide-react';
 
 export async function generateMetadata() {
   const t = await getTranslations('admin');
@@ -61,6 +61,12 @@ export default async function AdminPage() {
           <Button variant="outline" className="gap-2">
             <Users className="h-4 w-4" />
             {t('viewAllUsers')}
+          </Button>
+        </Link>
+        <Link href="/app/admin/audit-logs">
+          <Button variant="outline" className="gap-2">
+            <Shield className="h-4 w-4" />
+            {t('viewAuditLogs')}
           </Button>
         </Link>
       </div>

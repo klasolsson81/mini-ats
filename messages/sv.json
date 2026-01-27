@@ -161,7 +161,21 @@
     "adminUsers": "Admin-användare",
     "customerUsers": "Kundanvändare",
     "noAdminUsers": "Inga admin-användare.",
-    "noCustomerUsers": "Inga kundanvändare."
+    "noCustomerUsers": "Inga kundanvändare.",
+    "auditLogs": "Granskningsloggar",
+    "auditLogsSubtitle": "Se alla impersonation-sessioner och administratörsaktivitet",
+    "viewAuditLogs": "Visa granskningsloggar",
+    "totalSessions": "Totalt Sessioner",
+    "activeSessions": "Aktiva Sessioner",
+    "impersonationHistory": "Impersonation-historik",
+    "adminUser": "Admin-användare",
+    "tenant": "Kund",
+    "startedAt": "Startade",
+    "endedAt": "Slutade",
+    "duration": "Varaktighet",
+    "ipAddress": "IP-adress",
+    "active": "Aktiv",
+    "noAuditLogs": "Inga granskningsloggar än."
   },
   "footer": {
     "privacy": "Integritetspolicy",

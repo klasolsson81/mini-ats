@@ -161,7 +161,21 @@
     "adminUsers": "Admin Users",
     "customerUsers": "Customer Users",
     "noAdminUsers": "No admin users.",
-    "noCustomerUsers": "No customer users."
+    "noCustomerUsers": "No customer users.",
+    "auditLogs": "Audit Logs",
+    "auditLogsSubtitle": "View all impersonation sessions and administrator activity",
+    "viewAuditLogs": "View audit logs",
+    "totalSessions": "Total Sessions",
+    "activeSessions": "Active Sessions",
+    "impersonationHistory": "Impersonation History",
+    "adminUser": "Admin User",
+    "tenant": "Tenant",
+    "startedAt": "Started",
+    "endedAt": "Ended",
+    "duration": "Duration",
+    "ipAddress": "IP Address",
+    "active": "Active",
+    "noAuditLogs": "No audit logs yet."
   },
   "footer": {
     "privacy": "Privacy Policy",
