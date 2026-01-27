@@ -36,7 +36,11 @@ export function CreateAdminForm() {
       }
 
       toast.success(t('admin.adminCreated'));
-      e.currentTarget.reset();
+      // Reset form safely
+      const form = e.currentTarget;
+      if (form) {
+        form.reset();
+      }
     } catch (error: any) {
       toast.error(error.message || t('admin.errorOccurred'));
     } finally {

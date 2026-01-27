@@ -63,16 +63,21 @@ export async function POST(request: Request) {
     }
 
     // 2. Create profile (admin, no tenant)
-    const { error: profileError } = await supabaseAdmin.from('profiles').insert({
-      id: authData.user.id,
-      tenant_id: null,
-      role: 'admin',
-      full_name: user_name,
-      email: user_email,
-      must_change_password: true,
-    });
+    const { data: profileData, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .insert({
+        id: authData.user.id,
+        tenant_id: null,
+        role: 'admin',
+        full_name: user_name,
+        email: user_email,
+        must_change_password: true,
+      })
+      .select()
+      .single();
 
     if (profileError) {
+      console.error('Profile creation error:', profileError);
       // Rollback
       await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
       return NextResponse.json(
@@ -80,6 +85,12 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    console.log('Admin profile created successfully:', {
+      user_id: authData.user.id,
+      email: user_email,
+      role: profileData?.role,
+    });
 
     return NextResponse.json({
       success: true,

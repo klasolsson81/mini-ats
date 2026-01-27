@@ -25,6 +25,7 @@ export async function changePassword(newPassword: string) {
   });
 
   if (authError) {
+    console.error('Auth error:', authError);
     return { error: authError.message };
   }
 
@@ -35,9 +36,19 @@ export async function changePassword(newPassword: string) {
     .eq('id', user.id);
 
   if (profileError) {
+    console.error('Profile error:', profileError);
     return { error: profileError.message };
   }
 
+  // Refresh session to ensure it's up to date
+  const { error: refreshError } = await supabase.auth.refreshSession();
+
+  if (refreshError) {
+    console.error('Refresh error:', refreshError);
+  }
+
   revalidatePath('/app');
+  revalidatePath('/');
+
   return { success: true };
 }

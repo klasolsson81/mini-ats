@@ -50,10 +50,10 @@ export function ChangePasswordForm() {
       setIsLoading(false);
     } else {
       toast.success('Lösenord uppdaterat! Tar dig till appen...');
+      // Use window.location for full page reload to ensure session is refreshed
       setTimeout(() => {
-        router.push('/app');
-        router.refresh();
-      }, 1000);
+        window.location.href = '/app';
+      }, 1500);
     }
   }
 
