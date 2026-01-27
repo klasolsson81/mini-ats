@@ -47,10 +47,19 @@
     "activeInPipeline": "Aktiva i Pipeline",
     "quickStart": "Snabbstart",
     "viewKanban": "Visa Kanban",
+    "createJob": "Skapa Jobb",
+    "createCandidate": "Skapa Kandidat",
     "manageJobs": "Hantera Jobb",
     "manageCandidates": "Hantera Kandidater",
     "adminPanel": "Admin",
-    "manageUsersAndTenants": "Hantera Användare & Kunder"
+    "manageUsersAndTenants": "Hantera Användare & Kunder",
+    "recentActivity": "Senaste Aktivitet",
+    "noRecentActivity": "Ingen aktivitet än",
+    "recentJobs": "Senaste Jobb",
+    "recentCandidates": "Senaste Kandidater",
+    "recentImpersonations": "Senaste Impersoneringar",
+    "pipelineOverview": "Pipeline Översikt",
+    "noCandidates": "Inga kandidater i pipeline ännu"
   },
   "jobs": {
     "title": "Jobb",

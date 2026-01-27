@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -7,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Briefcase, Users, TrendingUp } from 'lucide-react';
 import { getEffectiveTenantId } from '@/lib/utils/tenant';
+import { QuickActions } from '@/features/dashboard/quick-actions';
+import { RecentActivity } from '@/features/dashboard/recent-activity';
+import { PipelineStats } from '@/features/dashboard/pipeline-stats';
 
 export async function generateMetadata() {
   const t = await getTranslations('nav');
@@ -38,8 +40,13 @@ export default async function DashboardPage() {
   let jobsCount = 0;
   let candidatesCount = 0;
   let activeCount = 0;
+  let recentJobs: any[] = [];
+  let recentCandidates: any[] = [];
+  let recentImpersonations: any[] = [];
+  let pipelineStats: { stage: string; count: number }[] = [];
 
   if (tenantId || isAdmin) {
+    // Fetch counts
     const jobsQuery = supabase.from('jobs').select('id', { count: 'exact' });
     if (tenantId) {
       jobsQuery.eq('tenant_id', tenantId);
@@ -65,6 +72,75 @@ export default async function DashboardPage() {
     }
     const { count: active } = await activeQuery;
     activeCount = active || 0;
+
+    // Fetch recent jobs (last 5)
+    const jobsDataQuery = supabase
+      .from('jobs')
+      .select('id, title, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (tenantId) {
+      jobsDataQuery.eq('tenant_id', tenantId);
+    }
+    const { data: jobsData } = await jobsDataQuery;
+    recentJobs = jobsData || [];
+
+    // Fetch recent candidates (last 5)
+    const candidatesDataQuery = supabase
+      .from('candidates')
+      .select('id, full_name, email, created_at')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (tenantId) {
+      candidatesDataQuery.eq('tenant_id', tenantId);
+    }
+    const { data: candidatesData } = await candidatesDataQuery;
+    recentCandidates = candidatesData || [];
+
+    // Fetch recent impersonations (admin only, last 3)
+    if (isAdmin && !tenantId) {
+      const { data: impersonationsData } = await supabase
+        .from('impersonation_logs')
+        .select(
+          `
+          id,
+          started_at,
+          admin:profiles!impersonation_logs_admin_id_fkey(full_name),
+          tenant:tenants!impersonation_logs_tenant_id_fkey(name)
+        `
+        )
+        .order('started_at', { ascending: false })
+        .limit(3);
+
+      recentImpersonations =
+        impersonationsData?.map((imp: any) => ({
+          id: imp.id,
+          started_at: imp.started_at,
+          admin_name: imp.admin?.full_name || 'Unknown',
+          tenant_name: imp.tenant?.name || 'Unknown',
+        })) || [];
+    }
+
+    // Fetch pipeline stats (group by stage)
+    const pipelineQuery = supabase
+      .from('job_candidates')
+      .select('stage');
+    if (tenantId) {
+      pipelineQuery.eq('tenant_id', tenantId);
+    }
+    const { data: pipelineData } = await pipelineQuery;
+
+    // Group by stage and count
+    const stageCounts: Record<string, number> = {};
+    pipelineData?.forEach((item: any) => {
+      stageCounts[item.stage] = (stageCounts[item.stage] || 0) + 1;
+    });
+
+    // Convert to array for component
+    pipelineStats = Object.entries(stageCounts).map(([stage, count]) => ({
+      stage,
+      count,
+    }));
   }
 
   return (
@@ -117,28 +193,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('quickStart')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Link href="/app/kanban">
-              <Button variant="outline" className="w-full justify-start">
-                {t('viewKanban')}
-              </Button>
-            </Link>
-            <Link href="/app/jobs">
-              <Button variant="outline" className="w-full justify-start">
-                {t('manageJobs')}
-              </Button>
-            </Link>
-            <Link href="/app/candidates">
-              <Button variant="outline" className="w-full justify-start">
-                {t('manageCandidates')}
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <QuickActions />
 
         {isAdmin && (
           <Card>
@@ -155,6 +210,17 @@ export default async function DashboardPage() {
           </Card>
         )}
       </div>
+
+      {/* Pipeline Stats */}
+      <PipelineStats stats={pipelineStats} />
+
+      {/* Recent Activity */}
+      <RecentActivity
+        recentJobs={recentJobs}
+        recentCandidates={recentCandidates}
+        recentImpersonations={recentImpersonations}
+        isAdmin={isAdmin}
+      />
     </div>
   );
 }

@@ -47,10 +47,19 @@
     "activeInPipeline": "Active in Pipeline",
     "quickStart": "Quick Start",
     "viewKanban": "View Kanban",
+    "createJob": "Create Job",
+    "createCandidate": "Create Candidate",
     "manageJobs": "Manage Jobs",
     "manageCandidates": "Manage Candidates",
     "adminPanel": "Admin",
-    "manageUsersAndTenants": "Manage Users & Tenants"
+    "manageUsersAndTenants": "Manage Users & Tenants",
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity yet",
+    "recentJobs": "Recent Jobs",
+    "recentCandidates": "Recent Candidates",
+    "recentImpersonations": "Recent Impersonations",
+    "pipelineOverview": "Pipeline Overview",
+    "noCandidates": "No candidates in pipeline yet"
   },
   "jobs": {
     "title": "Jobs",
