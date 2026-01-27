@@ -1,12 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Select } from '@/components/ui/select';
-import { Mail, Linkedin, Briefcase, User } from 'lucide-react';
-import { STAGE_ORDER } from '@/lib/constants/stages';
-import { updateCandidateStage } from '@/lib/actions/candidates';
-import { toast } from 'sonner';
+import { Mail, Linkedin, Briefcase } from 'lucide-react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -36,49 +31,47 @@ interface KanbanCardProps {
   isOverlay?: boolean;
 }
 
-// Card gradient styles matching column colors
-const CARD_STYLES: Record<string, { gradient: string; border: string; iconBg: string }> = {
+// Card styles with visible borders matching column colors
+const CARD_STYLES: Record<string, { bg: string; border: string; iconBg: string }> = {
   sourced: {
-    gradient: 'from-slate-100/80 via-slate-50/60 to-white/40',
-    border: 'border-slate-200/50',
+    bg: 'from-white/80 to-slate-50/60',
+    border: 'border-slate-400/60',
     iconBg: 'from-slate-400 to-slate-600',
   },
   applied: {
-    gradient: 'from-blue-100/80 via-blue-50/60 to-white/40',
-    border: 'border-blue-200/50',
+    bg: 'from-white/80 to-blue-50/60',
+    border: 'border-blue-400/60',
     iconBg: 'from-blue-400 to-blue-600',
   },
   screening: {
-    gradient: 'from-violet-100/80 via-purple-50/60 to-white/40',
-    border: 'border-violet-200/50',
+    bg: 'from-white/80 to-violet-50/60',
+    border: 'border-violet-400/60',
     iconBg: 'from-violet-400 to-purple-600',
   },
   interview: {
-    gradient: 'from-emerald-100/80 via-green-50/60 to-white/40',
-    border: 'border-emerald-200/50',
+    bg: 'from-white/80 to-emerald-50/60',
+    border: 'border-emerald-400/60',
     iconBg: 'from-emerald-400 to-green-600',
   },
   offer: {
-    gradient: 'from-amber-100/80 via-yellow-50/60 to-white/40',
-    border: 'border-amber-200/50',
+    bg: 'from-white/80 to-amber-50/60',
+    border: 'border-amber-400/60',
     iconBg: 'from-amber-400 to-yellow-500',
   },
   hired: {
-    gradient: 'from-orange-100/80 via-orange-50/60 to-white/40',
-    border: 'border-orange-200/50',
+    bg: 'from-white/80 to-orange-50/60',
+    border: 'border-orange-400/60',
     iconBg: 'from-orange-400 to-orange-600',
   },
   rejected: {
-    gradient: 'from-rose-100/80 via-pink-50/60 to-white/40',
-    border: 'border-rose-200/50',
+    bg: 'from-white/80 to-rose-50/60',
+    border: 'border-rose-400/60',
     iconBg: 'from-rose-400 to-pink-600',
   },
 };
 
 export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps) {
   const t = useTranslations();
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [currentStage, setCurrentStage] = useState(jobCandidate.stage);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -86,31 +79,13 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
       disabled: isOverlay,
     });
 
-  async function handleStageChange(newStage: string) {
-    if (newStage === currentStage) return;
-
-    setIsUpdating(true);
-    const result = await updateCandidateStage(jobCandidate.id, newStage as any);
-
-    if (result.error) {
-      toast.error(result.error);
-      setCurrentStage(jobCandidate.stage);
-    } else {
-      toast.success(t('kanban.stageUpdated'));
-      setCurrentStage(newStage);
-    }
-
-    setIsUpdating(false);
-  }
-
   const style = {
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.3 : 1,
   };
 
-  const cardStyle = CARD_STYLES[currentStage] || CARD_STYLES.sourced;
+  const cardStyle = CARD_STYLES[jobCandidate.stage] || CARD_STYLES.sourced;
 
-  // Get initials for avatar
   const initials = jobCandidate.candidates.full_name
     .split(' ')
     .map((n) => n[0])
@@ -124,16 +99,16 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
       style={isOverlay ? undefined : style}
       {...(!isOverlay ? listeners : {})}
       {...(!isOverlay ? attributes : {})}
-      className={`rounded-xl bg-gradient-to-br ${cardStyle.gradient} backdrop-blur-sm border ${cardStyle.border} transition-all duration-200 ${
+      className={`rounded-xl bg-gradient-to-br ${cardStyle.bg} backdrop-blur-sm border-2 ${cardStyle.border} transition-all duration-200 ${
         isOverlay
           ? 'shadow-2xl rotate-2 cursor-grabbing scale-105 ring-2 ring-[var(--primary)]/50'
           : 'hover:shadow-lg hover:-translate-y-1 cursor-grab active:cursor-grabbing shadow-md'
       }`}
     >
-      <div className="p-3.5 space-y-3">
+      <div className="p-3 space-y-2">
         {/* Header with Avatar and Name */}
-        <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${cardStyle.iconBg} flex items-center justify-center shadow-md flex-shrink-0`}>
+        <div className="flex items-center gap-2.5">
+          <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${cardStyle.iconBg} flex items-center justify-center shadow-sm flex-shrink-0`}>
             <span className="text-xs font-bold text-white">{initials}</span>
           </div>
           <div className="min-w-0 flex-1">
@@ -147,12 +122,12 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
           </div>
         </div>
 
-        {/* Contact Info */}
-        <div className="space-y-1.5 pl-12">
+        {/* Contact Info - Compact */}
+        <div className="flex items-center gap-3 text-xs text-gray-500 pl-10">
           {jobCandidate.candidates.email && (
-            <div className="flex items-center gap-1.5 text-xs text-gray-600">
-              <Mail className="h-3 w-3 flex-shrink-0 text-gray-400" />
-              <span className="truncate">{jobCandidate.candidates.email}</span>
+            <div className="flex items-center gap-1 truncate">
+              <Mail className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate max-w-[100px]">{jobCandidate.candidates.email}</span>
             </div>
           )}
           {jobCandidate.candidates.linkedin_url && (
@@ -160,34 +135,13 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
               href={jobCandidate.candidates.linkedin_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
+              className="flex items-center gap-1 text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => e.stopPropagation()}
             >
               <Linkedin className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate font-medium">LinkedIn</span>
             </a>
           )}
-        </div>
-
-        {/* Stage Selector */}
-        <div
-          className="pt-1"
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Select
-            value={currentStage}
-            onChange={(e) => handleStageChange(e.target.value)}
-            disabled={isUpdating}
-            className="text-xs bg-white/50 border-white/50 backdrop-blur-sm"
-          >
-            {STAGE_ORDER.map((stage) => (
-              <option key={stage} value={stage}>
-                {t(`kanban.stages.${stage}`)}
-              </option>
-            ))}
-          </Select>
         </div>
       </div>
     </div>
