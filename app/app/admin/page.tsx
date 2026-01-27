@@ -4,7 +4,9 @@ import { redirect } from 'next/navigation';
 import { CreateTenantForm } from '@/features/admin/create-tenant-form';
 import { CreateAdminForm } from '@/features/admin/create-admin-form';
 import { ImpersonateButton } from '@/components/impersonate-button';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Users } from 'lucide-react';
 
 export async function generateMetadata() {
   const t = await getTranslations('admin');
@@ -51,6 +53,16 @@ export default async function AdminPage() {
         <p className="mt-2 text-gray-700">
           {t('subtitle')}
         </p>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="flex gap-3">
+        <Link href="/app/admin/users">
+          <Button variant="outline" className="gap-2">
+            <Users className="h-4 w-4" />
+            {t('viewAllUsers')}
+          </Button>
+        </Link>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
