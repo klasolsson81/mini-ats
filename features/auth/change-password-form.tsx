@@ -50,10 +50,11 @@ export function ChangePasswordForm() {
       setIsLoading(false);
     } else {
       toast.success('Lösenord uppdaterat! Tar dig till appen...');
+      // Keep loading state active during redirect
       // Use window.location for full page reload to ensure session is refreshed
       setTimeout(() => {
         window.location.href = '/app';
-      }, 1500);
+      }, 1000);
     }
   }
 
@@ -66,6 +67,14 @@ export function ChangePasswordForm() {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        {isLoading && (
+          <div className="mb-4 rounded-lg bg-blue-50 p-4 text-center">
+            <div className="mx-auto mb-2 h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
+            <p className="text-sm font-medium text-blue-900">
+              Uppdaterar lösenord och förbereder din session...
+            </p>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* New Password */}
           <div className="space-y-2">

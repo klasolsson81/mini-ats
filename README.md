@@ -200,6 +200,7 @@ npm install
    - `supabase/migrations/20260126000000_initial_schema.sql`
    - `supabase/migrations/20260127_add_impersonation_audit_log.sql`
    - `supabase/migrations/20260127_add_must_change_password.sql`
+   - `supabase/migrations/20260127_fix_infinite_recursion.sql` **[CRITICAL]**
 
 See `supabase/migrations/README.md` for detailed instructions.
 
