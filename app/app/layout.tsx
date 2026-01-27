@@ -33,7 +33,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar profile={profile} />
+      <Sidebar profile={profile} isImpersonating={impersonation.isImpersonating} />
       <div className="flex flex-1 flex-col overflow-y-auto">
         {impersonation.isImpersonating && (
           <ImpersonationBanner tenantName={impersonation.tenantName!} />

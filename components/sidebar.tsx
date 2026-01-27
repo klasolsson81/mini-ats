@@ -19,9 +19,10 @@ import { LanguageSwitcher } from './language-switcher';
 
 interface SidebarProps {
   profile: Profile;
+  isImpersonating?: boolean;
 }
 
-export function Sidebar({ profile }: SidebarProps) {
+export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   const t = useTranslations();
   const pathname = usePathname();
 
@@ -51,7 +52,8 @@ export function Sidebar({ profile }: SidebarProps) {
     },
   ];
 
-  if (isAdmin) {
+  // Only show Admin link if user is admin AND not currently impersonating
+  if (isAdmin && !isImpersonating) {
     navigation.push({
       name: t('nav.admin'),
       href: '/app/admin',
@@ -102,7 +104,7 @@ export function Sidebar({ profile }: SidebarProps) {
             {profile.full_name}
           </p>
           <p className="text-xs text-gray-500">{profile.email}</p>
-          {isAdmin && (
+          {isAdmin && !isImpersonating && (
             <span className="mt-1 inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
               Admin
             </span>
