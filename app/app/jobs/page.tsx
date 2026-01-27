@@ -28,20 +28,19 @@ export default async function JobsPage() {
 
   const query = supabase.from('jobs').select('*').order('created_at', { ascending: false });
 
-  // If not admin OR admin is impersonating, filter by tenant
   if (tenantId) {
     query.eq('tenant_id', tenantId);
   } else if (!isAdmin) {
-    // Non-admin without tenant should not see any jobs
     query.eq('tenant_id', 'none');
   }
 
   const { data: jobs } = await query;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="space-y-2">
+    <div className="space-y-6 max-w-5xl">
+      {/* Header with title and button side by side */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="space-y-1">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
             {t('title')}
           </h1>
