@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Candidate, Job } from '@/lib/types/database';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/ui/glass-card';
+import { PillBadge } from '@/components/ui/pill-badge';
 import { Users, Edit, Trash2, Briefcase, Linkedin, Mail, Phone } from 'lucide-react';
 import { deleteCandidate } from '@/lib/actions/candidates';
 import { toast } from 'sonner';
@@ -54,62 +54,64 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
 
   if (candidates.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16">
-          <Users className="h-12 w-12 text-gray-400" />
-          <h3 className="mt-4 text-lg font-semibold text-gray-900">
+      <GlassCard>
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-4">
+            <Users className="h-8 w-8 text-white" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">
             {t('candidates.noCandidates')}
           </h3>
-        </CardContent>
-      </Card>
+        </div>
+      </GlassCard>
     );
   }
 
-  const getStageColor = (stage: string) => {
-    const colors: Record<string, string> = {
-      sourced: 'bg-gray-100 text-gray-800 border-gray-300',
-      applied: 'bg-blue-100 text-blue-800 border-blue-300',
-      screening: 'bg-purple-100 text-purple-800 border-purple-300',
-      interview: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      offer: 'bg-green-100 text-green-800 border-green-300',
-      hired: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-      rejected: 'bg-red-100 text-red-800 border-red-300',
+  const getStageVariant = (stage: string): 'primary' | 'secondary' | 'success' | 'warning' | 'danger' => {
+    const variants: Record<string, 'primary' | 'secondary' | 'success' | 'warning' | 'danger'> = {
+      sourced: 'secondary',
+      applied: 'primary',
+      screening: 'primary',
+      interview: 'warning',
+      offer: 'success',
+      hired: 'success',
+      rejected: 'danger',
     };
-    return colors[stage] || 'bg-gray-100 text-gray-800 border-gray-300';
+    return variants[stage] || 'secondary';
   };
 
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {candidates.map((candidate) => (
-          <Card key={candidate.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg text-gray-900">
-                    {candidate.full_name}
-                  </h3>
+          <GlassCard key={candidate.id} hover>
+            <div className="space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="flex-1 font-semibold text-lg text-gray-900">
+                  {candidate.full_name}
+                </h3>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-5 h-5 text-white" />
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Job assignments - NEW! */}
+
+              {/* Job assignments */}
               {candidate.job_candidates && candidate.job_candidates.length > 0 && (
-                <div className="space-y-2 pb-2 border-b border-gray-200">
+                <div className="space-y-2 pb-3 border-b border-white/30">
                   {candidate.job_candidates.map((jc) => (
-                    <div key={jc.id} className="space-y-1">
+                    <div key={jc.id} className="rounded-lg bg-white/30 p-2 space-y-1.5">
                       <div className="flex items-center gap-2 text-sm">
-                        <Briefcase className="h-3.5 w-3.5 flex-shrink-0 text-gray-500" />
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center flex-shrink-0">
+                          <Briefcase className="h-3 w-3 text-white" />
+                        </div>
                         <span className="font-medium text-gray-900 truncate">
                           {jc.jobs?.title || 'Unknown Job'}
                         </span>
                       </div>
-                      <div className="ml-5">
-                        <span
-                          className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${getStageColor(jc.stage)}`}
-                        >
+                      <div className="ml-7">
+                        <PillBadge variant={getStageVariant(jc.stage)}>
                           {t(`kanban.stages.${jc.stage}`)}
-                        </span>
+                        </PillBadge>
                       </div>
                     </div>
                   ))}
@@ -117,64 +119,68 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
               )}
 
               {/* Contact info */}
-              {candidate.email && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Mail className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">{candidate.email}</span>
-                </div>
-              )}
-              {candidate.phone && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Phone className="h-4 w-4 flex-shrink-0" />
-                  <span>{candidate.phone}</span>
-                </div>
-              )}
-              {candidate.linkedin_url && (
-                <a
-                  href={candidate.linkedin_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
-                >
-                  <Linkedin className="h-4 w-4 flex-shrink-0" />
-                  <span className="truncate">LinkedIn Profil</span>
-                </a>
-              )}
-              {candidate.notes && (
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {candidate.notes}
-                </p>
-              )}
+              <div className="space-y-2">
+                {candidate.email && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0">
+                      <Mail className="h-3.5 w-3.5 text-white" />
+                    </div>
+                    <span className="truncate">{candidate.email}</span>
+                  </div>
+                )}
+                {candidate.phone && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center flex-shrink-0">
+                      <Phone className="h-3.5 w-3.5 text-white" />
+                    </div>
+                    <span>{candidate.phone}</span>
+                  </div>
+                )}
+                {candidate.linkedin_url && (
+                  <a
+                    href={candidate.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-[var(--primary)] hover:text-[var(--primary-light)] transition-colors"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] flex items-center justify-center flex-shrink-0">
+                      <Linkedin className="h-3.5 w-3.5 text-white" />
+                    </div>
+                    <span className="truncate font-medium">LinkedIn Profil</span>
+                  </a>
+                )}
+                {candidate.notes && (
+                  <p className="text-sm text-gray-600 line-clamp-2 pt-1">
+                    {candidate.notes}
+                  </p>
+                )}
+              </div>
 
               {/* Actions */}
               <div className="flex gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
+                <button
                   onClick={() => setAttachingCandidate(candidate)}
-                  className="flex-1"
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-white/50 hover:bg-white/80 border border-white/20 text-sm font-medium text-gray-900 hover:text-[var(--primary)] transition-all duration-200"
                 >
-                  <Briefcase className="mr-1 h-4 w-4" />
+                  <Briefcase className="h-4 w-4" />
                   Koppla
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
+                </button>
+                <button
                   onClick={() => setEditingCandidate(candidate)}
+                  className="px-3 py-2 rounded-xl bg-white/50 hover:bg-white/80 border border-white/20 text-gray-900 hover:text-[var(--primary)] transition-all duration-200"
                 >
                   <Edit className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
+                </button>
+                <button
                   onClick={() => handleDelete(candidate.id, candidate.full_name)}
                   disabled={isDeleting === candidate.id}
+                  className="px-3 py-2 rounded-xl bg-gradient-to-br from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <Trash2 className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </GlassCard>
         ))}
       </div>
 

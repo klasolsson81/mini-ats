@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTransition, useState } from 'react';
 import { cn } from '@/lib/utils/cn';
@@ -16,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Profile } from '@/lib/types/database';
 import { logout } from '@/lib/actions/auth';
-import { Button } from './ui/button';
+import { PillBadge } from './ui/pill-badge';
 import { LanguageSwitcher } from './language-switcher';
 
 interface SidebarProps {
@@ -67,12 +66,16 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   }
 
   return (
-    <aside className="flex w-64 flex-col border-r border-gray-200 bg-white">
-      <div className="flex h-16 items-center justify-between px-6">
-        <h1 className="text-xl font-bold text-gray-900">Mini ATS</h1>
+    <aside className="flex w-20 flex-col glass border-r border-white/20 relative z-10">
+      {/* Logo */}
+      <div className="flex h-20 items-center justify-center px-3 border-b border-white/10">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] flex items-center justify-center shadow-lg glow-primary">
+          <span className="text-white font-bold text-lg">MA</span>
+        </div>
       </div>
 
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      {/* Navigation */}
+      <nav className="flex-1 flex flex-col items-center py-8 px-3 space-y-4">
         {navigation.map((item) => {
           const isActive = item.exact
             ? pathname === item.href
@@ -82,7 +85,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
 
           const handleNavigate = (e: React.MouseEvent) => {
             e.preventDefault();
-            if (isActive || isPending) return; // Don't navigate if already on page or navigating
+            if (isActive || isPending) return;
 
             setPendingHref(item.href);
             startTransition(() => {
@@ -95,57 +98,58 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
               key={item.name}
               onClick={handleNavigate}
               disabled={isPending}
+              title={item.name}
               className={cn(
-                'group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'group relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-300',
                 isActive
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
+                  ? 'bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] text-white shadow-lg glow-primary scale-110'
+                  : 'bg-white/40 text-gray-600 hover:bg-white/60 hover:scale-105 hover:shadow-md',
                 isPending && 'opacity-50 cursor-wait'
               )}
             >
               {isNavigating ? (
-                <Loader2 className="mr-3 h-5 w-5 flex-shrink-0 animate-spin text-blue-600" />
+                <Loader2 className="w-6 h-6 animate-spin" />
               ) : (
-                <item.icon
-                  className={cn(
-                    'mr-3 h-5 w-5 flex-shrink-0',
-                    isActive
-                      ? 'text-blue-600'
-                      : 'text-gray-400 group-hover:text-gray-500'
-                  )}
-                />
+                <item.icon className="w-6 h-6" />
               )}
-              {item.name}
+
+              {/* Tooltip on hover */}
+              <span className="absolute left-full ml-4 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                {item.name}
+              </span>
             </button>
           );
         })}
       </nav>
 
-      <div className="border-t border-gray-200 p-4 space-y-4">
-        <div className="px-2">
-          <p className="text-sm font-medium text-gray-900">
-            {profile.full_name}
-          </p>
-          <p className="text-xs text-gray-500">{profile.email}</p>
+      {/* User section */}
+      <div className="border-t border-white/10 p-4 space-y-4">
+        {/* Profile avatar */}
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white font-semibold text-lg shadow-md">
+            {profile.full_name?.charAt(0) || 'U'}
+          </div>
           {isAdmin && !isImpersonating && (
-            <span className="mt-1 inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+            <PillBadge variant="primary" className="mt-2 text-[10px] px-2 py-0.5">
               Admin
-            </span>
+            </PillBadge>
           )}
         </div>
 
-        <LanguageSwitcher />
+        {/* Language switcher - compact */}
+        <div className="flex justify-center">
+          <LanguageSwitcher />
+        </div>
 
-        <form action={logout}>
-          <Button
+        {/* Logout button */}
+        <form action={logout} className="flex justify-center">
+          <button
             type="submit"
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start"
+            title={t('auth.logout')}
+            className="w-12 h-12 rounded-xl bg-white/40 hover:bg-red-50 text-gray-600 hover:text-red-600 transition-all duration-200 flex items-center justify-center group"
           >
-            <LogOut className="mr-2 h-4 w-4" />
-            {t('auth.logout')}
-          </Button>
+            <LogOut className="w-5 h-5" />
+          </button>
         </form>
       </div>
     </aside>

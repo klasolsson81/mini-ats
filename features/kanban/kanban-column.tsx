@@ -36,35 +36,38 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
     id: stage,
   });
 
-  const stageColors: Record<string, string> = {
-    sourced: 'bg-gray-100 border-gray-300',
-    applied: 'bg-blue-50 border-blue-200',
-    screening: 'bg-purple-50 border-purple-200',
-    interview: 'bg-yellow-50 border-yellow-200',
-    offer: 'bg-green-50 border-green-200',
-    hired: 'bg-emerald-100 border-emerald-300',
-    rejected: 'bg-red-50 border-red-200',
+  // Soft pastel colors matching reference images
+  const stagePastelBg: Record<string, string> = {
+    sourced: 'bg-pastel-gray',
+    applied: 'bg-pastel-blue',
+    screening: 'bg-pastel-purple',
+    interview: 'bg-pastel-green',
+    offer: 'bg-pastel-yellow',
+    hired: 'bg-pastel-orange',
+    rejected: 'bg-pastel-pink',
   };
+
+  const pastelBg = stagePastelBg[stage] || stagePastelBg.sourced;
 
   return (
     <div className="flex flex-col" ref={setNodeRef}>
       <div
-        className={`flex flex-col rounded-lg border-2 ${stageColors[stage]} p-4 h-full min-h-[600px] transition-all ${
-          isOver ? 'ring-2 ring-blue-500 ring-offset-2 bg-opacity-80' : ''
+        className={`flex flex-col rounded-xl ${pastelBg} h-full min-h-[500px] p-3 transition-all duration-300 ${
+          isOver ? 'ring-2 ring-[var(--primary)] ring-offset-2 scale-[1.02] shadow-lg' : 'shadow-sm'
         }`}
       >
-        {/* Column Header */}
-        <div className="mb-4">
-          <h3 className="font-semibold text-gray-900">
+        {/* Column Header - subtle, not gradient */}
+        <div className="mb-3 px-2 py-1">
+          <h3 className="font-semibold text-gray-700 text-base">
             {t(`kanban.stages.${stage}`)}
           </h3>
-          <p className="text-sm text-gray-600">{candidates.length}</p>
+          <p className="text-xs text-gray-500 mt-0.5">{candidates.length}</p>
         </div>
 
         {/* Cards - overflow-y-auto keeps scrolling, but overflow-x-visible prevents clipping drag overlay */}
-        <div className="flex-1 space-y-3 overflow-y-auto overflow-x-visible">
+        <div className="flex-1 space-y-2.5 overflow-y-auto overflow-x-visible">
           {candidates.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-8">
+            <p className="text-sm text-gray-400 text-center py-8">
               {t('kanban.noCandidate')}
             </p>
           ) : (

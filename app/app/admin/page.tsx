@@ -4,9 +4,9 @@ import { redirect } from 'next/navigation';
 import { CreateTenantForm } from '@/features/admin/create-tenant-form';
 import { CreateAdminForm } from '@/features/admin/create-admin-form';
 import { ImpersonateButton } from '@/components/impersonate-button';
-import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/ui/glass-card';
 import Link from 'next/link';
-import { Users, Shield } from 'lucide-react';
+import { Users, Shield, Building2 } from 'lucide-react';
 
 export async function generateMetadata() {
   const t = await getTranslations('admin');
@@ -46,11 +46,11 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {t('pageTitle')}
         </h1>
-        <p className="mt-2 text-gray-700">
+        <p className="text-gray-600 text-lg">
           {t('subtitle')}
         </p>
       </div>
@@ -58,68 +58,90 @@ export default async function AdminPage() {
       {/* Quick Actions */}
       <div className="flex gap-3">
         <Link href="/app/admin/users">
-          <Button variant="outline" className="gap-2">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/50 hover:bg-white/80 border border-white/20 text-sm font-medium text-gray-900 hover:text-[var(--primary)] transition-all duration-200">
             <Users className="h-4 w-4" />
             {t('viewAllUsers')}
-          </Button>
+          </button>
         </Link>
         <Link href="/app/admin/audit-logs">
-          <Button variant="outline" className="gap-2">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/50 hover:bg-white/80 border border-white/20 text-sm font-medium text-gray-900 hover:text-[var(--primary)] transition-all duration-200">
             <Shield className="h-4 w-4" />
             {t('viewAuditLogs')}
-          </Button>
+          </button>
         </Link>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Create Admin User */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {t('createAdmin')}
-          </h2>
-          <CreateAdminForm />
-        </div>
+        <GlassCard>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                <Shield className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900">
+                {t('createAdmin')}
+              </h2>
+            </div>
+            <CreateAdminForm />
+          </div>
+        </GlassCard>
 
         {/* Create Tenant */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {t('createNewTenant')}
-          </h2>
-          <CreateTenantForm />
-        </div>
+        <GlassCard>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900">
+                {t('createNewTenant')}
+              </h2>
+            </div>
+            <CreateTenantForm />
+          </div>
+        </GlassCard>
       </div>
 
       {/* Existing Tenants */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">
+        <h2 className="text-2xl font-semibold text-gray-900">
           {t('existingTenants')}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tenants && tenants.length > 0 ? (
             tenants.map((tenant: any) => (
-              <div
-                key={tenant.id}
-                className="rounded-lg border border-gray-200 bg-white overflow-hidden"
-              >
-                <Link
-                  href={`/app/admin/tenants/${tenant.id}`}
-                  className="block p-4 hover:bg-gray-50 transition-colors"
-                >
-                  <h3 className="font-semibold text-gray-900">{tenant.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    {tenant.profiles?.[0]?.count || 0} {t('users')}
-                  </p>
-                </Link>
-                <div className="px-4 pb-4">
+              <GlassCard key={tenant.id} hover>
+                <div className="space-y-4">
+                  <Link
+                    href={`/app/admin/tenants/${tenant.id}`}
+                    className="block group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0">
+                        <Building2 className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 group-hover:text-[var(--primary)] transition-colors">
+                          {tenant.name}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {tenant.profiles?.[0]?.count || 0} {t('users')}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
                   <ImpersonateButton
                     tenantId={tenant.id}
                     tenantName={tenant.name}
                   />
                 </div>
-              </div>
+              </GlassCard>
             ))
           ) : (
-            <p className="text-sm text-gray-600">{t('noTenants')}</p>
+            <GlassCard>
+              <p className="text-sm text-gray-600 text-center py-8">{t('noTenants')}</p>
+            </GlassCard>
           )}
         </div>
       </div>

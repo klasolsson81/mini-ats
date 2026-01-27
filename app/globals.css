@@ -1,8 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base colors - softer palette */
+  --background: #f5f7fa;
+  --foreground: #2d3748;
+
+  /* Glassmorphism - more transparent and subtle */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.9);
+
+  /* Primary - softer blue/cyan */
+  --primary: #5eb8d1;
+  --primary-light: #88d4ea;
+  --primary-dark: #3a9ab3;
+  --primary-glow: rgba(94, 184, 209, 0.25);
+
+  /* Secondary - softer coral/red */
+  --secondary: #f687b3;
+  --secondary-light: #faa8ca;
+  --secondary-dark: #e55b96;
+  --secondary-glow: rgba(246, 135, 179, 0.25);
+
+  /* Soft pastels for Kanban columns */
+  --pastel-blue: #d5e8f5;
+  --pastel-purple: #e9d8f5;
+  --pastel-green: #d8f5e3;
+  --pastel-yellow: #fef3d0;
+  --pastel-orange: #ffe8d5;
+  --pastel-pink: #ffd8e8;
+  --pastel-gray: #e8ecf0;
+
+  /* Stage colors - solid backgrounds for pipeline stats */
+  --stage-sourced: #94a3b8;
+  --stage-applied: #60a5fa;
+  --stage-screening: #a78bfa;
+  --stage-interview: #34d399;
+  --stage-offer: #fbbf24;
+  --stage-hired: #fb923c;
+  --stage-rejected: #f472b6;
+
+  /* KPI gradients */
+  --kpi-blue: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
+  --kpi-purple: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 50%, #c4b5fd 100%);
+  --kpi-cyan: linear-gradient(135deg, #cffafe 0%, #a5f3fc 50%, #67e8f9 100%);
+
+  /* Shadows - softer and more layered for depth */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.12), 0 6px 12px rgba(0, 0, 0, 0.06);
+
+  /* Glow effects - softer */
+  --glow-primary: 0 0 24px var(--primary-glow);
+  --glow-secondary: 0 0 24px var(--secondary-glow);
 }
 
 @theme inline {
@@ -10,17 +61,199 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Custom colors */
+  --color-primary*: var(--primary);
+  --color-primary-light*: var(--primary-light);
+  --color-primary-dark*: var(--primary-dark);
+  --color-secondary*: var(--secondary);
+  --color-secondary-light*: var(--secondary-light);
+  --color-secondary-dark*: var(--secondary-dark);
+
+  /* Border radius - softer, not too rounded */
+  --radius-card: 16px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  /* Backdrop blur - stronger for premium feel */
+  --blur-glass: 20px;
+  --blur-strong: 24px;
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e8eef4 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Circuit board pattern background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='800' height='600' viewBox='0 0 800 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='circuit' x='0' y='0' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3C!-- Horizontal lines --%3E%3Cpath d='M0 50 h80 M120 50 h80' stroke='%2394a3b8' stroke-width='1' fill='none' opacity='0.15'/%3E%3Cpath d='M0 100 h40 M60 100 h60 M140 100 h60' stroke='%2394a3b8' stroke-width='1' fill='none' opacity='0.1'/%3E%3Cpath d='M0 150 h100 M160 150 h40' stroke='%2394a3b8' stroke-width='1' fill='none' opacity='0.12'/%3E%3C!-- Vertical lines --%3E%3Cpath d='M50 0 v40 M50 60 v40' stroke='%2394a3b8' stroke-width='1' fill='none' opacity='0.12'/%3E%3Cpath d='M100 0 v80 M100 120 v80' stroke='%2394a3b8' stroke-width='1' fill='none' opacity='0.1'/%3E%3Cpath d='M150 0 v60 M150 80 v60 M150 160 v40' stroke='%2394a3b8' stroke-width='1' fill='none' opacity='0.15'/%3E%3C!-- Connection dots --%3E%3Ccircle cx='50' cy='50' r='3' fill='%235eb8d1' opacity='0.2'/%3E%3Ccircle cx='100' cy='100' r='2' fill='%235eb8d1' opacity='0.15'/%3E%3Ccircle cx='150' cy='150' r='3' fill='%235eb8d1' opacity='0.2'/%3E%3Ccircle cx='120' cy='50' r='2' fill='%2394a3b8' opacity='0.15'/%3E%3Ccircle cx='60' cy='100' r='2' fill='%2394a3b8' opacity='0.12'/%3E%3Ccircle cx='140' cy='100' r='2' fill='%2394a3b8' opacity='0.12'/%3E%3Ccircle cx='160' cy='150' r='2' fill='%2394a3b8' opacity='0.15'/%3E%3C!-- Small squares (chip indicators) --%3E%3Crect x='96' y='46' width='8' height='8' fill='none' stroke='%235eb8d1' stroke-width='1' opacity='0.15'/%3E%3Crect x='46' y='146' width='8' height='8' fill='none' stroke='%235eb8d1' stroke-width='1' opacity='0.12'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23circuit)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 1;
+}
+
+/* Soft gradient overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(94, 184, 209, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(94, 184, 209, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(148, 163, 184, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-card);
+  padding: 2rem;
+}
+
+/* Button styles - softer gradients */
+.pill-button {
+  border-radius: var(--radius-pill);
+  padding: 0.625rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.pill-button-primary {
+  border-radius: var(--radius-pill);
+  padding: 0.625rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.pill-button-primary:hover {
+  box-shadow: 0 4px 16px var(--primary-glow), var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.pill-button-secondary {
+  border-radius: var(--radius-pill);
+  padding: 0.625rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.pill-button-secondary:hover {
+  box-shadow: 0 4px 16px var(--secondary-glow), var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.pill-button-outline {
+  border-radius: var(--radius-pill);
+  padding: 0.625rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.pill-button-outline:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 24px var(--primary-glow);
+}
+
+.glow-secondary {
+  box-shadow: 0 0 24px var(--secondary-glow);
+}
+
+/* Utility for content positioning above background */
+.content-layer {
+  position: relative;
+  z-index: 10;
+}
+
+/* Soft pastel backgrounds for status/categories */
+.bg-pastel-blue {
+  background-color: var(--pastel-blue);
+}
+
+.bg-pastel-purple {
+  background-color: var(--pastel-purple);
+}
+
+.bg-pastel-green {
+  background-color: var(--pastel-green);
+}
+
+.bg-pastel-yellow {
+  background-color: var(--pastel-yellow);
+}
+
+.bg-pastel-orange {
+  background-color: var(--pastel-orange);
+}
+
+.bg-pastel-pink {
+  background-color: var(--pastel-pink);
+}
+
+.bg-pastel-gray {
+  background-color: var(--pastel-gray);
 }

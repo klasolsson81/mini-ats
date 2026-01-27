@@ -64,7 +64,13 @@
     "recentCandidates": "Recent Candidates",
     "recentImpersonations": "Recent Impersonations",
     "pipelineOverview": "Pipeline Overview",
-    "noCandidates": "No candidates in pipeline yet"
+    "noCandidates": "No candidates in pipeline yet",
+    "viewAll": "View all",
+    "jobTitle": "Title",
+    "candidateName": "Name",
+    "date": "Date",
+    "tenant": "Tenant",
+    "noJobs": "No jobs yet"
   },
   "jobs": {
     "title": "Jobs",

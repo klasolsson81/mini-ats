@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/button';
+import { GlowButton } from '@/components/ui/glow-button';
 import { Plus } from 'lucide-react';
 import { CreateJobDialog } from './create-job-dialog';
 
@@ -12,10 +12,10 @@ export function CreateJobButton() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
+      <GlowButton onClick={() => setOpen(true)} variant="primary">
         <Plus className="mr-2 h-4 w-4" />
         {t('jobs.createJob')}
-      </Button>
+      </GlowButton>
       <CreateJobDialog open={open} onClose={() => setOpen(false)} />
     </>
   );

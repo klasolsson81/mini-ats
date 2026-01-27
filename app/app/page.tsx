@@ -2,13 +2,13 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Briefcase, Users, TrendingUp } from 'lucide-react';
+import { Briefcase, Users, TrendingUp, Settings } from 'lucide-react';
 import { getEffectiveTenantId } from '@/lib/utils/tenant';
 import { QuickActions } from '@/features/dashboard/quick-actions';
 import { RecentActivity } from '@/features/dashboard/recent-activity';
 import { PipelineStats } from '@/features/dashboard/pipeline-stats';
+import { KpiCard } from '@/components/ui/kpi-card';
+import { GlassCard } from '@/components/ui/glass-card';
 
 export async function generateMetadata() {
   const t = await getTranslations('nav');
@@ -145,69 +145,65 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+      {/* Page Header */}
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {isAdmin && !tenantId ? t('adminTitle') : t('title')}
         </h1>
-        <p className="mt-2 text-gray-700">
+        <p className="text-gray-600 text-lg">
           {t('welcome', { name: profile?.full_name })}
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-700">
-              {t('totalJobs')}
-            </CardTitle>
-            <Briefcase className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{jobsCount}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-700">
-              {t('totalCandidates')}
-            </CardTitle>
-            <Users className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{candidatesCount}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-700">
-              {t('activeInPipeline')}
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeCount}</div>
-          </CardContent>
-        </Card>
+      {/* KPI Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <KpiCard
+          title={t('totalJobs')}
+          value={jobsCount}
+          icon={Briefcase}
+          variant="blue"
+        />
+        <KpiCard
+          title={t('totalCandidates')}
+          value={candidatesCount}
+          icon={Users}
+          variant="purple"
+        />
+        <KpiCard
+          title={t('activeInPipeline')}
+          value={activeCount}
+          icon={TrendingUp}
+          variant="cyan"
+        />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      {/* Quick Actions & Admin Panel */}
+      <div className="grid gap-4 lg:grid-cols-2">
         <QuickActions />
 
         {isAdmin && !tenantId && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('adminPanel')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Link href="/app/admin">
-                <Button variant="outline" className="w-full justify-start">
-                  {t('manageUsersAndTenants')}
-                </Button>
+          <GlassCard>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center shadow-md">
+                  <Settings className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {t('adminPanel')}
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                {t('manageUsersAndTenants')}
+              </p>
+              <Link
+                href="/app/admin"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+              >
+                <Settings className="w-4 h-4" />
+                Admin Panel
               </Link>
-            </CardContent>
-          </Card>
+            </div>
+          </GlassCard>
         )}
       </div>
 

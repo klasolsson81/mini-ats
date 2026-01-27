@@ -149,34 +149,36 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="w-full sm:w-64">
-          <Select
-            value={selectedJobId}
-            onChange={(e) => setSelectedJobId(e.target.value)}
-            disabled={isPending}
-          >
-            <option value="all">{t('kanban.allJobs')}</option>
-            {jobs.map((job) => (
-              <option key={job.id} value={job.id}>
-                {job.title}
-              </option>
-            ))}
-          </Select>
-        </div>
+      <div className="glass-card">
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="w-full sm:w-64">
+            <Select
+              value={selectedJobId}
+              onChange={(e) => setSelectedJobId(e.target.value)}
+              disabled={isPending}
+            >
+              <option value="all">{t('kanban.allJobs')}</option>
+              {jobs.map((job) => (
+                <option key={job.id} value={job.id}>
+                  {job.title}
+                </option>
+              ))}
+            </Select>
+          </div>
 
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder={t('kanban.searchCandidates')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-            disabled={isPending}
-          />
-          {isPending && (
-            <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-blue-600" />
-          )}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder={t('kanban.searchCandidates')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+              disabled={isPending}
+            />
+            {isPending && (
+              <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-[var(--primary)]" />
+            )}
+          </div>
         </div>
       </div>
 

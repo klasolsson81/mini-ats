@@ -6,7 +6,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-200 bg-white py-6 mt-auto">
+    <footer className="border-t border-white/20 glass py-6 mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-gray-600">
@@ -15,7 +15,7 @@ export function Footer() {
               href="https://klasolsson.se"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-900 hover:underline"
+              className="hover:text-[var(--primary)] transition-colors"
             >
               Klas Olsson
             </a>
@@ -24,13 +24,13 @@ export function Footer() {
           <div className="flex gap-6">
             <Link
               href="/privacy"
-              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+              className="text-sm text-gray-600 hover:text-[var(--primary)] transition-colors"
             >
               {t('footer.privacy')}
             </Link>
             <Link
               href="/cookies"
-              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+              className="text-sm text-gray-600 hover:text-[var(--primary)] transition-colors"
             >
               {t('footer.cookies')}
             </Link>

@@ -64,7 +64,13 @@
     "recentCandidates": "Senaste Kandidater",
     "recentImpersonations": "Senaste Impersoneringar",
     "pipelineOverview": "Pipeline Översikt",
-    "noCandidates": "Inga kandidater i pipeline ännu"
+    "noCandidates": "Inga kandidater i pipeline ännu",
+    "viewAll": "Visa alla",
+    "jobTitle": "Titel",
+    "candidateName": "Namn",
+    "date": "Datum",
+    "tenant": "Kund",
+    "noJobs": "Inga jobb än"
   },
   "jobs": {
     "title": "Jobb",

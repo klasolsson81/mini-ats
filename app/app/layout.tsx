@@ -37,14 +37,14 @@ export default async function AppLayout({
   const impersonation = await getImpersonationStatus();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar profile={profile} isImpersonating={impersonation.isImpersonating} />
-      <div className="flex flex-1 flex-col overflow-y-auto">
+      <div className="flex flex-1 flex-col overflow-y-auto relative">
         {impersonation.isImpersonating && (
           <ImpersonationBanner tenantName={impersonation.tenantName!} />
         )}
-        <main className="flex-1">
-          <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <main className="flex-1 relative z-10">
+          <div className="container mx-auto px-6 py-8 lg:px-12 max-w-[1600px]">
             {children}
           </div>
         </main>

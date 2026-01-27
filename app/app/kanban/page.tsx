@@ -54,11 +54,11 @@ export default async function KanbanPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {t('title')}
         </h1>
-        <p className="mt-2 text-gray-700">
+        <p className="text-gray-600 text-lg">
           {t('subtitle')}
         </p>
       </div>

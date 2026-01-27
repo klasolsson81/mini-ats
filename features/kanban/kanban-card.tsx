@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, CardContent } from '@/components/ui/card';
 import { Select } from '@/components/ui/select';
 import { Mail, Linkedin, Briefcase } from 'lucide-react';
 import { STAGE_ORDER } from '@/lib/constants/stages';
@@ -72,37 +71,37 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
   };
 
   return (
-    <Card
+    <div
       ref={setNodeRef}
       style={isOverlay ? undefined : style}
       // Apply drag listeners to entire card (not just handle)
       {...(!isOverlay ? listeners : {})}
       {...(!isOverlay ? attributes : {})}
-      className={`bg-white transition-shadow ${
+      className={`rounded-lg bg-white border border-gray-100 transition-all duration-200 ${
         isOverlay
-          ? 'shadow-2xl rotate-3 cursor-grabbing'
-          : 'hover:shadow-md cursor-grab active:cursor-grabbing'
+          ? 'shadow-xl rotate-2 cursor-grabbing scale-105'
+          : 'hover:shadow-md hover:-translate-y-0.5 cursor-grab active:cursor-grabbing shadow-sm'
       }`}
     >
-      <CardContent className="p-4 space-y-3">
+      <div className="p-3 space-y-2.5">
         {/* Candidate Name */}
         <div className="flex items-start gap-2">
-          <h4 className="flex-1 font-semibold text-gray-900">
+          <h4 className="flex-1 font-medium text-gray-800 text-sm">
             {jobCandidate.candidates.full_name}
           </h4>
         </div>
 
         {/* Job Title */}
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Briefcase className="h-4 w-4 flex-shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs text-gray-600">
+          <Briefcase className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
           <span className="truncate">{jobCandidate.jobs.title}</span>
         </div>
 
         {/* Contact Info */}
         <div className="space-y-1">
           {jobCandidate.candidates.email && (
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <Mail className="h-3 w-3 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              <Mail className="h-3 w-3 flex-shrink-0 text-gray-400" />
               <span className="truncate">{jobCandidate.candidates.email}</span>
             </div>
           )}
@@ -111,20 +110,20 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
               href={jobCandidate.candidates.linkedin_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
+              className="flex items-center gap-1.5 text-xs text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
               // Prevent drag when clicking links
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => e.stopPropagation()}
             >
               <Linkedin className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate">LinkedIn</span>
+              <span className="truncate font-medium">LinkedIn</span>
             </a>
           )}
         </div>
 
         {/* Stage Selector */}
         <div
-          className="pt-2"
+          className="pt-1"
           // Prevent drag when interacting with dropdown
           onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => e.stopPropagation()}
@@ -133,7 +132,7 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
             value={currentStage}
             onChange={(e) => handleStageChange(e.target.value)}
             disabled={isUpdating}
-            className="text-sm"
+            className="text-xs"
           >
             {STAGE_ORDER.map((stage) => (
               <option key={stage} value={stage}>
@@ -142,7 +141,7 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
             ))}
           </Select>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
