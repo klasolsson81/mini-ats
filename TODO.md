@@ -174,31 +174,130 @@ export async function stopImpersonation() {
 
 ---
 
+## 🔐 Audit Logging & Security
+
+### ✅ Level 1: Impersonation Logging (KLART)
+
+**Status:** IMPLEMENTERAT (2026-01-27)
+
+**Vad som loggas:**
+- [x] Admin impersonation start (vem, vilken kund, IP, user agent)
+- [x] Admin impersonation slut (session duration)
+- [x] Visas i Admin UI på `/app/admin/audit-logs`
+
+**Implementation:**
+- Tabell: `impersonation_logs`
+- Backend: Automatisk logging i `lib/actions/impersonate.ts`
+- Frontend: `app/app/admin/audit-logs/page.tsx`
+- Privacy Policy: Dokumenterat i `app/privacy/page.tsx`
+- Restrictions: `lib/utils/restrictions.ts` förhindrar känsliga ops under impersonation
+
+**RLS:**
+- Endast admins kan läsa logs
+- Service role kan skriva logs
+
+---
+
+### 🔜 Level 2: User & Tenant Management Logging (TODO - Production)
+
+**Prioritet:** Medium (för production launch)
+
+**Vad som bör loggas:**
+
+#### User Management Events
+- [ ] `user.created` - När admin skapar ny användare
+- [ ] `user.deleted` - När admin raderar användare (irreversibel)
+- [ ] `user.role_changed` - När roll ändras (customer ↔ admin)
+- [ ] `user.deactivated` - När användare inaktiveras
+- [ ] `user.activated` - När användare aktiveras
+
+#### Tenant Management Events
+- [ ] `tenant.created` - När ny kund skapas
+- [ ] `tenant.deleted` - När kund raderas (irreversibel)
+- [ ] `tenant.updated` - När kundinfo ändras
+
+#### Authentication Events
+- [ ] `auth.password_changed` - När lösenord ändras
+- [ ] `auth.login_failed` - Misslyckade inloggningsförsök (brute force detection)
+- [ ] `auth.password_reset` - När lösenord återställs
+
+**Implementation Plan:**
+
+```sql
+-- Ny generell audit log tabell
+CREATE TABLE audit_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_type TEXT NOT NULL, -- 'user.created', 'tenant.deleted', etc
+  actor_id UUID REFERENCES profiles(id),
+  target_type TEXT, -- 'user', 'tenant', 'auth'
+  target_id UUID,
+  metadata JSONB, -- Extra context
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**UI:**
+- Lägg till `audit_logs` på samma sida som `impersonation_logs`
+- Filtrera per event type
+- Sök efter användare/kund
+
+**När implementera:**
+- Innan production launch
+- När user deletion implementeras
+- När tenant deletion implementeras
+
+---
+
+### ❌ Level 3: Granular Activity Logging (INTE rekommenderat)
+
+**Följande bör INTE loggas:**
+- ❌ `job.created` - För många events
+- ❌ `candidate.created` - För många events
+- ❌ `candidate.updated` - För många events
+- ❌ `kanban.moved` - För många events
+- ❌ View operations - Övervakning, inte audit
+
+**Varför inte:**
+- För stor datamängd
+- Performance-problem
+- Svårt att hitta viktiga events
+- Inte bransch-standard för audit logging
+
+---
+
 ## Testing Checklist
 
 När impersonation är implementerad:
 
-- [ ] Admin kan klicka "Agera som" på en kund
-- [ ] Banner visas med kundens namn
-- [ ] /app/jobs visar kundens jobb (inte admins)
-- [ ] /app/candidates visar kundens kandidater
-- [ ] /app/kanban visar kundens kanban
-- [ ] Admin kan skapa jobb åt kunden
-- [ ] Admin kan skapa kandidater åt kunden
-- [ ] "Sluta agera som" återställer till admin-vy
-- [ ] RLS fungerar korrekt (ingen datableed)
+- [x] Admin kan klicka "Agera som" på en kund
+- [x] Banner visas med kundens namn
+- [x] /app/jobs visar kundens jobb (inte admins)
+- [x] /app/candidates visar kundens kandidater
+- [x] /app/kanban visar kundens kanban
+- [x] Admin kan skapa jobb åt kunden
+- [x] Admin kan skapa kandidater åt kunden
+- [x] "Sluta agera som" återställer till admin-vy
+- [x] RLS fungerar korrekt (ingen datableed)
+- [x] Admin Panel döljs när impersonerar
+- [x] Audit logs sparas automatiskt
+- [x] Admin kan se audit logs i UI
 
 ---
 
 ## Notes
 
 - All RLS är redan implementerad korrekt med `current_tenant_id()` och `is_admin()`
-- Impersonation kräver bara cookie/session + middleware-uppdatering
-- Inga databas-ändringar behövs
-- UI-ändringar är huvudsakligen admin-panelen
+- Impersonation implementerad med cookie/session approach
+- Audit logging Level 1 (impersonation) är production-ready
+- Audit logging Level 2 (user/tenant) rekommenderas för production
+- Security documentation finns i SECURITY.md
+- Operation restrictions finns i lib/utils/restrictions.ts
 
 ---
 
 **Skapad:** 2026-01-27
-**Status:** Planering klar, implementation återstår
-**Prioritet:** Hög (kundkrav)
+**Senast uppdaterad:** 2026-01-27
+**Status:** Admin panel & impersonation KLART ✅
+**Prioritet:** Hög (kundkrav) - UPPFYLLT ✅

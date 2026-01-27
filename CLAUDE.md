@@ -541,6 +541,10 @@ All core features have been implemented and deployed to Vercel.
 - ✅ Filtering by job and candidate name
 - ✅ Admin panel for creating tenants and users
 - ✅ Stage updates via drag & drop or dropdown
+- ✅ **Admin impersonation** - Act as any tenant for support
+- ✅ **Tenant detail pages** - View tenant stats and users
+- ✅ **Add users to tenants** - Expand existing organizations
+- ✅ **User management** - View all users (admins + customers)
 
 **Internationalization**
 - ✅ Swedish (sv) and English (en) support
@@ -555,6 +559,29 @@ All core features have been implemented and deployed to Vercel.
 - ✅ Cookie Policy page (Swedish)
 - ✅ Footer with policy links
 - ✅ Minimal cookie usage (auth only)
+- ✅ **Admin access documentation** - Impersonation disclosed in privacy policy
+- ✅ **GDPR compliance** - Legitimate interest basis documented
+
+**Security & Audit Logging**
+- ✅ **Impersonation audit logs** (Level 1 - Production Ready)
+  - Database table: `impersonation_logs`
+  - Auto-logging: admin ID, tenant ID, timestamps, IP, user agent
+  - Admin UI: `/app/admin/audit-logs` - View all sessions
+  - RLS: Only admins can view logs
+  - GDPR compliant with privacy policy disclosure
+- ✅ **Operation restrictions** during impersonation
+  - Framework: `lib/utils/restrictions.ts`
+  - Prevents: user deletion, password changes, billing updates
+  - Documentation: `lib/utils/RESTRICTIONS_README.md`
+- ✅ **Security documentation**
+  - SECURITY.md with best practices
+  - Production checklist
+  - GDPR considerations
+  - Implementation examples
+- ⏳ **Level 2 audit logging** (TODO for production)
+  - User management events (create/delete/role change)
+  - Tenant management events
+  - Authentication events (password changes, failed logins)
 
 **UI/UX**
 - ✅ Responsive design (mobile to ultrawide)
@@ -576,6 +603,8 @@ All core features have been implemented and deployed to Vercel.
 6. **Drag & Drop** - Implemented full drag & drop with visual feedback
 7. **Hardcoded Text** - Removed all hardcoded Swedish/English strings, added proper translations
 8. **Color Contrast** - Improved label readability (text-gray-900, font-semibold throughout app)
+9. **Tenant Detail 404** - Fixed Next.js 15 async params handling in dynamic routes
+10. **Impersonation UI** - Hidden admin panel when acting as tenant (true customer view)
 
 ### Deployment
 - ✅ GitHub: https://github.com/klasolsson81/mini-ats
@@ -590,10 +619,42 @@ All core features have been implemented and deployed to Vercel.
 - Candidate timeline/activity log
 - Notes per stage change
 - Job pipeline metrics dashboard
-- Invite additional users per tenant
 - CSV import for bulk candidates
-- Audit log for admin actions
+- User lifecycle management (activate/deactivate/delete)
+- Level 2 audit logging (user/tenant management events)
+- Email notifications for candidates
+- Calendar integration for interviews
 
 ---
 
 **MVP Status: COMPLETE & DEPLOYED** 🚀
+**Security Status: PRODUCTION-READY** 🔒
+
+### Latest Updates (2026-01-27)
+
+**Admin Panel Improvements:**
+- ✅ Clickable tenant cards with detail pages
+- ✅ Tenant statistics (jobs, candidates, pipeline)
+- ✅ Add users to existing tenants
+- ✅ View all users (admins + customers)
+- ✅ Quick navigation buttons
+
+**Impersonation & Audit:**
+- ✅ Admin impersonation with visual banner
+- ✅ Hidden admin panel when impersonating (true customer view)
+- ✅ Automatic audit logging (who, what, when, IP)
+- ✅ Admin UI for viewing audit logs (`/app/admin/audit-logs`)
+- ✅ Privacy policy updated with admin access disclosure
+- ✅ Operation restrictions framework (prevent sensitive ops during impersonation)
+
+**Database:**
+- ✅ Migration: `impersonation_logs` table with RLS
+- ✅ Ready to run: `supabase/migrations/20260127_add_impersonation_audit_log.sql`
+
+**Documentation:**
+- ✅ SECURITY.md - Best practices and production checklist
+- ✅ lib/utils/RESTRICTIONS_README.md - Implementation guide
+- ✅ supabase/migrations/README.md - Migration instructions
+- ✅ TODO.md - Updated with audit logging levels
+
+---
