@@ -18,6 +18,7 @@ export function ChangePasswordForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const passwordStrength = {
     hasMinLength: password.length >= 8,
@@ -49,33 +50,50 @@ export function ChangePasswordForm() {
       toast.error(result.error);
       setIsLoading(false);
     } else {
-      toast.success('Lösenord uppdaterat! Tar dig till appen...');
-      // Keep loading state active during redirect
+      toast.success('Lösenord uppdaterat!');
+      // Show redirecting overlay
+      setIsRedirecting(true);
       // Use window.location for full page reload to ensure session is refreshed
       setTimeout(() => {
         window.location.href = '/app';
-      }, 1000);
+      }, 800);
     }
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Lock className="h-5 w-5" />
-          {t('changePassword')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading && (
-          <div className="mb-4 rounded-lg bg-blue-50 p-4 text-center">
-            <div className="mx-auto mb-2 h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
-            <p className="text-sm font-medium text-blue-900">
-              Uppdaterar lösenord och förbereder din session...
+    <>
+      {/* Fullscreen redirecting overlay */}
+      {isRedirecting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
+            <p className="text-lg font-semibold text-gray-900">
+              Tar dig till appen...
+            </p>
+            <p className="mt-2 text-sm text-gray-600">
+              Din session uppdateras
             </p>
           </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        </div>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lock className="h-5 w-5" />
+            {t('changePassword')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading && !isRedirecting && (
+            <div className="mb-4 rounded-lg bg-blue-50 p-4 text-center">
+              <div className="mx-auto mb-2 h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
+              <p className="text-sm font-medium text-blue-900">
+                Uppdaterar lösenord...
+              </p>
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-6">
           {/* New Password */}
           <div className="space-y-2">
             <label
@@ -187,12 +205,13 @@ export function ChangePasswordForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || !isPasswordValid || !passwordsMatch}
+            disabled={isLoading || isRedirecting || !isPasswordValid || !passwordsMatch}
           >
             {isLoading ? t('loading') : t('updatePassword')}
           </Button>
         </form>
       </CardContent>
     </Card>
+    </>
   );
 }
