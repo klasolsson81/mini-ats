@@ -60,7 +60,36 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">
-                5. Dina rättigheter (GDPR)
+                5. Administratörsåtkomst och Support
+              </h2>
+              <p className="text-gray-600">
+                För att kunna ge dig support och felsöka problem kan våra administratörer i vissa fall få åtkomst till din organisations data:
+              </p>
+              <ul className="list-disc pl-6 text-gray-600">
+                <li>
+                  <strong>Impersonation (Agera som):</strong> Administratörer kan "agera som" din organisation för att se systemet från ditt perspektiv och hjälpa till med problem.
+                </li>
+                <li>
+                  <strong>Varför vi gör detta:</strong> För att kunna ge effektiv support och lösa tekniska problem snabbt.
+                </li>
+                <li>
+                  <strong>Säkerhet:</strong> All administratörsåtkomst loggas i en säker granskningslogg med tidsstämpel, IP-adress och vilka åtgärder som utfördes.
+                </li>
+                <li>
+                  <strong>Begränsningar:</strong> Administratörer kan inte ändra lösenord, ta bort organisationer eller utföra andra känsliga operationer när de agerar som en organisation.
+                </li>
+                <li>
+                  <strong>Legitimt intresse:</strong> Denna åtkomst baseras på legitimt intresse för att tillhandahålla support och upprätthålla tjänsten (GDPR artikel 6.1.f).
+                </li>
+              </ul>
+              <p className="text-gray-600 mt-4">
+                Om du har frågor om administratörsåtkomst eller vill begära en kopia av granskningsloggen, kontakta oss på: privacy@miniats.se
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-gray-900">
+                6. Dina rättigheter (GDPR)
               </h2>
               <ul className="list-disc pl-6 text-gray-600">
                 <li>Rätt till tillgång: Begär kopia av dina uppgifter</li>
@@ -76,10 +105,10 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">
-                6. Cookies
+                7. Cookies
               </h2>
               <p className="text-gray-600">
-                Vi använder endast nödvändiga cookies för autentisering och språkinställningar. Läs mer i vår{' '}
+                Vi använder endast nödvändiga cookies för autentisering, språkinställningar och administratörsåtkomst. Läs mer i vår{' '}
                 <Link href="/cookies" className="text-blue-600 hover:underline">
                   Cookiepolicy
                 </Link>
@@ -89,7 +118,7 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">
-                7. Ändringar i policyn
+                8. Ändringar i policyn
               </h2>
               <p className="text-gray-600">
                 Vi kan uppdatera denna policy. Väsentliga ändringar meddelas via e-post.
@@ -98,7 +127,7 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">
-                8. Kontakt
+                9. Kontakt
               </h2>
               <p className="text-gray-600">
                 För frågor om integritet, kontakta oss på: privacy@miniats.se
@@ -106,7 +135,7 @@ export default function PrivacyPage() {
             </section>
 
             <p className="text-sm text-gray-500 mt-8">
-              Senast uppdaterad: 2026-01-26
+              Senast uppdaterad: 2026-01-27
             </p>
           </div>
 
