@@ -57,24 +57,44 @@ Baserat på kundkrav och nuvarande gaps i funktionalitet.
 
 ### 🟡 VIKTIGA (Användarupplevelse)
 
-#### 3. Befintliga Kunder - Mer Interaktiv
-- [ ] Gör kundkort klickbara
-- [ ] Visa detaljvy med alla användare för kunden
-- [ ] Lägg till "Lägg till användare" till befintlig kund
-- [ ] Visa kundstatistik (antal jobb, kandidater, aktiva processer)
+#### 3. Befintliga Kunder - Mer Interaktiv ✅ KLART
+- [x] Gör kundkort klickbara
+- [x] Visa detaljvy med alla användare för kunden
+- [x] Lägg till "Lägg till användare" till befintlig kund
+- [x] Visa kundstatistik (antal jobb, kandidater, aktiva processer)
 
-**Nuvarande problem:** Kund-listan visar bara namn och antal användare. Ingen interaktion möjlig.
+**Status:** IMPLEMENTERAT (2026-01-27)
+
+**Lösning:**
+- Ny sida: `/app/admin/tenants/[id]`
+- Visar kundstatistik (jobb, kandidater, aktiva processer)
+- Listar alla användare för kunden
+- Dialog för att lägga till nya användare till befintlig kund
+- Kundkort på admin-sidan är nu klickbara med hover-effekt
 
 ---
 
-#### 4. Användarhantering
-- [ ] Lista alla användare (både admins och customers)
-- [ ] Filtrera användare per kund
+#### 4. Användarhantering ✅ DELVIS KLART
+- [x] Lista alla användare (både admins och customers)
+- [x] Filtrera användare per kund (genom tenant detail page)
 - [ ] Aktivera/inaktivera användare
 - [ ] Radera användare (med bekräftelse)
 - [ ] Visa senaste inloggning
 
-**Nuvarande problem:** Ingen översikt över alla användare. Kan inte hantera befintliga användare.
+**Status:** DELVIS IMPLEMENTERAT (2026-01-27)
+
+**Lösning:**
+- Ny sida: `/app/admin/users`
+- Visar alla användare i systemet
+- Separata sektioner för admins och customers
+- Statistik: totalt antal användare, admin-användare, kundanvändare
+- Länkar till kundsidor från kundanvändare
+- "Visa alla användare" knapp på admin-panelen
+
+**Återstår:**
+- Aktivera/inaktivera användare (behöver auth.users update)
+- Radera användare (behöver cascade delete + auth cleanup)
+- Visa senaste inloggning (behöver auth.users.last_sign_in_at)
 
 ---
 
@@ -136,15 +156,21 @@ export async function stopImpersonation() {
 
 ✅ **Kan göra:**
 - Skapa ny kund + EN customer-användare
-- Visa lista över befintliga kunder (passiv)
-
-❌ **Kan INTE göra:**
 - Skapa admin-konton
 - Agera som kund (impersonate)
-- Se kunders jobb/kandidater
+- Se kunders jobb/kandidater när impersonerar
+- Skapa/redigera jobb och kandidater åt kunder
+- Visa lista över befintliga kunder (interaktiv)
+- Klicka på kundkort för att se detaljer
+- Visa kundstatistik (jobb, kandidater, aktiva processer)
 - Lägga till fler användare till befintlig kund
-- Hantera användare (aktivera/inaktivera/radera)
-- Se användarlista
+- Se alla användare i systemet (admins + customers)
+- Filtrera användare per kund
+
+❌ **Kan INTE göra (ännu):**
+- Aktivera/inaktivera användare
+- Radera användare
+- Se senaste inloggning för användare
 
 ---
 
