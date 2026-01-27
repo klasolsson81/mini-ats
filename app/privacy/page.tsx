@@ -1,115 +1,191 @@
 import Link from 'next/link';
-import { LanguageSwitcher } from '@/components/language-switcher';
+import { ArrowLeft, Shield } from 'lucide-react';
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="absolute right-4 top-4">
-        <LanguageSwitcher />
-      </div>
+    <div className="min-h-screen circuit-bg">
+      <div className="container mx-auto max-w-4xl px-4 py-12">
+        {/* Back link */}
+        <Link
+          href="/app"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-cyan-600 transition-colors mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Tillbaka till appen
+        </Link>
 
-      <div className="container mx-auto max-w-4xl px-4 py-16">
-        <div className="rounded-lg bg-white p-8 shadow-sm">
-          <h1 className="mb-8 text-3xl font-bold text-gray-900">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+            <Shield className="w-7 h-7 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
             Integritetspolicy
           </h1>
+        </div>
 
-          <div className="prose prose-gray max-w-none space-y-6">
+        {/* Content card */}
+        <div className="relative rounded-2xl overflow-hidden">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 p-[1.5px]">
+            <div className="absolute inset-[1.5px] rounded-[14px] bg-gradient-to-br from-white via-blue-50/50 to-white backdrop-blur-xl" />
+          </div>
+
+          <div className="relative p-8 space-y-8">
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 1. Introduktion
               </h2>
-              <p className="text-gray-600">
-                Mini ATS ("vi", "oss") värnar om din integritet. Denna policy beskriver hur vi samlar in, använder och skyddar dina personuppgifter.
+              <p className="text-gray-700">
+                Mini ATS ("vi", "oss") värnar om din integritet. Denna policy
+                beskriver hur vi samlar in, använder och skyddar dina
+                personuppgifter i enlighet med GDPR.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 2. Personuppgifter vi samlar in
               </h2>
-              <p className="text-gray-600">Vi samlar in följande typer av data:</p>
-              <ul className="list-disc pl-6 text-gray-600">
-                <li>Kontoinformation: namn, e-postadress</li>
-                <li>Kandidatinformation: namn, e-post, telefon, LinkedIn-profil</li>
-                <li>Jobbannonsinformation: titlar, beskrivningar</li>
-                <li>Användningsdata: inloggningar, aktivitet i systemet</li>
+              <p className="text-gray-700 mb-3">
+                Vi samlar in följande typer av data:
+              </p>
+              <ul className="list-disc pl-6 text-gray-700 space-y-1">
+                <li>
+                  <strong>Kontoinformation:</strong> namn, e-postadress
+                </li>
+                <li>
+                  <strong>Kandidatinformation:</strong> namn, e-post, telefon,
+                  LinkedIn-profil
+                </li>
+                <li>
+                  <strong>Jobbannonsinformation:</strong> titlar, beskrivningar
+                </li>
+                <li>
+                  <strong>Användningsdata:</strong> inloggningar, aktivitet i
+                  systemet
+                </li>
+                <li>
+                  <strong>Teknisk data:</strong> IP-adress (för geografisk
+                  språkdetektering och säkerhet)
+                </li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 3. Hur vi använder dina uppgifter
               </h2>
-              <ul className="list-disc pl-6 text-gray-600">
+              <ul className="list-disc pl-6 text-gray-700 space-y-1">
                 <li>Tillhandahålla och förbättra våra tjänster</li>
                 <li>Hantera användarkonton och autentisering</li>
+                <li>
+                  Automatiskt välja språk baserat på din geografiska plats
+                </li>
                 <li>Kommunicera med dig om tjänsten</li>
-                <li>Säkerställa systemsäkerhet</li>
+                <li>Säkerställa systemsäkerhet och förhindra missbruk</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 4. Lagring och säkerhet
               </h2>
-              <p className="text-gray-600">
-                Vi lagrar data hos Supabase (EU-region). Vi använder kryptering, RLS-policyer och moderna säkerhetsmetoder för att skydda dina uppgifter.
+              <p className="text-gray-700">
+                Vi lagrar data hos Supabase (EU-region). Vi använder kryptering,
+                Row Level Security (RLS) och moderna säkerhetsmetoder för att
+                skydda dina uppgifter.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 5. Administratörsåtkomst och Support
               </h2>
-              <p className="text-gray-600">
-                För att kunna ge dig support och felsöka problem kan våra administratörer i vissa fall få åtkomst till din organisations data:
+              <p className="text-gray-700 mb-3">
+                För att kunna ge dig support och felsöka problem kan våra
+                administratörer i vissa fall få åtkomst till din organisations
+                data:
               </p>
-              <ul className="list-disc pl-6 text-gray-600">
+              <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>
-                  <strong>Impersonation (Agera som):</strong> Administratörer kan "agera som" din organisation för att se systemet från ditt perspektiv och hjälpa till med problem.
+                  <strong>Impersonation (Agera som):</strong> Administratörer
+                  kan "agera som" din organisation för att se systemet från ditt
+                  perspektiv och hjälpa till med problem.
                 </li>
                 <li>
-                  <strong>Varför vi gör detta:</strong> För att kunna ge effektiv support och lösa tekniska problem snabbt.
+                  <strong>Varför vi gör detta:</strong> För att kunna ge
+                  effektiv support och lösa tekniska problem snabbt.
                 </li>
                 <li>
-                  <strong>Säkerhet:</strong> All administratörsåtkomst loggas i en säker granskningslogg med tidsstämpel, IP-adress och vilka åtgärder som utfördes.
+                  <strong>Säkerhet:</strong> All administratörsåtkomst loggas i
+                  en säker granskningslogg med tidsstämpel, IP-adress och vilka
+                  åtgärder som utfördes.
                 </li>
                 <li>
-                  <strong>Begränsningar:</strong> Administratörer kan inte ändra lösenord, ta bort organisationer eller utföra andra känsliga operationer när de agerar som en organisation.
+                  <strong>Begränsningar:</strong> Administratörer kan inte ändra
+                  lösenord, ta bort organisationer eller utföra andra känsliga
+                  operationer när de agerar som en organisation.
                 </li>
                 <li>
-                  <strong>Legitimt intresse:</strong> Denna åtkomst baseras på legitimt intresse för att tillhandahålla support och upprätthålla tjänsten (GDPR artikel 6.1.f).
+                  <strong>Legitimt intresse:</strong> Denna åtkomst baseras på
+                  legitimt intresse för att tillhandahålla support och
+                  upprätthålla tjänsten (GDPR artikel 6.1.f).
                 </li>
               </ul>
-              <p className="text-gray-600 mt-4">
-                Om du har frågor om administratörsåtkomst eller vill begära en kopia av granskningsloggen, kontakta oss på: privacy@miniats.se
-              </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 6. Dina rättigheter (GDPR)
               </h2>
-              <ul className="list-disc pl-6 text-gray-600">
-                <li>Rätt till tillgång: Begär kopia av dina uppgifter</li>
-                <li>Rätt till rättelse: Korrigera felaktiga uppgifter</li>
-                <li>Rätt till radering: Be oss radera dina uppgifter</li>
-                <li>Rätt till dataportabilitet: Exportera dina data</li>
-                <li>Rätt att invända: Motsätta dig viss behandling</li>
+              <p className="text-gray-700 mb-3">Du har följande rättigheter:</p>
+              <ul className="list-disc pl-6 text-gray-700 space-y-1">
+                <li>
+                  <strong>Rätt till tillgång:</strong> Begär kopia av dina
+                  uppgifter
+                </li>
+                <li>
+                  <strong>Rätt till rättelse:</strong> Korrigera felaktiga
+                  uppgifter
+                </li>
+                <li>
+                  <strong>Rätt till radering:</strong> Be oss radera dina
+                  uppgifter
+                </li>
+                <li>
+                  <strong>Rätt till dataportabilitet:</strong> Exportera dina
+                  data
+                </li>
+                <li>
+                  <strong>Rätt att invända:</strong> Motsätta dig viss
+                  behandling
+                </li>
               </ul>
-              <p className="text-gray-600 mt-4">
-                För att utöva dina rättigheter, kontakta oss på: privacy@miniats.se
+              <p className="text-gray-700 mt-3">
+                För att utöva dina rättigheter, kontakta oss på:{' '}
+                <a
+                  href="mailto:privacy@miniats.se"
+                  className="text-cyan-600 hover:text-cyan-700 hover:underline"
+                >
+                  privacy@miniats.se
+                </a>
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
-                7. Cookies
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
+                7. Cookies och språkdetektering
               </h2>
-              <p className="text-gray-600">
-                Vi använder endast nödvändiga cookies för autentisering, språkinställningar och administratörsåtkomst. Läs mer i vår{' '}
-                <Link href="/cookies" className="text-blue-600 hover:underline">
+              <p className="text-gray-700">
+                Vi använder endast nödvändiga cookies för autentisering och
+                språkinställningar. Vi använder också din IP-adress för att
+                automatiskt välja språk (svenska för besökare från Sverige,
+                engelska för övriga). IP-adressen lagras inte permanent för
+                detta ändamål. Läs mer i vår{' '}
+                <Link
+                  href="/cookies"
+                  className="text-cyan-600 hover:text-cyan-700 hover:underline"
+                >
                   Cookiepolicy
                 </Link>
                 .
@@ -117,35 +193,33 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 8. Ändringar i policyn
               </h2>
-              <p className="text-gray-600">
-                Vi kan uppdatera denna policy. Väsentliga ändringar meddelas via e-post.
+              <p className="text-gray-700">
+                Vi kan uppdatera denna policy. Väsentliga ändringar meddelas via
+                e-post.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 mb-3">
                 9. Kontakt
               </h2>
-              <p className="text-gray-600">
-                För frågor om integritet, kontakta oss på: privacy@miniats.se
+              <p className="text-gray-700">
+                För frågor om integritet, kontakta oss på:{' '}
+                <a
+                  href="mailto:privacy@miniats.se"
+                  className="text-cyan-600 hover:text-cyan-700 hover:underline"
+                >
+                  privacy@miniats.se
+                </a>
               </p>
             </section>
 
-            <p className="text-sm text-gray-500 mt-8">
+            <p className="text-sm text-gray-500 pt-4 border-t border-gray-200">
               Senast uppdaterad: 2026-01-27
             </p>
-          </div>
-
-          <div className="mt-8">
-            <Link
-              href="/app"
-              className="text-blue-600 hover:text-blue-700 hover:underline"
-            >
-              ← Tillbaka till appen
-            </Link>
           </div>
         </div>
       </div>

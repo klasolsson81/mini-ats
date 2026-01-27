@@ -731,3 +731,120 @@ All core features have been implemented and deployed to Vercel.
   - See KNOWN_ISSUES.md for details and planned fix
 
 ---
+
+### UI/UX Refresh (2026-01-27)
+
+**Sidebar Improvements:**
+- ✅ Wider sidebar (w-28) with text labels under each icon
+- ✅ User menu dropdown with:
+  - Language switcher (SV/EN)
+  - Change password link
+  - Account settings link
+  - Logout button
+- ✅ Cleaner navigation with visual feedback
+
+**User Settings:**
+- ✅ Account settings page (`/app/settings`)
+- ✅ Change password page (`/app/settings/password`) with:
+  - Current password verification
+  - Password strength validation (8+ chars, letters, numbers)
+  - Real-time match indicator
+  - Show/hide password toggles
+  - Modern glassmorphism styling
+- ✅ Server action for password change with proper error handling
+
+**Language/Locale:**
+- ✅ Automatic language detection based on IP (via Vercel headers)
+  - Sweden IP → Swedish (sv)
+  - Other countries → English (en)
+- ✅ Manual language switcher in user menu
+- ✅ Cookie-based persistence (NEXT_LOCALE)
+
+**Dashboard Enhancements:**
+- ✅ Open jobs count (e.g., "3 öppna") under Total Jobs KPI
+- ✅ Relative timestamps ("2h sedan", "Igår") in Recent Activity
+- ✅ "Needs Attention" section for stale candidates (>7 days in stage)
+- ✅ Conversion funnel metrics (Applied → Screening → Interview → Offer %)
+- ✅ Time-to-hire average (days for hired candidates)
+- ✅ Removed purple colors - now consistent cyan/blue/emerald theme
+
+**Policy Pages Updated:**
+- ✅ Privacy Policy - New tech styling, IP-based language detection disclosure
+- ✅ Cookie Policy - Complete cookie table, geo-location section
+- ✅ Both pages now match the app's glassmorphism design
+
+**New Files:**
+- `features/settings/change-password-form.tsx`
+- `app/app/settings/page.tsx`
+- `app/app/settings/password/page.tsx`
+- `features/dashboard/attention-needed.tsx`
+- `features/dashboard/conversion-metrics.tsx`
+
+**New Translations:**
+- `settings.*` namespace (language, changePassword, account, etc.)
+- `dashboard.openJobs`, `dashboard.attentionNeeded`, etc.
+- `dashboard.conversionFunnel`, `dashboard.timeToHire`, etc.
+
+---
+
+### Glassmorphism Design System (2026-01-27)
+
+**Complete UI Overhaul:**
+Unified the entire application with a cohesive glassmorphism design language.
+
+**New CSS Classes (globals.css):**
+- `glass-cyan` - Cyan/turquoise tinted glass (Pipeline, Jobs, Candidates, Admin)
+- `glass-blue` - Blue tinted glass (KPI cards, Recent Candidates, Tenant list)
+- `glass-amber` - Amber/yellow tinted glass (Quick Actions, Attention Needed)
+- `glass-violet` - Violet/purple tinted glass (Conversion Metrics, Create Admin)
+- `glass-emerald` - Green tinted glass (Recent Jobs, Time to Hire)
+- `glass-rose` - Pink tinted glass (available for future use)
+
+**Kanban Column Backgrounds:**
+- `kanban-col-sourced` - Slate/gray gradient
+- `kanban-col-applied` - Blue gradient
+- `kanban-col-screening` - Violet gradient
+- `kanban-col-interview` - Emerald gradient
+- `kanban-col-offer` - Amber gradient
+- `kanban-col-hired` - Orange gradient
+- `kanban-col-rejected` - Rose/pink gradient
+
+**Design Principles:**
+- All cards use colored gradients with 0.3-0.5 opacity
+- `backdrop-filter: blur(12px)` for frosted glass effect
+- Colored borders matching the card's theme (1.5-2px)
+- Consistent shadow and hover effects
+- Cards are transparent enough to show the background pattern
+
+**Updated Components:**
+- ✅ KPI Cards - Variant-based coloring (blue, emerald, cyan)
+- ✅ Quick Actions - Amber glass
+- ✅ Pipeline Stats - Cyan glass
+- ✅ Recent Activity - Emerald (jobs), Blue (candidates), Amber (impersonations)
+- ✅ Conversion Metrics - Violet glass
+- ✅ Attention Needed - Amber glass
+- ✅ Jobs List - Cyan gradient cards with strong borders
+- ✅ Candidates List - Cyan gradient cards with strong borders
+- ✅ Kanban Columns - Stage-specific colored backgrounds
+- ✅ Kanban Cards - White/transparent glass (inherits column color)
+- ✅ Admin Panel - Violet (Create Admin), Cyan (Create Tenant), Blue (Tenant list)
+- ✅ Admin Quick Actions - Gradient buttons with colored borders
+
+**Kanban UX Fix:**
+- ✅ Moved candidates always appear at bottom of new column
+- ✅ No more visual "jumping" after server revalidation
+- ✅ Optimistic update places candidate at end of array
+
+**Login Page:**
+- ✅ Custom background image (`/public/bg.png`)
+- ✅ Animated border effect on login card
+- ✅ Light sweep and pulse glow overlays
+- ✅ Forgot password link and flow
+
+**Forgot Password Flow:**
+- ✅ `/forgot-password` page with email input
+- ✅ `/reset-password` page for setting new password
+- ✅ Supabase password reset integration
+- ✅ Swedish translations for all states
+
+---

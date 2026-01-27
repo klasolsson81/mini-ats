@@ -103,7 +103,7 @@ body::before {
   opacity: 1;
 }
 
-/* Soft gradient overlay */
+/* Soft gradient overlay - static, no animation */
 body::after {
   content: '';
   position: fixed;
@@ -112,11 +112,195 @@ body::after {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(ellipse at 10% 20%, rgba(94, 184, 209, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 80%, rgba(94, 184, 209, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(148, 163, 184, 0.03) 0%, transparent 70%);
+    radial-gradient(ellipse at 10% 20%, rgba(94, 184, 209, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 80%, rgba(94, 184, 209, 0.04) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
+}
+
+/* Animated gradient flow - cyan/blue/teal tones */
+@keyframes gradient-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-flow {
+  background: linear-gradient(
+    -45deg,
+    #cceef5,
+    #d5e8f2,
+    #c0e8e8,
+    #d8f0f5,
+    #c5dff0,
+    #cceef5
+  ) !important;
+  background-size: 400% 400%;
+  animation: gradient-flow 8s ease-in-out infinite;
+}
+
+.animate-flow-footer {
+  background: linear-gradient(
+    90deg,
+    #d0ecf2,
+    #c5e5ed,
+    #d5f0f2,
+    #c8e0ec,
+    #d0ecf2
+  ) !important;
+  background-size: 300% 100%;
+  animation: gradient-flow 10s ease-in-out infinite;
+}
+
+/* Main content area - very subtle, no animation */
+.animate-flow-main {
+  background: transparent;
+}
+
+/* Full page animated background for login */
+.animate-flow-page {
+  background: linear-gradient(
+    -45deg,
+    #e8f4f8,
+    #d0e8f0,
+    #e0f0f5,
+    #c8e0ec,
+    #d8eff5,
+    #e0e8f2,
+    #cce8f0,
+    #e8f4f8
+  );
+  background-size: 400% 400%;
+  animation: gradient-flow 12s ease-in-out infinite;
+}
+
+/* Circuit board login background */
+.login-bg {
+  background-image: url('/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Light sweep overlay */
+.light-sweep-overlay {
+  background: linear-gradient(
+    125deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(120, 220, 255, 0.3) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 300% 300%;
+  animation: light-sweep 4s ease-in-out infinite;
+}
+
+@keyframes light-sweep {
+  0% {
+    background-position: 150% 150%;
+  }
+  100% {
+    background-position: -50% -50%;
+  }
+}
+
+/* Pulsing glow effect overlay */
+.pulse-glow-overlay {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(80, 200, 255, 0.25) 0%,
+    rgba(80, 200, 255, 0.1) 30%,
+    transparent 60%
+  );
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Animated border that travels around the card */
+.animated-border-card {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.animated-border-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: 1rem;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    transparent 0%,
+    transparent 30%,
+    rgba(100, 220, 255, 0.9) 50%,
+    rgba(150, 240, 255, 1) 55%,
+    rgba(100, 220, 255, 0.9) 60%,
+    transparent 70%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotate-border 3s linear infinite;
+  pointer-events: none;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-border {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Fallback for browsers without @property support */
+@supports not (background: conic-gradient(from var(--angle, 0deg), red, blue)) {
+  .animated-border-card::before {
+    background: linear-gradient(
+      90deg,
+      rgba(100, 220, 255, 0.3),
+      rgba(150, 240, 255, 0.8),
+      rgba(100, 220, 255, 0.3)
+    );
+    animation: shimmer-border 2s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer-border {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
 }
 
 /* Glassmorphism utility classes */
@@ -152,6 +336,97 @@ body::after {
   box-shadow: var(--shadow-md);
   border-radius: var(--radius-card);
   padding: 2rem;
+}
+
+/* Simple glass backgrounds that work reliably */
+.glass-bg {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-bg-light {
+  background: rgba(255, 255, 255, 0.20) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-bg-medium {
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-bg-white {
+  background: rgba(255, 255, 255, 0.40) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Colored glass backgrounds - more transparent glassmorphic with color tints */
+.glass-cyan {
+  background: linear-gradient(135deg, rgba(207, 250, 254, 0.5) 0%, rgba(165, 243, 252, 0.4) 50%, rgba(103, 232, 249, 0.3) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(103, 232, 249, 0.5) !important;
+}
+
+.glass-blue {
+  background: linear-gradient(135deg, rgba(219, 234, 254, 0.5) 0%, rgba(191, 219, 254, 0.4) 50%, rgba(147, 197, 253, 0.3) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(147, 197, 253, 0.5) !important;
+}
+
+.glass-amber {
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.5) 0%, rgba(253, 230, 138, 0.4) 50%, rgba(252, 211, 77, 0.3) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(252, 211, 77, 0.5) !important;
+}
+
+.glass-violet {
+  background: linear-gradient(135deg, rgba(237, 233, 254, 0.5) 0%, rgba(221, 214, 254, 0.4) 50%, rgba(196, 181, 253, 0.3) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(196, 181, 253, 0.5) !important;
+}
+
+.glass-emerald {
+  background: linear-gradient(135deg, rgba(209, 250, 229, 0.5) 0%, rgba(167, 243, 208, 0.4) 50%, rgba(110, 231, 183, 0.3) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(110, 231, 183, 0.5) !important;
+}
+
+.glass-rose {
+  background: linear-gradient(135deg, rgba(255, 228, 230, 0.5) 0%, rgba(254, 205, 211, 0.4) 50%, rgba(253, 164, 175, 0.3) 100%) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(253, 164, 175, 0.5) !important;
+}
+
+/* Kanban column backgrounds - soft colored backgrounds */
+.kanban-col-sourced {
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.25) 0%, rgba(148, 163, 184, 0.15) 100%) !important;
+}
+.kanban-col-applied {
+  background: linear-gradient(180deg, rgba(96, 165, 250, 0.25) 0%, rgba(96, 165, 250, 0.15) 100%) !important;
+}
+.kanban-col-screening {
+  background: linear-gradient(180deg, rgba(167, 139, 250, 0.25) 0%, rgba(167, 139, 250, 0.15) 100%) !important;
+}
+.kanban-col-interview {
+  background: linear-gradient(180deg, rgba(52, 211, 153, 0.25) 0%, rgba(52, 211, 153, 0.15) 100%) !important;
+}
+.kanban-col-offer {
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.25) 0%, rgba(251, 191, 36, 0.15) 100%) !important;
+}
+.kanban-col-hired {
+  background: linear-gradient(180deg, rgba(251, 146, 60, 0.25) 0%, rgba(251, 146, 60, 0.15) 100%) !important;
+}
+.kanban-col-rejected {
+  background: linear-gradient(180deg, rgba(244, 114, 182, 0.25) 0%, rgba(244, 114, 182, 0.15) 100%) !important;
 }
 
 /* Button styles - softer gradients */

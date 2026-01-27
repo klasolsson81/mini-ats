@@ -61,9 +61,14 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   const [optimisticCandidates, updateOptimisticCandidates] = useOptimistic(
     jobCandidates,
     (state: JobCandidate[], update: OptimisticUpdate) => {
-      return state.map((jc) =>
-        jc.id === update.id ? { ...jc, stage: update.newStage } : jc
-      );
+      // Find the candidate being moved
+      const movedCandidate = state.find((jc) => jc.id === update.id);
+      if (!movedCandidate) return state;
+
+      // Remove from current position and add to end with new stage
+      // This ensures the candidate appears at the bottom of the new column
+      const withoutMoved = state.filter((jc) => jc.id !== update.id);
+      return [...withoutMoved, { ...movedCandidate, stage: update.newStage }];
     }
   );
 
@@ -139,8 +144,8 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Filters - Tech style */}
-      <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-4">
+      {/* Filters */}
+      <div className="rounded-2xl glass-cyan border border-cyan-300/50 shadow-sm p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">

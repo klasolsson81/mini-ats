@@ -59,7 +59,7 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
 
   if (candidates.length === 0) {
     return (
-      <div className="rounded-2xl bg-gradient-to-br from-blue-100/50 via-cyan-50/40 to-white/30 backdrop-blur-xl border border-white/50 shadow-xl p-12">
+      <div className="rounded-2xl bg-gradient-to-br from-cyan-100/50 via-sky-50/40 to-blue-100/50 backdrop-blur-sm border-2 border-cyan-300/50 shadow-sm p-12">
         <div className="flex flex-col items-center justify-center">
           <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg">
             <Users className="h-7 w-7 text-white" />
@@ -88,17 +88,9 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
           return (
             <div
               key={candidate.id}
-              className="group relative rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+              className="group rounded-xl bg-gradient-to-br from-cyan-100/50 via-sky-50/40 to-blue-100/50 backdrop-blur-sm border-2 border-cyan-300/50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-cyan-400/60"
             >
-              {/* Gradient border */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 p-[1.5px]">
-                <div className="absolute inset-[1.5px] rounded-[10px] bg-gradient-to-br from-blue-50 via-cyan-50/90 to-white/95 backdrop-blur-xl" />
-              </div>
-              {/* Hover glow */}
-              <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg shadow-cyan-300/50" />
-
-              {/* Content */}
-              <div className="relative p-4 space-y-3">
+              <div className="p-4 space-y-3">
                 {/* Header: Avatar + Name */}
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md flex-shrink-0">

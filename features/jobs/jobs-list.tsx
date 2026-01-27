@@ -35,7 +35,7 @@ export function JobsList({ jobs }: JobsListProps) {
 
   if (jobs.length === 0) {
     return (
-      <div className="rounded-2xl bg-gradient-to-br from-blue-100/40 via-cyan-50/30 to-white/20 backdrop-blur-xl border border-white/50 shadow-xl shadow-blue-100/30 p-12">
+      <div className="rounded-2xl bg-gradient-to-br from-cyan-100/50 via-sky-50/40 to-blue-100/50 backdrop-blur-sm border-2 border-cyan-300/50 shadow-sm p-12">
         <div className="flex flex-col items-center justify-center">
           <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center mb-4 shadow-lg">
             <Briefcase className="h-8 w-8 text-white" />
@@ -54,17 +54,9 @@ export function JobsList({ jobs }: JobsListProps) {
         {jobs.map((job) => (
           <div
             key={job.id}
-            className="group relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+            className="group rounded-2xl bg-gradient-to-br from-cyan-100/50 via-sky-50/40 to-blue-100/50 backdrop-blur-sm border-2 border-cyan-300/50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-cyan-400/60"
           >
-            {/* Gradient border */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 p-[1.5px]">
-              <div className="absolute inset-[1.5px] rounded-[14px] bg-gradient-to-br from-blue-50 via-cyan-50/90 to-white/95 backdrop-blur-xl" />
-            </div>
-            {/* Hover glow */}
-            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg shadow-cyan-300/50" />
-
-            {/* Content */}
-            <div className="relative p-5 space-y-4">
+            <div className="p-5 space-y-4">
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 space-y-2">

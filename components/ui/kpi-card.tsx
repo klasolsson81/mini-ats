@@ -5,36 +5,35 @@ import { cn } from '@/lib/utils/cn';
 interface KpiCardProps {
   title: string;
   value: string | number;
+  subtitle?: string;
   icon: LucideIcon;
   href?: string;
-  variant?: 'blue' | 'purple' | 'cyan';
+  variant?: 'blue' | 'emerald' | 'cyan';
   className?: string;
 }
 
 const variantStyles = {
   blue: {
-    bg: 'from-blue-500/20 via-blue-400/10 to-transparent',
-    iconBg: 'from-blue-500 to-blue-600',
-    border: 'border-blue-300/30',
-    hoverBorder: 'hover:border-blue-400/50',
+    glass: 'glass-blue',
+    border: 'border-blue-300/50',
+    iconBg: 'from-blue-500 to-indigo-600',
   },
-  purple: {
-    bg: 'from-violet-500/20 via-violet-400/10 to-transparent',
-    iconBg: 'from-violet-500 to-purple-600',
-    border: 'border-violet-300/30',
-    hoverBorder: 'hover:border-violet-400/50',
+  emerald: {
+    glass: 'glass-emerald',
+    border: 'border-emerald-300/50',
+    iconBg: 'from-emerald-500 to-green-600',
   },
   cyan: {
-    bg: 'from-cyan-500/20 via-cyan-400/10 to-transparent',
+    glass: 'glass-cyan',
+    border: 'border-cyan-300/50',
     iconBg: 'from-cyan-500 to-teal-600',
-    border: 'border-cyan-300/30',
-    hoverBorder: 'hover:border-cyan-400/50',
   },
 };
 
 export function KpiCard({
   title,
   value,
+  subtitle,
   icon: Icon,
   href,
   variant = 'blue',
@@ -45,23 +44,21 @@ export function KpiCard({
   const content = (
     <div
       className={cn(
-        'relative overflow-hidden rounded-2xl p-5',
-        'bg-white/40 backdrop-blur-md',
-        'border',
+        'rounded-2xl border shadow-sm',
+        styles.glass,
         styles.border,
-        href && styles.hoverBorder,
-        'shadow-sm transition-all duration-300',
-        href && 'hover:shadow-lg hover:scale-[1.02] cursor-pointer',
+        'transition-all duration-300',
+        href && 'hover:scale-[1.02] hover:shadow-md cursor-pointer',
         className
       )}
     >
-      {/* Gradient overlay */}
-      <div className={cn('absolute inset-0 bg-gradient-to-br', styles.bg)} />
-
-      <div className="relative z-10 flex items-center justify-between">
+      <div className="p-5 flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-gray-600 mb-1">{title}</p>
           <p className="text-4xl font-bold text-gray-900">{value}</p>
+          {subtitle && (
+            <p className="text-sm font-medium text-gray-500 mt-1">{subtitle}</p>
+          )}
         </div>
         <div
           className={cn(

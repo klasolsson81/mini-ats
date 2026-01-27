@@ -39,11 +39,11 @@ export default async function AppLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar profile={profile} isImpersonating={impersonation.isImpersonating} />
-      <div className="flex flex-1 flex-col overflow-y-auto relative">
+      <div className="flex flex-1 flex-col relative">
         {impersonation.isImpersonating && (
           <ImpersonationBanner tenantName={impersonation.tenantName!} />
         )}
-        <main className="flex-1 relative z-10">
+        <main className="flex-1 overflow-y-auto relative z-10 animate-flow-main">
           <div className="container mx-auto px-6 py-8 lg:px-12 max-w-[1600px]">
             {children}
           </div>

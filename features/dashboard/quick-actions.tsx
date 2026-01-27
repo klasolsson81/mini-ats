@@ -42,15 +42,15 @@ export function QuickActions() {
       key: 'candidate',
       label: t('createCandidate'),
       icon: Users,
-      gradient: 'from-violet-500 to-purple-600',
+      gradient: 'from-cyan-500 to-blue-600',
       onClick: () => setShowCandidateDialog(true),
     },
   ];
 
   return (
     <>
-      <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-5">
-        <div className="space-y-4">
+      <div className="rounded-2xl glass-amber border border-amber-300/50 shadow-sm">
+        <div className="p-5 space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
               <Zap className="w-5 h-5 text-white" />
@@ -67,7 +67,7 @@ export function QuickActions() {
                 <button
                   key={action.key}
                   onClick={action.onClick}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-white/40 via-cyan-50/30 to-blue-50/40 hover:from-white/60 hover:via-cyan-100/40 hover:to-blue-100/50 transition-all duration-300 group border border-cyan-200/30 hover:border-cyan-300/50 hover:shadow-md hover:shadow-cyan-100/50"
+                  className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl glass-bg-white hover:shadow-sm transition-all duration-300 group border border-white/50 hover:border-amber-200/50"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-md`}>
@@ -77,7 +77,7 @@ export function QuickActions() {
                       {action.label}
                     </span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-cyan-400 group-hover:text-cyan-600 transition-colors" />
+                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-amber-600 transition-colors" />
                 </button>
               );
             })}

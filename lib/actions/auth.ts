@@ -57,3 +57,85 @@ export async function logout() {
   revalidatePath('/', 'layout');
   redirect('/login');
 }
+
+export async function changePassword(currentPassword: string, newPassword: string) {
+  const supabase = await createClient();
+
+  // First verify the current password by attempting to sign in
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user || !user.email) {
+    return { error: 'Användaren hittades inte' };
+  }
+
+  // Verify current password by re-authenticating
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword,
+  });
+
+  if (signInError) {
+    return { error: 'Nuvarande lösenord är felaktigt' };
+  }
+
+  // Update the password
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (updateError) {
+    return { error: translateAuthError(updateError.message) };
+  }
+
+  // Clear the must_change_password flag if it was set
+  await supabase
+    .from('profiles')
+    .update({ must_change_password: false })
+    .eq('id', user.id);
+
+  revalidatePath('/', 'layout');
+  return { success: true };
+}
+
+export async function forgotPassword(email: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/reset-password`,
+  });
+
+  if (error) {
+    return { error: translateAuthError(error.message) };
+  }
+
+  return { success: true };
+}
+
+export async function resetPassword(newPassword: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (error) {
+    return { error: translateAuthError(error.message) };
+  }
+
+  // Clear the must_change_password flag if it was set
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    await supabase
+      .from('profiles')
+      .update({ must_change_password: false })
+      .eq('id', user.id);
+  }
+
+  revalidatePath('/', 'layout');
+  return { success: true };
+}

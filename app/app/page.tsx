@@ -7,6 +7,8 @@ import { getEffectiveTenantId } from '@/lib/utils/tenant';
 import { QuickActions } from '@/features/dashboard/quick-actions';
 import { RecentActivity } from '@/features/dashboard/recent-activity';
 import { PipelineStats } from '@/features/dashboard/pipeline-stats';
+import { AttentionNeeded } from '@/features/dashboard/attention-needed';
+import { ConversionMetrics } from '@/features/dashboard/conversion-metrics';
 import { KpiCard } from '@/components/ui/kpi-card';
 
 export async function generateMetadata() {
@@ -37,21 +39,42 @@ export default async function DashboardPage() {
   const { tenantId, isAdmin } = await getEffectiveTenantId();
 
   let jobsCount = 0;
+  let openJobsCount = 0;
   let candidatesCount = 0;
   let activeCount = 0;
   let recentJobs: any[] = [];
   let recentCandidates: any[] = [];
   let recentImpersonations: any[] = [];
   let pipelineStats: { stage: string; count: number }[] = [];
+  let stageCountsRecord: Record<string, number> = {};
+  let avgDaysToHire: number | null = null;
+  let staleCandidates: {
+    id: string;
+    candidate_name: string;
+    job_title: string;
+    stage: string;
+    days_in_stage: number;
+  }[] = [];
 
   if (tenantId || isAdmin) {
-    // Fetch counts
+    // Fetch total jobs count
     const jobsQuery = supabase.from('jobs').select('id', { count: 'exact' });
     if (tenantId) {
       jobsQuery.eq('tenant_id', tenantId);
     }
     const { count: jobs } = await jobsQuery;
     jobsCount = jobs || 0;
+
+    // Fetch open jobs count
+    const openJobsQuery = supabase
+      .from('jobs')
+      .select('id', { count: 'exact' })
+      .eq('status', 'open');
+    if (tenantId) {
+      openJobsQuery.eq('tenant_id', tenantId);
+    }
+    const { count: openJobs } = await openJobsQuery;
+    openJobsCount = openJobs || 0;
 
     const candidatesQuery = supabase
       .from('candidates')
@@ -134,12 +157,79 @@ export default async function DashboardPage() {
     pipelineData?.forEach((item: any) => {
       stageCounts[item.stage] = (stageCounts[item.stage] || 0) + 1;
     });
+    stageCountsRecord = stageCounts;
 
     // Convert to array for component
     pipelineStats = Object.entries(stageCounts).map(([stage, count]) => ({
       stage,
       count,
     }));
+
+    // Calculate average days to hire
+    const hiredQuery = supabase
+      .from('job_candidates')
+      .select('created_at')
+      .eq('stage', 'hired');
+
+    if (tenantId) {
+      hiredQuery.eq('tenant_id', tenantId);
+    }
+
+    const { data: hiredData } = await hiredQuery;
+
+    if (hiredData && hiredData.length > 0) {
+      const now = new Date();
+      const totalDays = hiredData.reduce((sum: number, item: any) => {
+        const createdAt = new Date(item.created_at);
+        const days = Math.floor(
+          (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return sum + days;
+      }, 0);
+      avgDaysToHire = Math.round(totalDays / hiredData.length);
+    }
+
+    // Fetch stale candidates (in active stages for >7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const staleQuery = supabase
+      .from('job_candidates')
+      .select(
+        `
+        id,
+        stage,
+        created_at,
+        candidates(full_name),
+        jobs(title)
+      `
+      )
+      .not('stage', 'in', '(hired,rejected)')
+      .lt('created_at', sevenDaysAgo.toISOString())
+      .order('created_at', { ascending: true })
+      .limit(5);
+
+    if (tenantId) {
+      staleQuery.eq('tenant_id', tenantId);
+    }
+
+    const { data: staleData } = await staleQuery;
+
+    staleCandidates =
+      staleData?.map((item: any) => {
+        const createdAt = new Date(item.created_at);
+        const now = new Date();
+        const daysInStage = Math.floor(
+          (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return {
+          id: item.id,
+          candidate_name: item.candidates?.full_name || 'Unknown',
+          job_title: item.jobs?.title || 'Unknown',
+          stage: item.stage,
+          days_in_stage: daysInStage,
+        };
+      }) || [];
   }
 
   return (
@@ -159,6 +249,7 @@ export default async function DashboardPage() {
         <KpiCard
           title={t('totalJobs')}
           value={jobsCount}
+          subtitle={t('openJobs', { count: openJobsCount })}
           icon={Briefcase}
           variant="blue"
           href="/app/jobs"
@@ -167,7 +258,7 @@ export default async function DashboardPage() {
           title={t('totalCandidates')}
           value={candidatesCount}
           icon={Users}
-          variant="purple"
+          variant="emerald"
           href="/app/candidates"
         />
         <KpiCard
@@ -184,10 +275,10 @@ export default async function DashboardPage() {
         <QuickActions />
 
         {isAdmin && !tenantId && (
-          <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-5">
-            <div className="space-y-4">
+          <div className="rounded-2xl glass-cyan border border-cyan-300/50 shadow-sm">
+            <div className="p-5 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
                   <Settings className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
@@ -196,7 +287,7 @@ export default async function DashboardPage() {
               </div>
               <Link
                 href="/app/admin"
-                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
               >
                 <Settings className="w-4 h-4" />
                 {t('manageUsersAndTenants')}
@@ -206,8 +297,17 @@ export default async function DashboardPage() {
         )}
       </div>
 
+      {/* Attention Needed */}
+      <AttentionNeeded staleCandidates={staleCandidates} />
+
       {/* Pipeline Stats */}
       <PipelineStats stats={pipelineStats} />
+
+      {/* Conversion Metrics */}
+      <ConversionMetrics
+        stageCounts={stageCountsRecord}
+        avgDaysToHire={avgDaysToHire}
+      />
 
       {/* Recent Activity */}
       <RecentActivity

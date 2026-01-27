@@ -31,43 +31,15 @@ interface KanbanCardProps {
   isOverlay?: boolean;
 }
 
-// Card styles with visible borders matching column colors
-const CARD_STYLES: Record<string, { bg: string; border: string; iconBg: string }> = {
-  sourced: {
-    bg: 'from-white/80 to-slate-50/60',
-    border: 'border-slate-400/60',
-    iconBg: 'from-slate-400 to-slate-600',
-  },
-  applied: {
-    bg: 'from-white/80 to-blue-50/60',
-    border: 'border-blue-400/60',
-    iconBg: 'from-blue-400 to-blue-600',
-  },
-  screening: {
-    bg: 'from-white/80 to-violet-50/60',
-    border: 'border-violet-400/60',
-    iconBg: 'from-violet-400 to-purple-600',
-  },
-  interview: {
-    bg: 'from-white/80 to-emerald-50/60',
-    border: 'border-emerald-400/60',
-    iconBg: 'from-emerald-400 to-green-600',
-  },
-  offer: {
-    bg: 'from-white/80 to-amber-50/60',
-    border: 'border-amber-400/60',
-    iconBg: 'from-amber-400 to-yellow-500',
-  },
-  hired: {
-    bg: 'from-white/80 to-orange-50/60',
-    border: 'border-orange-400/60',
-    iconBg: 'from-orange-400 to-orange-600',
-  },
-  rejected: {
-    bg: 'from-white/80 to-rose-50/60',
-    border: 'border-rose-400/60',
-    iconBg: 'from-rose-400 to-pink-600',
-  },
+// Icon background colors by stage
+const ICON_COLORS: Record<string, string> = {
+  sourced: 'from-slate-400 to-slate-600',
+  applied: 'from-blue-400 to-blue-600',
+  screening: 'from-violet-400 to-purple-600',
+  interview: 'from-emerald-400 to-green-600',
+  offer: 'from-amber-400 to-yellow-500',
+  hired: 'from-orange-400 to-orange-600',
+  rejected: 'from-rose-400 to-pink-600',
 };
 
 export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps) {
@@ -84,7 +56,7 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
     opacity: isDragging ? 0.3 : 1,
   };
 
-  const cardStyle = CARD_STYLES[jobCandidate.stage] || CARD_STYLES.sourced;
+  const iconColor = ICON_COLORS[jobCandidate.stage] || ICON_COLORS.sourced;
 
   const initials = jobCandidate.candidates.full_name
     .split(' ')
@@ -99,16 +71,16 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
       style={isOverlay ? undefined : style}
       {...(!isOverlay ? listeners : {})}
       {...(!isOverlay ? attributes : {})}
-      className={`rounded-xl bg-gradient-to-br ${cardStyle.bg} backdrop-blur-sm border-2 ${cardStyle.border} transition-all duration-200 ${
+      className={`rounded-xl bg-white/40 backdrop-blur-sm border-2 border-white/70 shadow-sm transition-all duration-200 ${
         isOverlay
-          ? 'shadow-2xl rotate-2 cursor-grabbing scale-105 ring-2 ring-[var(--primary)]/50'
-          : 'hover:shadow-lg hover:-translate-y-1 cursor-grab active:cursor-grabbing shadow-md'
+          ? 'shadow-2xl rotate-2 cursor-grabbing scale-105 ring-2 ring-[var(--primary)]/50 bg-white/70'
+          : 'hover:shadow-md hover:-translate-y-1 hover:bg-white/55 hover:border-white/80 cursor-grab active:cursor-grabbing'
       }`}
     >
       <div className="p-3 space-y-2">
         {/* Header with Avatar and Name */}
         <div className="flex items-center gap-2.5">
-          <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${cardStyle.iconBg} flex items-center justify-center shadow-sm flex-shrink-0`}>
+          <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${iconColor} flex items-center justify-center shadow-sm flex-shrink-0`}>
             <span className="text-xs font-bold text-white">{initials}</span>
           </div>
           <div className="min-w-0 flex-1">

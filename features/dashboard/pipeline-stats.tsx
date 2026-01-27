@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, ChevronRight } from 'lucide-react';
 
 interface PipelineStatsProps {
   stats: {
@@ -11,36 +11,25 @@ interface PipelineStatsProps {
   }[];
 }
 
-// Vibrant gradient colors for each stage
-const STAGE_COLORS: Record<string, { gradient: string; text: string }> = {
-  sourced: {
-    gradient: 'from-slate-400 to-slate-600',
-    text: 'text-white',
-  },
-  applied: {
-    gradient: 'from-blue-400 to-blue-600',
-    text: 'text-white',
-  },
-  screening: {
-    gradient: 'from-violet-400 to-purple-600',
-    text: 'text-white',
-  },
-  interview: {
-    gradient: 'from-emerald-400 to-green-600',
-    text: 'text-white',
-  },
-  offer: {
-    gradient: 'from-amber-400 to-yellow-500',
-    text: 'text-gray-900',
-  },
-  hired: {
-    gradient: 'from-orange-400 to-orange-600',
-    text: 'text-white',
-  },
-  rejected: {
-    gradient: 'from-rose-400 to-pink-600',
-    text: 'text-white',
-  },
+// Stage colors for the horizontal bar
+const STAGE_COLORS: Record<string, string> = {
+  sourced: 'bg-slate-500',
+  applied: 'bg-blue-500',
+  screening: 'bg-violet-500',
+  interview: 'bg-emerald-500',
+  offer: 'bg-amber-500',
+  hired: 'bg-orange-500',
+  rejected: 'bg-rose-500',
+};
+
+const STAGE_BG_COLORS: Record<string, string> = {
+  sourced: 'bg-slate-100 text-slate-700 border-slate-200',
+  applied: 'bg-blue-100 text-blue-700 border-blue-200',
+  screening: 'bg-violet-100 text-violet-700 border-violet-200',
+  interview: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  offer: 'bg-amber-100 text-amber-700 border-amber-200',
+  hired: 'bg-orange-100 text-orange-700 border-orange-200',
+  rejected: 'bg-rose-100 text-rose-700 border-rose-200',
 };
 
 // Define the order of stages for display
@@ -58,81 +47,79 @@ export function PipelineStats({ stats }: PipelineStatsProps) {
   const t = useTranslations();
   const tKanban = useTranslations('kanban.stages');
 
-  const totalActive = stats
-    .filter((s) => s.stage !== 'hired' && s.stage !== 'rejected')
-    .reduce((sum, s) => sum + s.count, 0);
+  const total = stats.reduce((sum, s) => sum + s.count, 0);
 
-  // Sort stats by stage order
-  const sortedStats = [...stats].sort((a, b) => {
-    const aIndex = STAGE_ORDER.indexOf(a.stage);
-    const bIndex = STAGE_ORDER.indexOf(b.stage);
-    return aIndex - bIndex;
+  // Sort stats by stage order and include all stages
+  const allStages = STAGE_ORDER.map((stage) => {
+    const found = stats.find((s) => s.stage === stage);
+    return {
+      stage,
+      count: found?.count || 0,
+    };
   });
 
+  if (stats.length === 0) {
+    return null;
+  }
+
   return (
-    <div className="rounded-2xl bg-white/30 backdrop-blur-md border border-white/40 p-6 max-w-6xl">
-      <div className="space-y-5">
+    <div className="rounded-2xl glass-cyan border border-cyan-300/50 shadow-sm max-w-6xl">
+      <div className="p-5 space-y-4">
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
               <TrendingUp className="w-5 h-5 text-white" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              {t('dashboard.pipelineOverview')}
-            </h3>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">
+                {t('dashboard.pipelineOverview')}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {total} {t('dashboard.totalCandidates').toLowerCase()}
+              </p>
+            </div>
           </div>
           <Link
             href="/app/kanban"
-            className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
+            className="flex items-center gap-1 text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors"
           >
-            {t('dashboard.viewKanban')} →
+            {t('dashboard.viewKanban')}
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        {stats.length === 0 ? (
-          <p className="text-sm text-gray-600">{t('dashboard.noCandidates')}</p>
-        ) : (
-          <div className="space-y-4">
-            {/* Total Active - Compact */}
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-300/30">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-white">{totalActive}</span>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {t('dashboard.activeInPipeline')}
-                </p>
-                <p className="text-xs text-gray-600">
-                  {stats.filter((s) => s.stage !== 'hired' && s.stage !== 'rejected').length} {t('kanban.stages.screening').toLowerCase()}
-                </p>
-              </div>
-            </div>
+        {/* Horizontal Progress Bar */}
+        <div className="h-4 rounded-full bg-white/50 overflow-hidden flex">
+          {allStages.map((stat) => {
+            if (stat.count === 0) return null;
+            const width = (stat.count / total) * 100;
+            return (
+              <div
+                key={stat.stage}
+                className={`${STAGE_COLORS[stat.stage]} h-full transition-all duration-500`}
+                style={{ width: `${width}%` }}
+                title={`${tKanban(stat.stage)}: ${stat.count}`}
+              />
+            );
+          })}
+        </div>
 
-            {/* Stage Breakdown - Gradient cards */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
-              {sortedStats.map((stat) => {
-                const colors = STAGE_COLORS[stat.stage] || STAGE_COLORS.sourced;
-                const stageName = tKanban(stat.stage);
-
-                return (
-                  <div
-                    key={stat.stage}
-                    className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${colors.gradient} p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg shadow-md`}
-                  >
-                    <div className="relative z-10">
-                      <p className={`text-xs font-semibold ${colors.text} opacity-90 mb-1 truncate`}>
-                        {stageName}
-                      </p>
-                      <p className={`text-2xl font-bold ${colors.text}`}>{stat.count}</p>
-                    </div>
-                    {/* Shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 opacity-50" />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {/* Stage Pills */}
+        <div className="flex flex-wrap gap-2">
+          {allStages.map((stat) => {
+            const colors = STAGE_BG_COLORS[stat.stage];
+            return (
+              <div
+                key={stat.stage}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium ${colors}`}
+              >
+                <span>{tKanban(stat.stage)}</span>
+                <span className="font-bold">{stat.count}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

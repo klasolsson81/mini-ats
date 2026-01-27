@@ -2,16 +2,10 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { login } from '@/lib/actions/auth';
+import { Loader2 } from 'lucide-react';
 
 export function LoginForm() {
   const t = useTranslations();
@@ -34,73 +28,102 @@ export function LoginForm() {
     <>
       {/* Fullscreen loading overlay during login */}
       {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
-          <div className="text-center">
-            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600"></div>
-            <p className="text-lg font-semibold text-gray-900">
-              Loggar in...
+        <div className="fixed inset-0 z-50 flex items-center justify-center login-bg">
+          <div className="text-center relative z-10">
+            <div className="mx-auto mb-4 w-20 h-20 rounded-2xl bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-xl border border-white/50">
+              <Loader2 className="w-10 h-10 text-cyan-500 animate-spin" />
+            </div>
+            <p className="text-lg font-semibold text-gray-800">
+              {t('auth.loggingIn')}
             </p>
             <p className="mt-2 text-sm text-gray-600">
-              Förbereder din session
+              {t('auth.preparingSession')}
             </p>
           </div>
         </div>
       )}
 
-      <Card>
-      <CardHeader>
-        <CardTitle>{t('auth.login')}</CardTitle>
-        <CardDescription>
-          {t('auth.email')} / {t('auth.password')}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form action={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {t('auth.email')}
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="name@example.com"
-              required
-              disabled={isLoading}
-            />
+      {/* Glassmorphism card with animated border */}
+      <div className="animated-border-card shadow-2xl">
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+          {/* Header */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-white drop-shadow-md">{t('auth.login')}</h2>
+            <p className="text-sm text-cyan-100 mt-1">
+              {t('auth.loginSubtitle')}
+            </p>
           </div>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {t('auth.password')}
-            </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              disabled={isLoading}
-            />
-          </div>
-
-          {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
-              {error}
+          {/* Form */}
+          <form action={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-semibold text-white drop-shadow-sm"
+              >
+                {t('auth.email')}
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="name@example.com"
+                required
+                disabled={isLoading}
+                className="h-11 bg-white/30 backdrop-blur-sm border-white/40 text-gray-800 placeholder:text-gray-500 focus:border-cyan-300 focus:ring-cyan-300 focus:bg-white/50"
+              />
             </div>
-          )}
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? t('common.loading') : t('auth.signIn')}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="text-sm font-semibold text-white drop-shadow-sm"
+              >
+                {t('auth.password')}
+              </label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                disabled={isLoading}
+                className="h-11 bg-white/30 backdrop-blur-sm border-white/40 text-gray-800 placeholder:text-gray-500 focus:border-cyan-300 focus:ring-cyan-300 focus:bg-white/50"
+              />
+            </div>
+
+            {error && (
+              <div className="rounded-xl bg-red-500/20 backdrop-blur-sm border border-red-300/50 p-3 text-sm text-white">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-11 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t('common.loading')}
+                </span>
+              ) : (
+                t('auth.signIn')
+              )}
+            </button>
+
+            {/* Forgot password link */}
+            <div className="text-center pt-3">
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-blue-800 hover:text-blue-900 underline underline-offset-2 decoration-blue-400 hover:decoration-blue-600 transition-all"
+              >
+                {t('auth.forgotPassword')}
+              </Link>
+            </div>
+          </form>
+        </div>
+      </div>
     </>
   );
 }
