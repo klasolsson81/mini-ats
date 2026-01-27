@@ -17,6 +17,7 @@ export async function generateMetadata() {
 export default async function AdminPage() {
   const supabase = await createClient();
   const t = await getTranslations('admin');
+  const tCommon = await getTranslations('common');
 
   const {
     data: { user },
@@ -131,7 +132,7 @@ export default async function AdminPage() {
                       {t('users')}
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-600">
-                      {t('actions')}
+                      {tCommon('actions')}
                     </th>
                   </tr>
                 </thead>
