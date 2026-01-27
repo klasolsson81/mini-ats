@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Briefcase, Users, TrendingUp } from 'lucide-react';
+import { getEffectiveTenantId } from '@/lib/utils/tenant';
 
 export async function generateMetadata() {
   const t = await getTranslations('nav');
@@ -32,8 +33,7 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single();
 
-  const isAdmin = profile?.role === 'admin';
-  const tenantId = profile?.tenant_id;
+  const { tenantId, isAdmin } = await getEffectiveTenantId();
 
   let jobsCount = 0;
   let candidatesCount = 0;
@@ -41,7 +41,7 @@ export default async function DashboardPage() {
 
   if (tenantId || isAdmin) {
     const jobsQuery = supabase.from('jobs').select('id', { count: 'exact' });
-    if (!isAdmin && tenantId) {
+    if (tenantId) {
       jobsQuery.eq('tenant_id', tenantId);
     }
     const { count: jobs } = await jobsQuery;
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
     const candidatesQuery = supabase
       .from('candidates')
       .select('id', { count: 'exact' });
-    if (!isAdmin && tenantId) {
+    if (tenantId) {
       candidatesQuery.eq('tenant_id', tenantId);
     }
     const { count: candidates } = await candidatesQuery;
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
       .from('job_candidates')
       .select('id', { count: 'exact' })
       .not('stage', 'in', '(hired,rejected)');
-    if (!isAdmin && tenantId) {
+    if (tenantId) {
       activeQuery.eq('tenant_id', tenantId);
     }
     const { count: active } = await activeQuery;

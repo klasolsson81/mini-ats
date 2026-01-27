@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { CandidatesList } from '@/features/candidates/candidates-list';
 import { CreateCandidateButton } from '@/features/candidates/create-candidate-button';
+import { getEffectiveTenantId } from '@/lib/utils/tenant';
 
 export async function generateMetadata() {
   const t = await getTranslations('candidates');
@@ -23,27 +24,27 @@ export default async function CandidatesPage() {
     redirect('/login');
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single();
+  const { tenantId, isAdmin } = await getEffectiveTenantId();
 
   const query = supabase
     .from('candidates')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (profile?.role !== 'admin' && profile?.tenant_id) {
-    query.eq('tenant_id', profile.tenant_id);
+  if (tenantId) {
+    query.eq('tenant_id', tenantId);
+  } else if (!isAdmin) {
+    query.eq('tenant_id', 'none');
   }
 
   const { data: candidates } = await query;
 
   // Get jobs for attach dialog
   const jobsQuery = supabase.from('jobs').select('id, title').eq('status', 'open');
-  if (profile?.role !== 'admin' && profile?.tenant_id) {
-    jobsQuery.eq('tenant_id', profile.tenant_id);
+  if (tenantId) {
+    jobsQuery.eq('tenant_id', tenantId);
+  } else if (!isAdmin) {
+    jobsQuery.eq('tenant_id', 'none');
   }
   const { data: jobs } = await jobsQuery;
 

@@ -7,6 +7,7 @@ import {
   type CandidateFormData,
 } from '@/lib/validations/candidate';
 import { Stage } from '../constants/stages';
+import { getEffectiveTenantId } from '@/lib/utils/tenant';
 
 export async function createCandidate(data: CandidateFormData) {
   const supabase = await createClient();
@@ -19,22 +20,14 @@ export async function createCandidate(data: CandidateFormData) {
     return { error: 'Unauthorized' };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile) {
-    return { error: 'Profile not found' };
-  }
-
   const validated = candidateSchema.safeParse(data);
   if (!validated.success) {
     return { error: validated.error.issues[0].message };
   }
 
-  if (!profile.tenant_id) {
+  const { tenantId } = await getEffectiveTenantId();
+
+  if (!tenantId) {
     return { error: 'Tenant required' };
   }
 
@@ -42,7 +35,7 @@ export async function createCandidate(data: CandidateFormData) {
     .from('candidates')
     .insert({
       ...validated.data,
-      tenant_id: profile.tenant_id,
+      tenant_id: tenantId,
     })
     .select()
     .single();
@@ -106,13 +99,9 @@ export async function attachCandidateToJob(
     return { error: 'Unauthorized' };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single();
+  const { tenantId } = await getEffectiveTenantId();
 
-  if (!profile?.tenant_id) {
+  if (!tenantId) {
     return { error: 'Tenant required' };
   }
 
@@ -120,7 +109,7 @@ export async function attachCandidateToJob(
     candidate_id: candidateId,
     job_id: jobId,
     stage,
-    tenant_id: profile.tenant_id,
+    tenant_id: tenantId,
   });
 
   if (error) {

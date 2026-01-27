@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { KanbanBoard } from '@/features/kanban/kanban-board';
+import { getEffectiveTenantId } from '@/lib/utils/tenant';
 
 export async function generateMetadata() {
   const t = await getTranslations('kanban');
@@ -22,16 +23,14 @@ export default async function KanbanPage() {
     redirect('/login');
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single();
+  const { tenantId, isAdmin } = await getEffectiveTenantId();
 
   // Fetch jobs for filter
   const jobsQuery = supabase.from('jobs').select('id, title').eq('status', 'open');
-  if (profile?.role !== 'admin' && profile?.tenant_id) {
-    jobsQuery.eq('tenant_id', profile.tenant_id);
+  if (tenantId) {
+    jobsQuery.eq('tenant_id', tenantId);
+  } else if (!isAdmin) {
+    jobsQuery.eq('tenant_id', 'none');
   }
   const { data: jobs } = await jobsQuery;
 
@@ -45,8 +44,10 @@ export default async function KanbanPage() {
     `)
     .order('created_at', { ascending: false });
 
-  if (profile?.role !== 'admin' && profile?.tenant_id) {
-    jcQuery.eq('tenant_id', profile.tenant_id);
+  if (tenantId) {
+    jcQuery.eq('tenant_id', tenantId);
+  } else if (!isAdmin) {
+    jcQuery.eq('tenant_id', 'none');
   }
 
   const { data: jobCandidates } = await jcQuery;

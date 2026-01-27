@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { jobSchema, type JobFormData } from '@/lib/validations/job';
+import { getEffectiveTenantId } from '@/lib/utils/tenant';
 
 export async function createJob(data: JobFormData) {
   const supabase = await createClient();
@@ -15,28 +16,20 @@ export async function createJob(data: JobFormData) {
     return { error: 'Unauthorized' };
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id, role')
-    .eq('id', user.id)
-    .single();
-
-  if (!profile) {
-    return { error: 'Profile not found' };
-  }
-
   const validated = jobSchema.safeParse(data);
   if (!validated.success) {
     return { error: validated.error.issues[0].message };
   }
 
-  if (!profile.tenant_id) {
+  const { tenantId } = await getEffectiveTenantId();
+
+  if (!tenantId) {
     return { error: 'Tenant required' };
   }
 
   const { error } = await supabase.from('jobs').insert({
     ...validated.data,
-    tenant_id: profile.tenant_id,
+    tenant_id: tenantId,
   });
 
   if (error) {
