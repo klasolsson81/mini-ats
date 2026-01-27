@@ -3,6 +3,19 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
+// Map common Supabase auth errors to user-friendly Swedish messages
+function translateAuthError(error: string): string {
+  const errorMap: Record<string, string> = {
+    'New password should be different from the old password':
+      'Det nya lösenordet måste skilja sig från det gamla',
+    'Password should be at least 6 characters':
+      'Lösenordet måste vara minst 6 tecken långt',
+    'New password cannot be empty': 'Lösenordet får inte vara tomt',
+  };
+
+  return errorMap[error] || error;
+}
+
 export async function changePassword(newPassword: string) {
   const supabase = await createClient();
 
@@ -11,7 +24,7 @@ export async function changePassword(newPassword: string) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: 'Not authenticated' };
+    return { error: 'Inte autentiserad' };
   }
 
   // Validate password (minimum 8 characters)
@@ -26,7 +39,7 @@ export async function changePassword(newPassword: string) {
 
   if (authError) {
     console.error('Auth error:', authError);
-    return { error: authError.message };
+    return { error: translateAuthError(authError.message) };
   }
 
   // Clear the must_change_password flag
