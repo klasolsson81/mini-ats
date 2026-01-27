@@ -114,6 +114,8 @@
     "pageTitle": "Admin Panel",
     "subtitle": "Manage tenants and users",
     "createUser": "Create user",
+    "createAdmin": "Create Admin",
+    "createAdminUser": "Create Admin User",
     "createTenant": "Create tenant",
     "createNewTenant": "Create New Tenant",
     "existingTenants": "Existing Tenants",
@@ -127,12 +129,16 @@
     "roleAdmin": "Admin",
     "roleCustomer": "Customer",
     "impersonate": "Impersonate",
+    "actAs": "Act as",
     "stopImpersonating": "Stop impersonating",
+    "impersonatingAs": "Acting as {tenant}",
     "userCreated": "User created",
+    "adminCreated": "Admin created",
     "tenantCreated": "Tenant created",
     "errorOccurred": "An error occurred",
     "users": "users",
-    "noTenants": "No tenants yet."
+    "noTenants": "No tenants yet.",
+    "adminDescription": "Admin users have access to the entire system and can manage all tenants."
   },
   "footer": {
     "privacy": "Privacy Policy",

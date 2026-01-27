@@ -114,6 +114,8 @@
     "pageTitle": "Admin Panel",
     "subtitle": "Hantera kunder och användare",
     "createUser": "Skapa användare",
+    "createAdmin": "Skapa Admin",
+    "createAdminUser": "Skapa Admin-Användare",
     "createTenant": "Skapa kund",
     "createNewTenant": "Skapa Ny Kund",
     "existingTenants": "Befintliga Kunder",
@@ -127,12 +129,16 @@
     "roleAdmin": "Admin",
     "roleCustomer": "Kund",
     "impersonate": "Agera som",
+    "actAs": "Agera som",
     "stopImpersonating": "Sluta agera som",
+    "impersonatingAs": "Du agerar som {tenant}",
     "userCreated": "Användare skapad",
+    "adminCreated": "Admin skapad",
     "tenantCreated": "Kund skapad",
     "errorOccurred": "Ett fel uppstod",
     "users": "användare",
-    "noTenants": "Inga kunder än."
+    "noTenants": "Inga kunder än.",
+    "adminDescription": "Admin-användare har tillgång till hela systemet och kan hantera alla kunder."
   },
   "footer": {
     "privacy": "Integritetspolicy",
