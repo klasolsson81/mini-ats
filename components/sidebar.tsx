@@ -111,8 +111,15 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
     },
   ];
 
-  // Only show Admin link if user is admin AND not currently impersonating
+  // Hide search for admins who are not impersonating (they have no tenant to search)
   if (isAdmin && !isImpersonating) {
+    // Remove search from navigation for admin without impersonation
+    const searchIndex = navigation.findIndex((n) => n.href === '/app/search');
+    if (searchIndex !== -1) {
+      navigation.splice(searchIndex, 1);
+    }
+
+    // Add Admin link
     navigation.push({
       name: t('nav.admin'),
       href: '/app/admin',
