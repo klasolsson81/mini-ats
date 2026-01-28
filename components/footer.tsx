@@ -11,38 +11,42 @@ export function Footer() {
 
   return (
     <>
-      <footer className="border-t border-white/20 glass py-3 shrink-0 animate-flow-footer">
+      <footer className="py-6 shrink-0">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-center gap-2 text-center">
-            {/* Policy links */}
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-3 text-center">
+            {/* Links row */}
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <button
                 onClick={() => setModalType('privacy')}
-                className="text-xs font-medium text-gray-700 hover:text-cyan-700 transition-colors"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors underline-offset-4 hover:underline"
               >
                 {t('footer.privacy')}
               </button>
-              <span className="text-gray-400">•</span>
               <button
                 onClick={() => setModalType('cookies')}
-                className="text-xs font-medium text-gray-700 hover:text-cyan-700 transition-colors"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors underline-offset-4 hover:underline"
               >
                 {t('footer.cookies')}
               </button>
+              <a
+                href="mailto:support@miniats.se"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors underline-offset-4 hover:underline"
+              >
+                {t('footer.contact')}
+              </a>
             </div>
 
             {/* Copyright */}
-            <p className="text-xs text-gray-600">
+            <p className="text-sm text-gray-500">
               © {currentYear}{' '}
               <a
                 href="https://klasolsson.se"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium hover:text-cyan-700 transition-colors"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Klas Olsson
               </a>
-              {' · '}{t('footer.allRightsReserved')}
             </p>
           </div>
         </div>
