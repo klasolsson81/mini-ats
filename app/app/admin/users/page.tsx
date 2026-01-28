@@ -69,11 +69,11 @@ export default async function UsersPage() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {t('allUsers')}
         </h1>
-        <p className="text-gray-600 text-lg">{t('allUsersSubtitle')}</p>
+        <p className="text-gray-600 text-sm sm:text-lg">{t('allUsersSubtitle')}</p>
       </div>
 
       {/* Statistics */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 max-w-4xl">
+      <div className="grid gap-3 grid-cols-3 max-w-4xl">
         <KpiCard
           title={t('totalUsers')}
           value={activeUsers.length}

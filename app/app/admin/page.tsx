@@ -57,23 +57,23 @@ export default async function AdminPage() {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
             {t('pageTitle')}
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-sm sm:text-lg">
             {t('subtitle')}
           </p>
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Link href="/app/admin/users">
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 backdrop-blur-sm border-2 border-cyan-300/50 text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 backdrop-blur-sm border-2 border-cyan-300/50 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto">
               <Users className="h-4 w-4 text-cyan-600" />
-              {t('viewAllUsers')}
+              <span className="truncate">{t('viewAllUsers')}</span>
             </button>
           </Link>
           <Link href="/app/admin/audit-logs">
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-500/20 to-purple-500/20 hover:from-violet-500/30 hover:to-purple-500/30 backdrop-blur-sm border-2 border-violet-300/50 text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md">
+            <button className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-violet-500/20 to-purple-500/20 hover:from-violet-500/30 hover:to-purple-500/30 backdrop-blur-sm border-2 border-violet-300/50 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto">
               <Shield className="h-4 w-4 text-violet-600" />
-              {t('viewAuditLogs')}
+              <span className="truncate">{t('viewAuditLogs')}</span>
             </button>
           </Link>
         </div>
@@ -131,8 +131,8 @@ export default async function AdminPage() {
           </div>
 
           {tenants && tenants.length > 0 ? (
-            <div className="rounded-xl overflow-hidden border-2 border-white/50 bg-white/30 backdrop-blur-sm">
-              <table className="w-full">
+            <div className="rounded-xl overflow-x-auto border-2 border-white/50 bg-white/30 backdrop-blur-sm">
+              <table className="w-full min-w-[400px]">
                 <thead>
                   <tr className="border-b border-white/40 bg-white/40">
                     <th className="px-4 py-3 text-left text-xs font-bold uppercase text-gray-700">

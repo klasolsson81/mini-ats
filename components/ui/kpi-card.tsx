@@ -57,21 +57,21 @@ export function KpiCard({
         className
       )}
     >
-      <div className="p-5 flex items-center justify-between">
-        <div>
-          <p className="text-sm font-semibold text-gray-600 mb-1">{title}</p>
-          <p className="text-4xl font-bold text-gray-900">{value}</p>
+      <div className="p-3 sm:p-5 flex items-center justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm font-semibold text-gray-600 mb-1 truncate">{title}</p>
+          <p className="text-2xl sm:text-4xl font-bold text-gray-900">{value}</p>
           {subtitle && (
-            <p className="text-sm font-medium text-gray-500 mt-1">{subtitle}</p>
+            <p className="text-xs sm:text-sm font-medium text-gray-500 mt-1 truncate">{subtitle}</p>
           )}
         </div>
         <div
           className={cn(
-            'w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg',
+            'w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg shrink-0',
             styles.iconBg
           )}
         >
-          <Icon className="w-6 h-6 text-white" />
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
         </div>
       </div>
     </div>

@@ -151,7 +151,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   };
 
   return (
-    <aside className="flex w-16 sm:w-28 flex-col glass border-r border-white/20 relative z-10 overflow-visible animate-flow">
+    <aside className="flex w-14 sm:w-28 flex-col glass border-r border-white/20 relative z-10 overflow-visible animate-flow shrink-0">
       {/* Logo */}
       <div className="flex h-16 sm:h-20 items-center justify-center px-1 sm:px-2 border-b border-white/10">
         <div className="flex flex-col items-center">
@@ -201,7 +201,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
               )}
               <span
                 className={cn(
-                  'text-[8px] sm:text-[10px] font-medium mt-0.5 sm:mt-1 truncate max-w-full',
+                  'hidden sm:block text-[10px] font-medium mt-1 truncate max-w-full',
                   isActive ? 'text-white' : 'text-gray-600'
                 )}
               >
