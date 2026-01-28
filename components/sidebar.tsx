@@ -49,6 +49,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   const [isPending, startTransition] = useTransition();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const currentLocale = useSyncExternalStore(
@@ -58,6 +59,16 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   );
 
   const isAdmin = profile.role === 'admin';
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    setIsUserMenuOpen(false);
+    const result = await logout();
+    if (result?.success && result.redirectTo) {
+      router.push(result.redirectTo);
+      router.refresh();
+    }
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -287,16 +298,20 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
 
                   <div className="border-t border-cyan-100 my-1" />
 
-                  <form action={logout}>
-                    <button
-                      type="submit"
-                      className="w-full flex items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title={t('auth.logout')}
-                      aria-label={t('auth.logout')}
-                    >
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className="w-full flex items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                    title={t('auth.logout')}
+                    aria-label={t('auth.logout')}
+                  >
+                    {isLoggingOut ? (
+                      <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                    ) : (
                       <LogOut className="w-5 h-5" aria-hidden="true" />
-                    </button>
-                  </form>
+                    )}
+                  </button>
                 </div>
               </div>
               </div>

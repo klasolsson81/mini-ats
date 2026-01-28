@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 // Map common Supabase auth errors to user-friendly Swedish messages
 function translateAuthError(error: string): string {
@@ -33,14 +32,25 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { error, data: authData } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
     return { error: translateAuthError(error.message) };
   }
 
+  // Check if user must change password
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('must_change_password')
+    .eq('id', authData.user.id)
+    .single();
+
   revalidatePath('/', 'layout');
-  redirect('/app');
+
+  // Return success with redirect URL instead of calling redirect()
+  // This allows the client to show a loading overlay during navigation
+  const redirectTo = profile?.must_change_password ? '/change-password' : '/app';
+  return { success: true, redirectTo };
 }
 
 export async function logout() {
@@ -55,7 +65,9 @@ export async function logout() {
 
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
-  redirect('/login');
+
+  // Return success with redirect URL for client-side navigation
+  return { success: true, redirectTo: '/login' };
 }
 
 export async function changePassword(currentPassword: string, newPassword: string) {

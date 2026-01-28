@@ -4,42 +4,23 @@ This document tracks known issues and limitations in the current MVP release.
 
 ---
 
-## 🟡 UI/UX Issues
+## ✅ Resolved UI/UX Issues
 
-### 1. Black Screen During Authentication Redirects
+### 1. Black Screen During Authentication Redirects ✅ FIXED (2026-01-28)
 
-**Severity:** Minor (Cosmetic)
-**Status:** Tracked for v0.2
-**Affected Flows:**
-- After clicking "Logga in" button → redirect to /app or /change-password
-- After changing password on first login → redirect to /app
+**Status:** RESOLVED
+**Fix:** Changed from server-side `redirect()` to client-side `router.push()`
 
-**Description:**
-Users may see a brief (1-3 seconds) black screen during page transitions when:
-1. Logging in for the first time (before password change)
-2. Completing the password change and being redirected to the dashboard
+**Solution Implemented:**
+- Server actions now return `{ success: true, redirectTo: '/app' }` instead of calling `redirect()`
+- Client-side navigation with `router.push()` and `router.refresh()`
+- Loading overlay stays visible during the entire navigation
+- Applied to: login, logout flows
 
-**Technical Cause:**
-`window.location.href` full page reload causes the browser to show a blank state between page unload and new page load. Fullscreen overlays attempt to cover this but timing varies by browser and connection speed.
-
-**User Impact:**
-- Low - Functionality is not affected
-- Authentication works correctly
-- Data loads properly after transition
-- Only visual experience is briefly impacted
-
-**Workaround:**
-None needed - transitions complete successfully within 1-3 seconds.
-
-**Planned Fix (v0.2):**
-- Implement server-side session refresh to eliminate `window.location.href`
-- Use Next.js `router.refresh()` with proper session management
-- Add smoother transitions with React Suspense boundaries
-- Consider SPA-style authentication flow
-
-**References:**
-- Feature implementation: Force password change (2026-01-27)
-- Related commits: bf5c8cd, 444cbd5, ca50afb
+**Files Changed:**
+- `lib/actions/auth.ts` - Return success instead of redirect
+- `features/auth/login-form.tsx` - Client-side navigation
+- `components/sidebar.tsx` - Client-side logout navigation
 
 ---
 
@@ -204,6 +185,7 @@ For production deployment, track issues using:
 To provide balance, here's what's been thoroughly tested and works reliably:
 
 - ✅ Authentication and authorization
+- ✅ Smooth login/logout transitions (no black screen)
 - ✅ Multi-tenant data isolation (RLS)
 - ✅ Force password change on first login
 - ✅ Jobs CRUD operations
@@ -219,6 +201,6 @@ To provide balance, here's what's been thoroughly tested and works reliably:
 ---
 
 **Document Created:** 2026-01-27
-**Last Updated:** 2026-01-27
+**Last Updated:** 2026-01-28
 **Version:** MVP v0.1
 **Next Review:** Before v0.2 release

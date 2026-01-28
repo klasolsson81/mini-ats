@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { login } from '@/lib/actions/auth';
@@ -9,6 +10,7 @@ import { Loader2 } from 'lucide-react';
 
 export function LoginForm() {
   const t = useTranslations();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,8 +22,12 @@ export function LoginForm() {
     if (result?.error) {
       setError(result.error);
       setIsLoading(false);
+    } else if (result?.success && result.redirectTo) {
+      // Client-side navigation with loading overlay visible
+      router.push(result.redirectTo);
+      router.refresh();
+      // Keep isLoading true - overlay stays visible during navigation
     }
-    // If successful, redirect() is called and component unmounts
   }
 
   return (
