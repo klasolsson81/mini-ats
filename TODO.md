@@ -108,10 +108,17 @@
 
 ### P2 - Nice to have (Post-MVP)
 
-#### 10. Unit Tests: Filter Logic
-**Varför:** Code confidence, refactoring safety
-**Estimat:** 2 timmar
-**Fil:** `features/kanban/kanban-board.tsx`
+#### 10. Unit Tests: Filter Logic ✅ KLART (2026-01-28)
+**Status:** IMPLEMENTERAT
+**Filer:** `lib/utils/kanban-filters.ts`, `lib/utils/__tests__/kanban-filters.test.ts`, `vitest.config.ts`
+
+**Lösning:**
+- Extraherat filter-logik till testbar utility-funktion
+- 21 unit tests för filterJobCandidates, groupByStage, countByStage
+- Fixat bug: sökfrågan trimmas nu korrekt
+- Uppdaterat kanban-board.tsx att använda utility
+
+**Kör tester:** `npm run test`
 
 ---
 

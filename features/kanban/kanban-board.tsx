@@ -6,6 +6,7 @@ import { Select } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, Filter } from 'lucide-react';
 import { STAGE_ORDER, type Stage } from '@/lib/constants/stages';
+import { filterJobCandidates, groupByStage } from '@/lib/utils/kanban-filters';
 import { KanbanColumn } from './kanban-column';
 import { KanbanCard } from './kanban-card';
 import {
@@ -105,37 +106,15 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     });
   }
 
-  const filteredCandidates = useMemo(() => {
-    let filtered = optimisticCandidates;
+  const filteredCandidates = useMemo(
+    () => filterJobCandidates(optimisticCandidates, selectedJobId, searchQuery),
+    [optimisticCandidates, selectedJobId, searchQuery]
+  );
 
-    if (selectedJobId !== 'all') {
-      filtered = filtered.filter((jc) => jc.job_id === selectedJobId);
-    }
-
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((jc) =>
-        jc.candidates.full_name.toLowerCase().includes(query)
-      );
-    }
-
-    return filtered;
-  }, [optimisticCandidates, selectedJobId, searchQuery]);
-
-  const candidatesByStage = useMemo(() => {
-    const grouped: Record<string, JobCandidate[]> = {};
-    STAGE_ORDER.forEach((stage) => {
-      grouped[stage] = [];
-    });
-
-    filteredCandidates.forEach((jc) => {
-      if (grouped[jc.stage]) {
-        grouped[jc.stage].push(jc);
-      }
-    });
-
-    return grouped;
-  }, [filteredCandidates]);
+  const candidatesByStage = useMemo(
+    () => groupByStage(filteredCandidates),
+    [filteredCandidates]
+  );
 
   const activeJobCandidate = useMemo(() => {
     if (!activeId) return null;
