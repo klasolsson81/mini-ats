@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { logAuditEvent } from '@/lib/utils/audit-log';
 
 // Map common Supabase auth errors to user-friendly Swedish messages
 function translateAuthError(error: string): string {
@@ -59,6 +60,21 @@ export async function changePassword(newPassword: string) {
   if (refreshError) {
     console.error('Refresh error:', refreshError);
   }
+
+  // Log audit event
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, email')
+    .eq('id', user.id)
+    .single();
+
+  await logAuditEvent({
+    eventType: 'auth.password_changed',
+    targetType: 'auth',
+    targetId: user.id,
+    targetName: profile?.full_name || profile?.email,
+    metadata: { email: profile?.email },
+  });
 
   revalidatePath('/app');
   revalidatePath('/');

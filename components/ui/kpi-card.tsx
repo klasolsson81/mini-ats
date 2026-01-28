@@ -8,7 +8,7 @@ interface KpiCardProps {
   subtitle?: string;
   icon: LucideIcon;
   href?: string;
-  variant?: 'blue' | 'emerald' | 'cyan';
+  variant?: 'blue' | 'emerald' | 'cyan' | 'purple';
   className?: string;
 }
 
@@ -27,6 +27,11 @@ const variantStyles = {
     glass: 'glass-cyan',
     border: 'border-cyan-300/50',
     iconBg: 'from-cyan-500 to-teal-600',
+  },
+  purple: {
+    glass: 'glass',
+    border: 'border-purple-300/50',
+    iconBg: 'from-purple-500 to-violet-600',
   },
 };
 

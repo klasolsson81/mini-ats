@@ -1,8 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
-import { Briefcase, Users, TrendingUp, Settings } from 'lucide-react';
+import { Briefcase, Users, TrendingUp, Building2, ScrollText } from 'lucide-react';
 import { getEffectiveTenantId } from '@/lib/utils/tenant';
 import { QuickActions } from '@/features/dashboard/quick-actions';
 import { RecentActivity } from '@/features/dashboard/recent-activity';
@@ -10,6 +9,8 @@ import { PipelineStats } from '@/features/dashboard/pipeline-stats';
 import { AttentionNeeded } from '@/features/dashboard/attention-needed';
 import { ConversionMetrics } from '@/features/dashboard/conversion-metrics';
 import { KpiCard } from '@/components/ui/kpi-card';
+import { AdminQuickActions } from '@/features/dashboard/admin-quick-actions';
+import { AdminRecentActivity } from '@/features/dashboard/admin-recent-activity';
 
 interface RecentJob {
   id: string;
@@ -93,126 +94,128 @@ export default async function DashboardPage() {
     days_in_stage: number;
   }[] = [];
 
-  if (tenantId || isAdmin) {
-    // Fetch total jobs count
-    const jobsQuery = supabase.from('jobs').select('id', { count: 'exact' });
-    if (tenantId) {
-      jobsQuery.eq('tenant_id', tenantId);
-    }
-    const { count: jobs } = await jobsQuery;
+  // Admin platform stats
+  let tenantsCount = 0;
+  let usersCount = 0;
+  let adminUsersCount = 0;
+  let auditEventsCount = 0;
+
+  // Admin-only platform stats (when not impersonating)
+  if (isAdmin && !tenantId) {
+    const { count: tenants } = await supabase
+      .from('tenants')
+      .select('id', { count: 'exact' });
+    tenantsCount = tenants || 0;
+
+    const { count: users } = await supabase
+      .from('profiles')
+      .select('id', { count: 'exact' });
+    usersCount = users || 0;
+
+    const { count: admins } = await supabase
+      .from('profiles')
+      .select('id', { count: 'exact' })
+      .eq('role', 'admin');
+    adminUsersCount = admins || 0;
+
+    const { count: events } = await supabase
+      .from('audit_logs')
+      .select('id', { count: 'exact' });
+    auditEventsCount = events || 0;
+
+    // Fetch total jobs across all tenants
+    const { count: allJobs } = await supabase
+      .from('jobs')
+      .select('id', { count: 'exact' });
+    jobsCount = allJobs || 0;
+
+    // Fetch recent impersonations for admin
+    const { data: impersonationsData } = await supabase
+      .from('impersonation_logs')
+      .select(
+        `
+        id,
+        started_at,
+        admin:profiles!impersonation_logs_admin_id_fkey(full_name),
+        tenant:tenants!impersonation_logs_tenant_id_fkey(name)
+      `
+      )
+      .order('started_at', { ascending: false })
+      .limit(5);
+
+    recentImpersonations =
+      (impersonationsData as ImpersonationLogRaw[] | null)?.map((imp) => ({
+        id: imp.id,
+        started_at: imp.started_at,
+        admin_name: imp.admin?.full_name || 'Unknown',
+        tenant_name: imp.tenant?.name || 'Unknown',
+      })) || [];
+  }
+
+  // Customer/tenant-specific stats (only when viewing as tenant)
+  if (tenantId) {
+    const { count: jobs } = await supabase
+      .from('jobs')
+      .select('id', { count: 'exact' })
+      .eq('tenant_id', tenantId);
     jobsCount = jobs || 0;
 
-    // Fetch open jobs count
-    const openJobsQuery = supabase
+    const { count: openJobs } = await supabase
       .from('jobs')
       .select('id', { count: 'exact' })
-      .eq('status', 'open');
-    if (tenantId) {
-      openJobsQuery.eq('tenant_id', tenantId);
-    }
-    const { count: openJobs } = await openJobsQuery;
+      .eq('status', 'open')
+      .eq('tenant_id', tenantId);
     openJobsCount = openJobs || 0;
 
-    const candidatesQuery = supabase
+    const { count: candidates } = await supabase
       .from('candidates')
-      .select('id', { count: 'exact' });
-    if (tenantId) {
-      candidatesQuery.eq('tenant_id', tenantId);
-    }
-    const { count: candidates } = await candidatesQuery;
+      .select('id', { count: 'exact' })
+      .eq('tenant_id', tenantId);
     candidatesCount = candidates || 0;
 
-    const activeQuery = supabase
+    const { count: active } = await supabase
       .from('job_candidates')
       .select('id', { count: 'exact' })
-      .not('stage', 'in', '(hired,rejected)');
-    if (tenantId) {
-      activeQuery.eq('tenant_id', tenantId);
-    }
-    const { count: active } = await activeQuery;
+      .not('stage', 'in', '(hired,rejected)')
+      .eq('tenant_id', tenantId);
     activeCount = active || 0;
 
-    // Fetch recent jobs (last 5)
-    const jobsDataQuery = supabase
+    const { data: jobsData } = await supabase
       .from('jobs')
       .select('id, title, status, created_at')
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(5);
-    if (tenantId) {
-      jobsDataQuery.eq('tenant_id', tenantId);
-    }
-    const { data: jobsData } = await jobsDataQuery;
     recentJobs = jobsData || [];
 
-    // Fetch recent candidates (last 5)
-    const candidatesDataQuery = supabase
+    const { data: candidatesData } = await supabase
       .from('candidates')
       .select('id, full_name, email, created_at')
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(5);
-    if (tenantId) {
-      candidatesDataQuery.eq('tenant_id', tenantId);
-    }
-    const { data: candidatesData } = await candidatesDataQuery;
     recentCandidates = candidatesData || [];
 
-    // Fetch recent impersonations (admin only, last 3)
-    if (isAdmin && !tenantId) {
-      const { data: impersonationsData } = await supabase
-        .from('impersonation_logs')
-        .select(
-          `
-          id,
-          started_at,
-          admin:profiles!impersonation_logs_admin_id_fkey(full_name),
-          tenant:tenants!impersonation_logs_tenant_id_fkey(name)
-        `
-        )
-        .order('started_at', { ascending: false })
-        .limit(3);
-
-      recentImpersonations =
-        (impersonationsData as ImpersonationLogRaw[] | null)?.map((imp) => ({
-          id: imp.id,
-          started_at: imp.started_at,
-          admin_name: imp.admin?.full_name || 'Unknown',
-          tenant_name: imp.tenant?.name || 'Unknown',
-        })) || [];
-    }
-
-    // Fetch pipeline stats (group by stage)
-    const pipelineQuery = supabase
+    const { data: pipelineData } = await supabase
       .from('job_candidates')
-      .select('stage');
-    if (tenantId) {
-      pipelineQuery.eq('tenant_id', tenantId);
-    }
-    const { data: pipelineData } = await pipelineQuery;
+      .select('stage')
+      .eq('tenant_id', tenantId);
 
-    // Group by stage and count
     const stageCounts: Record<string, number> = {};
     (pipelineData as PipelineItem[] | null)?.forEach((item) => {
       stageCounts[item.stage] = (stageCounts[item.stage] || 0) + 1;
     });
     stageCountsRecord = stageCounts;
-
-    // Convert to array for component
     pipelineStats = Object.entries(stageCounts).map(([stage, count]) => ({
       stage,
       count,
     }));
 
-    // Calculate average days to hire
-    const hiredQuery = supabase
+    const { data: hiredData } = await supabase
       .from('job_candidates')
       .select('created_at')
-      .eq('stage', 'hired');
-
-    if (tenantId) {
-      hiredQuery.eq('tenant_id', tenantId);
-    }
-
-    const { data: hiredData } = await hiredQuery;
+      .eq('stage', 'hired')
+      .eq('tenant_id', tenantId);
 
     if (hiredData && hiredData.length > 0) {
       const now = new Date();
@@ -226,31 +229,17 @@ export default async function DashboardPage() {
       avgDaysToHire = Math.round(totalDays / hiredData.length);
     }
 
-    // Fetch stale candidates (in active stages for >7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const staleQuery = supabase
+    const { data: staleData } = await supabase
       .from('job_candidates')
-      .select(
-        `
-        id,
-        stage,
-        created_at,
-        candidates(full_name),
-        jobs(title)
-      `
-      )
+      .select(`id, stage, created_at, candidates(full_name), jobs(title)`)
+      .eq('tenant_id', tenantId)
       .not('stage', 'in', '(hired,rejected)')
       .lt('created_at', sevenDaysAgo.toISOString())
       .order('created_at', { ascending: true })
       .limit(5);
-
-    if (tenantId) {
-      staleQuery.eq('tenant_id', tenantId);
-    }
-
-    const { data: staleData } = await staleQuery;
 
     staleCandidates =
       (staleData as StaleItem[] | null)?.map((item) => {
@@ -269,12 +258,71 @@ export default async function DashboardPage() {
       }) || [];
   }
 
+  // Determine if showing admin portal or customer portal
+  const showAdminPortal = isAdmin && !tenantId;
+
+  // Admin Portal - completely different dashboard
+  if (showAdminPortal) {
+    return (
+      <div className="space-y-8">
+        {/* Page Header */}
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+            {t('adminTitle')}
+          </h1>
+          <p className="text-gray-600 text-lg">
+            {t('welcome', { name: profile?.full_name })}
+          </p>
+        </div>
+
+        {/* Platform KPI Cards */}
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-4 max-w-6xl">
+          <KpiCard
+            title={t('totalTenants')}
+            value={tenantsCount}
+            icon={Building2}
+            variant="blue"
+            href="/app/admin"
+          />
+          <KpiCard
+            title={t('totalUsers')}
+            value={usersCount}
+            subtitle={t('adminCount', { count: adminUsersCount })}
+            icon={Users}
+            variant="emerald"
+            href="/app/admin/users"
+          />
+          <KpiCard
+            title={t('totalJobsAll')}
+            value={jobsCount}
+            icon={Briefcase}
+            variant="cyan"
+          />
+          <KpiCard
+            title={t('auditEvents')}
+            value={auditEventsCount}
+            icon={ScrollText}
+            variant="purple"
+            href="/app/admin/audit-logs"
+          />
+        </div>
+
+        {/* Admin Quick Actions */}
+        <AdminQuickActions />
+
+        {/* Admin Recent Activity */}
+        <AdminRecentActivity recentImpersonations={recentImpersonations} />
+      </div>
+    );
+  }
+
+  // Customer Portal - regular dashboard
   return (
     <div className="space-y-8">
       {/* Page Header */}
       <div className="space-y-2">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
-          {isAdmin && !tenantId ? t('adminTitle') : t('title')}
+          {t('title')}
         </h1>
         <p className="text-gray-600 text-lg">
           {t('welcome', { name: profile?.full_name })}
@@ -307,32 +355,8 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Quick Actions & Admin Panel */}
-      <div className="grid gap-4 sm:grid-cols-2 max-w-4xl">
-        <QuickActions />
-
-        {isAdmin && !tenantId && (
-          <div className="rounded-2xl glass-cyan border border-cyan-300/50 shadow-sm">
-            <div className="p-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
-                  <Settings className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {t('adminPanel')}
-                </h3>
-              </div>
-              <Link
-                href="/app/admin"
-                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
-              >
-                <Settings className="w-4 h-4" />
-                {t('manageUsersAndTenants')}
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Quick Actions */}
+      <QuickActions />
 
       {/* Attention Needed */}
       <AttentionNeeded staleCandidates={staleCandidates} />
@@ -350,8 +374,8 @@ export default async function DashboardPage() {
       <RecentActivity
         recentJobs={recentJobs}
         recentCandidates={recentCandidates}
-        recentImpersonations={recentImpersonations}
-        isAdmin={isAdmin}
+        recentImpersonations={[]}
+        isAdmin={false}
       />
     </div>
   );

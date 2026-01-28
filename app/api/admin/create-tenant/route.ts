@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { logAuditEvent } from '@/lib/utils/audit-log';
 
 export async function POST(request: Request) {
   try {
@@ -97,6 +98,22 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    // Log audit events
+    await logAuditEvent({
+      eventType: 'tenant.created',
+      targetType: 'tenant',
+      targetId: tenant.id,
+      targetName: tenant_name,
+    });
+
+    await logAuditEvent({
+      eventType: 'user.created',
+      targetType: 'user',
+      targetId: authData.user.id,
+      targetName: user_name,
+      metadata: { email: user_email, role: 'customer', tenantId: tenant.id },
+    });
 
     return NextResponse.json({
       success: true,

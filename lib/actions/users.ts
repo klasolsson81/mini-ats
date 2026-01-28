@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { logAuditEvent } from '@/lib/utils/audit-log';
 
 /**
  * Toggle user active status (activate/deactivate)
@@ -33,6 +34,13 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
     return { error: 'Du kan inte inaktivera ditt eget konto' };
   }
 
+  // Get target user info for audit log
+  const { data: targetUser } = await supabase
+    .from('profiles')
+    .select('full_name, email')
+    .eq('id', userId)
+    .single();
+
   // Update user status
   const { error } = await supabase
     .from('profiles')
@@ -43,6 +51,15 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
     console.error('Toggle user active error:', error);
     return { error: 'Kunde inte uppdatera användarstatus' };
   }
+
+  // Log audit event
+  await logAuditEvent({
+    eventType: isActive ? 'user.activated' : 'user.deactivated',
+    targetType: 'user',
+    targetId: userId,
+    targetName: targetUser?.full_name || targetUser?.email,
+    metadata: { email: targetUser?.email },
+  });
 
   revalidatePath('/app/admin/users');
   return { success: true };
@@ -114,8 +131,103 @@ export async function deleteUser(userId: string) {
     return { error: 'Kunde inte ta bort användare' };
   }
 
+  // Log audit event
+  await logAuditEvent({
+    eventType: 'user.deleted',
+    targetType: 'user',
+    targetId: userId,
+    targetName: targetUser.full_name,
+    metadata: { role: targetUser.role },
+  });
+
   revalidatePath('/app/admin/users');
   return { success: true, softDeleted: true };
+}
+
+/**
+ * Bulk toggle user active status
+ */
+export async function bulkToggleUserActive(userIds: string[], isActive: boolean) {
+  const supabase = await createClient();
+
+  // Verify caller is admin
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Ej inloggad' };
+  }
+
+  const { data: callerProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (callerProfile?.role !== 'admin') {
+    return { error: 'Endast administratörer kan ändra användarstatus' };
+  }
+
+  // Filter out self from deactivation
+  const filteredIds = isActive
+    ? userIds
+    : userIds.filter((id) => id !== user.id);
+
+  if (filteredIds.length === 0) {
+    return { error: 'Inga användare att uppdatera' };
+  }
+
+  // Check for last admin protection when deactivating
+  if (!isActive) {
+    const { data: targetUsers } = await supabase
+      .from('profiles')
+      .select('id, role')
+      .in('id', filteredIds);
+
+    const adminIds = targetUsers?.filter((u) => u.role === 'admin').map((u) => u.id) || [];
+
+    if (adminIds.length > 0) {
+      const { count: totalAdmins } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'admin')
+        .eq('is_active', true);
+
+      const { count: selectedAdmins } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'admin')
+        .eq('is_active', true)
+        .in('id', adminIds);
+
+      if (totalAdmins && selectedAdmins && totalAdmins - selectedAdmins < 1) {
+        return { error: 'Kan inte inaktivera alla administratörer' };
+      }
+    }
+  }
+
+  // Update all users
+  const { error } = await supabase
+    .from('profiles')
+    .update({ is_active: isActive })
+    .in('id', filteredIds);
+
+  if (error) {
+    console.error('Bulk toggle user active error:', error);
+    return { error: 'Kunde inte uppdatera användarstatus' };
+  }
+
+  // Log audit event
+  await logAuditEvent({
+    eventType: isActive ? 'user.bulk_activated' : 'user.bulk_deactivated',
+    targetType: 'user',
+    targetName: `${filteredIds.length} användare`,
+    metadata: { count: filteredIds.length, userIds: filteredIds },
+  });
+
+  revalidatePath('/app/admin/users');
+  return { success: true, updatedCount: filteredIds.length };
 }
 
 /**

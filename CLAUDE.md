@@ -1,850 +1,186 @@
-# CLAUDE.md — Mini-ATS (Devotion Ventures) — Build Instructions
+# CLAUDE.md — Mini-ATS Build Instructions
 
-You are Claude Code assisting with building a production-ready MVP "mini-ATS" (Applicant Tracking System).
-Goal: ship a usable first version fast, then iterate. Prioritize correctness, security, maintainability, and product polish.
-
----
-
-## 🚨 CURRENT DEVELOPMENT STATUS (2026-01-27)
-
-**Development Mode:** LOCAL TESTING ONLY
-- ✅ First partial delivery sent to customer (deployed version on Vercel)
-- 🛠️ Continuing development locally on `localhost:3000`
-- ❌ **DO NOT PUSH TO GITHUB** until final MVP is ready
-- 📦 When satisfied, push all commits at once for final MVP deployment
-
-**Workflow:**
-1. Make changes and test on `http://localhost:3000`
-2. Commit locally: `git commit -m "message"`
-3. **DO NOT** run `git push`
-4. When all changes approved → Push everything to GitHub for final deployment
-
-**Reason:**
-Customer is currently testing the deployed version. We don't want to update it until final MVP is complete.
+You are Claude Code assisting with the Mini ATS (Applicant Tracking System) project.
+Goal: Maintain and improve a production-ready multi-tenant ATS.
 
 ---
 
-## 0) Prime Directive (Most Important)
-**Ship a working, stable MVP in 48 hours**, deployed and testable by a real customer, then improve it throughout the week.
-If a decision is unclear, make a reasonable assumption, document it in `README.md` under **Assumptions**, and proceed.
-
----
-
-## 1) Product Brief (Original Assignment)
-Build a mini-ATS that can be live for a first customer ASAP.
-
-### Core features
-- As **Admin**, I can create accounts (admin accounts & customer accounts)
-- As **Customer**, I can log in
-- As **Customer**, I can post jobs I’m hiring for
-- As **Customer**, I can add candidates with profile info (e.g., LinkedIn link)
-- As **Customer**, I can see a compact Kanban view of all candidates
-- As **Customer**, I can filter the Kanban view by job & candidate name
-- As **Admin**, I can do everything a customer can do, on their behalf
-
-### Guidelines
-- Use **Supabase** as backend (auth + DB)
-- Develop as much as possible with AI tools (Claude Code/Cursor/Lovable etc.)
-- Make reasonable assumptions about customers / needs
-- If time remains, add extra ATS features
-
-### Delivery
-- Share **admin login** with Gabriel (+ CC)
-- Record a **~5 min Loom demo**
-- Email assumptions / scope decisions
-- Ship often (multiple deliveries OK)
-
-### Deadline
-- 1 week
-
----
-
-## 2) Tech Stack (Recommended)
-Use what is fastest to ship while staying professional.
+## Tech Stack
 
 ### Frontend
-- **Next.js (App Router) + TypeScript**
-- TailwindCSS for quick UI (optional but recommended)
-- Component pattern: `features/*` + shared UI components
+- **Next.js 16 (App Router) + TypeScript**
+- **TailwindCSS** with glassmorphism design system
+- **next-intl** for i18n (Swedish + English)
+- Component pattern: `features/*` for feature-specific, `components/ui/*` for shared
 
 ### Backend
 - **Supabase Auth + Postgres**
 - **Row-Level Security (RLS)** for multi-tenant isolation
-- Supabase Storage (optional, e.g., resume uploads later)
+- Server Actions for all mutations (`lib/actions/`)
 
 ### Testing
-- Unit tests: **Vitest**
-- E2E tests: **Playwright**
-- Lint/format: **ESLint + Prettier**
+- Unit tests: **Vitest** (`npm run test`)
+- E2E tests: **Playwright** (`npm run test:e2e`)
 
 ### Deployment
-- **Vercel** for frontend
-- Supabase hosted backend
+- **Vercel** for frontend (auto-deploy from GitHub)
+- **Supabase** hosted backend
 
 ---
 
-## 3) Architecture Rules (Non-negotiable)
-### Clean Code & Maintainability
-- Use **single responsibility principle (SRP)**: small focused functions/components.
-- Prefer **pure functions** for logic and keep side-effects at boundaries.
-- Keep files small and readable. Refactor early.
-- Use explicit names: `createJob`, `getCandidatesByJob`, `updateCandidateStage`.
-- Avoid “magic strings”. Use enums/consts for stages/roles.
-- No dead code. No commented-out code blocks.
+## Architecture Rules
 
-### Code Comments (Important)
-Write comments that explain **why** or clarify behavior, not conversation history.
-✅ Good: `// Validates that the candidate belongs to the current tenant before updating stage`
-❌ Bad: `// Added this because you said so`
+### Code Quality
+- TypeScript strict mode - no `any` types
+- Single responsibility principle - small focused functions/components
+- Pure functions for logic, side-effects at boundaries
+- Explicit names: `createJob`, `getCandidatesByJob`, `updateCandidateStage`
+- No dead code, no commented-out code blocks
 
-### Error Handling & UX
-- No silent failures.
-- Always show user feedback: loading, success, error states.
-- Validate forms on client + enforce constraints server-side.
-
-### UI/UX Quality & Accessibility
-**Color Contrast & Readability:**
-- Use sufficient color contrast for text (WCAG AA minimum)
-- Labels: `text-gray-900` with `font-semibold` (not `text-gray-600` or `text-gray-700`)
-- Body text: `text-gray-700` minimum (not `text-gray-500` or lighter)
-- Subtitles: `text-gray-700` (not `text-gray-600`)
-
-❌ **BAD - Poor contrast:**
-```tsx
-<label className="text-sm font-medium text-gray-600">
-  {t('jobs.title')}
-</label>
-```
-
-✅ **GOOD - Good contrast:**
-```tsx
-<label className="text-sm font-semibold text-gray-900">
-  {t('jobs.title')}
-</label>
-```
-
-**Responsive Design:**
-- Test on all screen sizes (mobile, tablet, laptop, desktop, ultrawide)
-- Use responsive grid/flex layouts (no fixed widths unless necessary)
-- Avoid horizontal scroll on any screen size
-- Use Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
-
-**Visual Hierarchy:**
-- H1: `text-3xl font-bold text-gray-900`
-- Subtitles: `text-gray-700` (not lighter)
-- Form labels: `text-sm font-semibold text-gray-900`
-- Body text: `text-sm text-gray-700`
-- Muted text: `text-xs text-gray-600` (only for secondary info)
+### Error Handling
+- No silent failures
+- Always show user feedback: loading, success, error states
+- Validate forms on client + enforce constraints server-side
 
 ### Security
-- Never expose Supabase **service role key** to the client.
-- Use **RLS** to enforce tenant boundaries.
-- Enforce role-based access: customer vs admin.
-- Prevent insecure direct object references (IDOR) using RLS + scoped queries.
+- Never expose `SUPABASE_SERVICE_ROLE_KEY` to client
+- Use RLS to enforce tenant boundaries
+- All admin operations server-side only
 
 ---
 
-## 4) Core Domain Model (Data Design)
-This is a B2B multi-tenant system: each customer is a **tenant**.
+## Internationalization (Critical)
 
-### Roles
-- `admin` (can act on behalf of any tenant)
-- `customer` (restricted to own tenant)
+**NEVER hardcode user-facing text.** All text must come from translation files.
 
-### Suggested tables (Supabase Postgres)
-Use UUID PKs and `created_at`, `updated_at`.
-
-#### `tenants`
-- `id` (uuid, pk)
-- `name` (text)
-- `created_at`
-
-#### `profiles`
-- `id` (uuid, pk, same as auth.users.id)
-- `tenant_id` (uuid, fk tenants.id, nullable for platform admins if needed)
-- `role` (text enum: 'admin' | 'customer')
-- `full_name` (text)
-- `email` (text)
-- `created_at`
-
-#### `jobs`
-- `id` (uuid, pk)
-- `tenant_id` (uuid, fk tenants.id)
-- `title` (text)
-- `description` (text)
-- `status` (text: 'open' | 'closed')
-- `created_at`
-
-#### `candidates`
-- `id` (uuid, pk)
-- `tenant_id` (uuid)
-- `full_name` (text)
-- `email` (text, nullable)
-- `phone` (text, nullable)
-- `linkedin_url` (text, nullable)
-- `notes` (text, nullable)
-- `created_at`
-
-#### `job_candidates`
-Join table connecting candidates to a job + stage.
-- `id` (uuid, pk)
-- `tenant_id` (uuid)
-- `job_id` (uuid, fk jobs.id)
-- `candidate_id` (uuid, fk candidates.id)
-- `stage` (text enum; see Kanban stages below)
-- `created_at`
-
-### Kanban Stages (MVP)
-Use a fixed set for simplicity:
-- `sourced`
-- `applied`
-- `screening`
-- `interview`
-- `offer`
-- `hired`
-- `rejected`
-
----
-
-## 5) Auth + Permissions (Supabase)
-### Supabase Auth
-- Email/password auth is enough for MVP.
-- Create accounts for customers via **admin-only server endpoint** or **Supabase Edge Function** using service role (server-side only).
-
-### RLS Policies (Mandatory)
-All tenant-owned tables must enforce:
-- Customers: access rows where `tenant_id = profile.tenant_id`
-- Admin: can access all tenants
-
-Preferred approach:
-- Create a Postgres function `is_admin()` reading `profiles.role`.
-- Policies:
-  - `SELECT/INSERT/UPDATE/DELETE` allowed if `is_admin()` OR `tenant_id = current_tenant_id()`
-
-Implement helper SQL functions:
-- `current_user_id()` from auth
-- `current_tenant_id()` from `profiles.tenant_id`
-- `is_admin()` from `profiles.role`
-
-Document RLS in `README.md`.
-
----
-
-## 6) App Pages & UX (MVP Scope)
-### Public
-- `/login` (SV/EN)
-
-### Customer area (protected)
-- `/app` (dashboard overview)
-- `/app/jobs` list + create/edit
-- `/app/candidates` list + create/edit
-- `/app/kanban` compact Kanban (default view)
-
-### Admin area (protected)
-- `/admin/users` create customer accounts (tenant + login)
-- `/admin/impersonate` choose tenant to act as (optional but good)
-- Admin can access the same customer pages while impersonating a tenant
-
-### Kanban UI (Compact)
-- Columns by stage
-- Candidate cards show: name, job title, LinkedIn icon/link
-- Quick move stage: drag & drop OR stage dropdown (dropdown is enough for MVP)
-- Filters:
-  - by job (`job_id`)
-  - by candidate name search (contains match)
-
----
-
-## 7) MVP Build Checklist (No Bugs / Customer-Ready)
-**Definition of MVP Done (v0.1):**
-- [x] Login works (customer + admin)
-- [x] Customer can create a job
-- [x] Customer can create a candidate with LinkedIn link
-- [x] Customer can attach candidate to a job + stage
-- [x] Kanban displays all candidates grouped by stage
-- [x] Filtering works (job + name)
-- [x] Admin can create customer accounts (server-side secure)
-- [x] Multi-tenant isolation is enforced with RLS (critical)
-- [x] All forms validated (required fields)
-- [x] Empty states + loading states + error states everywhere
-- [x] No console errors in browser
-- [x] Deployed on Vercel and usable via live URL
-- [x] README contains setup + assumptions
-
-**MVP smoke tests (manual + automated):**
-- [x] Customer A cannot see Customer B data (RLS enforced)
-- [x] Admin can see both (is_admin() function in RLS)
-- [x] Job creation -> candidate creation -> appears on kanban
-- [x] Filter works correctly (job + name search)
-- [x] Update stage works and persists (via drag & drop + dropdown)
-
----
-
-## 8) Extended Features (Only after MVP is stable)
-Add features that increase product value quickly.
-
-### "Impressive but realistic" extensions
-- [x] Drag & drop Kanban (implemented with @dnd-kit)
-- [ ] Candidate timeline / activity log
-- [ ] Notes per candidate & per stage changes
-- [ ] Job pipeline metrics (count per stage)
-- [ ] Invite additional customer users under same tenant
-- [ ] CSV import candidates
-- [ ] Basic search page for candidates
-- [ ] Audit log for admin actions (minimal)
-
-### UI/UX polish
-- [x] Responsive layout for laptop/tablet (1-7 columns based on screen size)
-- [x] Toast notifications (Sonner)
-- [x] Keyboard-friendly forms
-- [x] Better spacing/typography
-- [ ] Dark mode (optional)
-
----
-
-## 9) Internationalization (Multi-language)
-The product must support at least:
-- Swedish (`sv`)
-- English (`en`)
-And be structured to add more languages easily.
-
-### Requirements
-- All user-facing text MUST come from translation files.
-- Provide a simple language switcher in the UI.
-- Default language: Swedish.
-- Use a proven library (recommended: `next-intl`).
-
-### CRITICAL: No Hardcoded Text (Mandatory)
-**NEVER hardcode user-facing text in any language.**
-
-❌ **BAD - Hardcoded text:**
 ```tsx
+// BAD
 <h1>Kandidater</h1>
-<p>Hantera kandidater och deras profiler</p>
-<Button>Skapa kandidat</Button>
-toast.success('Kandidat skapad!');
-```
+toast.success('Skapad!');
 
-✅ **GOOD - Use translations:**
-```tsx
+// GOOD
 <h1>{t('candidates.title')}</h1>
-<p>{t('candidates.subtitle')}</p>
-<Button>{t('candidates.createCandidate')}</Button>
 toast.success(t('candidates.candidateCreated'));
 ```
 
-### Translation Best Practices
-
-1. **Add translations FIRST**, then use them in code
-   - Update `messages/sv.json` and `messages/en.json`
-   - Then reference with `t('key')`
-
-2. **Use translations everywhere:**
-   - Page titles and subtitles
-   - Button labels
-   - Form labels and placeholders
-   - Toast notifications (success/error)
-   - Dialog titles and descriptions
-   - Empty states
-   - Validation messages
-
-3. **Translation key structure:**
-   ```json
-   {
-     "candidates": {
-       "title": "Kandidater",
-       "subtitle": "Hantera kandidater och deras profiler",
-       "createCandidate": "Skapa kandidat",
-       "candidateCreated": "Kandidat skapad",
-       "noCandidates": "Inga kandidater än"
-     }
-   }
-   ```
-
-4. **Parameterized translations:**
-   ```tsx
-   // In translation file:
-   "welcome": "Välkommen tillbaka, {name}!"
-
-   // In component:
-   {t('dashboard.welcome', { name: profile?.full_name })}
-   ```
-
-5. **Before committing code:**
-   - Search for hardcoded Swedish/English strings
-   - Check all `toast.success()` and `toast.error()` calls
-   - Verify all labels, buttons, and headings use `t()`
-
-### Optional (future language placeholder)
-Add folder structure for more languages (e.g. `tr` or `ar`) even if translations are partial.
+Translation files: `messages/sv.json` and `messages/en.json`
 
 ---
 
-## 10) GDPR, Cookies & Privacy (EU/Sweden)
-We must be privacy-first. Keep compliance lightweight but correct.
+## UI/UX Standards
 
-### Principles
-- Store only necessary data (data minimization).
-- No tracking/analytics by default.
-- Provide clear privacy information and user rights guidance.
+### Color Contrast (WCAG AA)
+- Labels: `text-gray-900 font-semibold`
+- Body text: `text-gray-700` minimum
+- Subtitles: `text-gray-600`
 
-### Must-have pages (MVP)
-- `/privacy` (Privacy Policy)
-- `/cookies` (Cookie Policy)
-- Link them in footer.
+### Visual Hierarchy
+- H1: `text-4xl font-bold` with gradient text
+- Section headers: `text-lg font-semibold text-gray-900`
+- Form labels: `text-sm font-semibold text-gray-900`
 
-### Cookie Consent
-- If NO non-essential cookies are used: display a minimal notice or no banner.
-- If analytics or marketing cookies are added: implement a consent banner with **Accept / Reject** and a preferences page.
-
-### Data Subject Rights (MVP-ready)
-Provide instructions in Privacy Policy for:
-- Access request
-- Data export
-- Deletion request (account/candidate data)
-Even if automated flows are not implemented, document the process.
-
-### Security practices
-- Use RLS for access control.
-- Avoid storing sensitive personal data.
-- Use HTTPS (Vercel default).
-- Sanitize user-generated content where needed.
-
-> Note: This is not legal advice, but implement best-practice compliance.
+### Design System
+- Glass cards: `glass`, `glass-blue`, `glass-emerald`, `glass-cyan`, `glass-purple`
+- Rounded corners: `rounded-2xl` for cards, `rounded-xl` for buttons
+- Borders: `border-white/30` for glass panels
 
 ---
 
-## 11) Testing Strategy (Professional Minimum)
-### Unit tests (Vitest)
-- [ ] Candidate stage transitions validation
-- [ ] Filtering logic (job + name)
-- [ ] Access control helpers (role checks)
+## Project Structure
 
-### E2E tests (Playwright)
-- [ ] Login as customer
-- [ ] Create job
-- [ ] Create candidate
-- [ ] Candidate appears in kanban
-- [ ] Filter works
-- [ ] Customer isolation (Customer B cannot see A’s data)
-
-### CI (optional)
-- GitHub Actions: run lint + tests on push
-
----
-
-## 12) Build Process (How You Should Work)
-### Step 1 — Scaffold + Auth (1–2 hours)
-- Create Next.js app
-- Setup Supabase client
-- Create auth pages
-- Protect routes
-
-### Step 2 — Database + RLS (2–4 hours)
-- Create tables
-- Setup RLS policies
-- Ensure tenant isolation works
-
-### Step 3 — Core CRUD (4–8 hours)
-- Jobs CRUD
-- Candidates CRUD
-- JobCandidates + stage updates
-
-### Step 4 — Kanban + Filters (2–6 hours)
-- Compact view
-- Filters
-- Update stage
-
-### Step 5 — Admin Create Accounts (2–6 hours)
-- Secure server function to create user + tenant + profile
-
-### Step 6 — Polish + Tests + Docs (rest of week)
-- Fix edge cases
-- Add tests
-- Improve UX
-- Add privacy/cookie pages
-- i18n finalize
+```
+mini-ats/
+├── app/                    # Next.js App Router
+│   ├── app/               # Protected routes (/app/*)
+│   │   ├── admin/         # Admin portal (tenants, users, logs)
+│   │   ├── jobs/          # Customer job management
+│   │   ├── candidates/    # Customer candidate management
+│   │   ├── kanban/        # Kanban board
+│   │   └── search/        # Candidate search
+│   └── api/               # API routes (admin operations)
+├── components/            # Shared UI components
+├── features/             # Feature-specific components
+├── lib/                  # Shared logic
+│   ├── actions/          # Server Actions
+│   ├── supabase/         # DB client
+│   └── utils/            # Helpers
+├── messages/             # i18n translations (sv.json, en.json)
+└── docs/                 # Documentation
+```
 
 ---
 
-## 13) Deliverables (Must be easy to evaluate)
-Prepare final delivery package:
+## Database Schema
 
-### Links
-- Live URL (Vercel)
-- GitHub repo
-- Loom demo link (~5 minutes)
+### Core Tables
+- `tenants` - Multi-tenant isolation root
+- `profiles` - User metadata + role (admin/customer)
+- `jobs` - Tenant-scoped job postings
+- `candidates` - Tenant-scoped candidate pool
+- `job_candidates` - M2M join with stage tracking
 
-### Admin login
-- Provide email + password OR instruct “reset password”
-- Include 1–2 customer demo accounts too
+### Audit Tables
+- `impersonation_logs` - Admin impersonation sessions
+- `audit_logs` - User/tenant management events
 
-### Email content
-- Assumptions + scope tradeoffs
-- What you would build next
-
----
-
-## 14) Output Quality Requirements
-When generating code, always ensure:
-- TypeScript strict and no `any` unless justified.
-- No TODOs left without explanation.
-- Functions are small and named clearly.
-- Components are readable and split by responsibility.
-- Comments explain behavior, not chat history.
-- Run formatting and tests before considering a task done.
-
-**Before finalizing any feature:**
-1) Run `npm run lint`
-2) Run `npm test` (unit)
-3) Run Playwright tests (if available)
-4) Manual smoke test in browser
+### Kanban Stages
+`sourced` → `applied` → `screening` → `interview` → `offer` → `hired` / `rejected`
 
 ---
 
-## 15) Assumptions Template (Add to README)
-When you make assumptions, record them like this:
+## Admin vs Customer Portal
 
-- Tenant model: One company = one tenant
-- One candidate can belong to multiple jobs (supported via join table)
-- Stages are fixed in MVP
-- Email invites are out-of-scope for MVP
-- No analytics cookies in MVP
+The app has separate navigation for admin and customer users:
 
----
+**Admin Portal** (when not impersonating):
+- Dashboard with platform stats
+- Tenant management
+- User management
+- Audit logs
 
-## 16) “If You’re Unsure” Rule
-If a requirement is ambiguous:
-- Decide quickly
-- Implement the simplest viable solution
-- Document in README
-- Keep code flexible for later changes
-
----
-
-## 17) Definition of Done (Final)
-A feature is done only if:
-- It works end-to-end
-- It respects tenant access rules
-- It has error handling + validation
-- It's tested (unit or e2e where appropriate)
-- It's translated (sv/en)
-- It's deployed and demoable
+**Customer Portal** (customers + impersonating admins):
+- Dashboard with tenant stats
+- Kanban board
+- Jobs management
+- Candidates management
+- Search
 
 ---
 
-## 18) Implementation Status (Updated 2026-01-27)
+## Demo Accounts
 
-### MVP Complete ✅
-All core features have been implemented and deployed to Vercel.
-
-### Key Implementations
-
-**Database & Backend**
-- Supabase Postgres with complete schema (tenants, profiles, jobs, candidates, job_candidates)
-- Row-Level Security (RLS) policies enforcing multi-tenant isolation
-- Helper functions: `current_user_id()`, `current_tenant_id()`, `is_admin()`
-- Server actions for all mutations (auth, jobs, candidates, stage updates)
-
-**Authentication**
-- Email/password login via Supabase Auth
-- Protected routes with middleware
-- Role-based access (admin vs customer)
-- Session management
-
-**Features Implemented**
-- ✅ Jobs CRUD (create, read, update, delete)
-- ✅ Candidates CRUD with LinkedIn integration
-- ✅ Kanban board with responsive grid layout (1-7 columns)
-- ✅ Drag & drop functionality (@dnd-kit)
-- ✅ Filtering by job and candidate name
-- ✅ Admin panel for creating tenants and users
-- ✅ Stage updates via drag & drop or dropdown
-- ✅ **Admin impersonation** - Act as any tenant for support
-- ✅ **Tenant detail pages** - View tenant stats and users
-- ✅ **Add users to tenants** - Expand existing organizations
-- ✅ **User management** - View all users (admins + customers)
-
-**Internationalization**
-- ✅ Swedish (sv) and English (en) support
-- ✅ next-intl implementation
-- ✅ Language switcher component
-- ✅ All UI text translated (no hardcoded text)
-- ✅ Parameterized translations for dynamic content
-- ✅ Toast messages fully translated
-
-**GDPR & Privacy**
-- ✅ Privacy Policy page (Swedish)
-- ✅ Cookie Policy page (Swedish)
-- ✅ Footer with policy links
-- ✅ Minimal cookie usage (auth only)
-- ✅ **Admin access documentation** - Impersonation disclosed in privacy policy
-- ✅ **GDPR compliance** - Legitimate interest basis documented
-
-**Security & Audit Logging**
-- ✅ **Impersonation audit logs** (Level 1 - Production Ready)
-  - Database table: `impersonation_logs`
-  - Auto-logging: admin ID, tenant ID, timestamps, IP, user agent
-  - Admin UI: `/app/admin/audit-logs` - View all sessions
-  - RLS: Only admins can view logs
-  - GDPR compliant with privacy policy disclosure
-- ✅ **Operation restrictions** during impersonation
-  - Framework: `lib/utils/restrictions.ts`
-  - Prevents: user deletion, password changes, billing updates
-  - Documentation: `lib/utils/RESTRICTIONS_README.md`
-- ✅ **Security documentation**
-  - SECURITY.md with best practices
-  - Production checklist
-  - GDPR considerations
-  - Implementation examples
-- ⏳ **Level 2 audit logging** (TODO for production)
-  - User management events (create/delete/role change)
-  - Tenant management events
-  - Authentication events (password changes, failed logins)
-
-**UI/UX**
-- ✅ Responsive design (mobile to ultrawide)
-- ✅ Toast notifications (Sonner)
-- ✅ Loading states on all forms
-- ✅ Error handling with user feedback
-- ✅ Empty states
-- ✅ Consistent component library
-- ✅ WCAG AA color contrast compliance
-- ✅ Proper visual hierarchy (labels, headings, body text)
-
-### Bugs Fixed
-
-1. **Login Error Flash** - Removed try-catch that was catching redirect() error
-2. **Language Switcher** - Implemented server action for locale cookie setting
-3. **Zod Validation** - Fixed API usage (error.issues vs error.errors)
-4. **i18n Build Error** - Separated locale constants from server-only code
-5. **Kanban Layout** - Changed from fixed-width to responsive grid
-6. **Drag & Drop** - Implemented full drag & drop with visual feedback
-7. **Hardcoded Text** - Removed all hardcoded Swedish/English strings, added proper translations
-8. **Color Contrast** - Improved label readability (text-gray-900, font-semibold throughout app)
-9. **Tenant Detail 404** - Fixed Next.js 15 async params handling in dynamic routes
-10. **Impersonation UI** - Hidden admin panel when acting as tenant (true customer view)
-11. **Kanban Drag UX** - Entire card is now draggable (not just handle), DragOverlay prevents z-index issues
-12. **Performance** - Implemented optimistic updates (useOptimistic) and navigation loading states (useTransition)
-
-### Deployment
-- ✅ GitHub: https://github.com/klasolsson81/mini-ats
-- ✅ Vercel: Auto-deployment configured
-- ✅ Supabase: Production database with RLS enabled
-
-### Demo Accounts
-- Admin: admin@devotion.ventures / admin123
-- Customer (DevCo): customer@devco.se / customer123
-
-### Next Steps (Optional Enhancements)
-- Candidate timeline/activity log
-- Notes per stage change
-- Job pipeline metrics dashboard
-- CSV import for bulk candidates
-- User lifecycle management (activate/deactivate/delete)
-- Level 2 audit logging (user/tenant management events)
-- Email notifications for candidates
-- Calendar integration for interviews
+- **Admin:** admin@devotion.ventures / admin123
+- **Customer:** customer@devco.se / customer123
 
 ---
 
-**MVP Status: COMPLETE & DEPLOYED** 🚀
-**Security Status: PRODUCTION-READY** 🔒
+## Documentation
 
-### Latest Updates (2026-01-27)
-
-**Dashboard Improvements:**
-- ✅ Quick Actions with real create dialogs (job/candidate)
-- ✅ Recent Activity panel (last 5 jobs, candidates, admin impersonations)
-- ✅ Pipeline Stats overview (candidates per stage with colors)
-- ✅ All dashboard features fully functional (not just links)
-
-**Kanban UX Improvements:**
-- ✅ Entire card is now draggable (GitHub Projects-level smoothness)
-- ✅ DragOverlay prevents z-index issues (card always visible during drag)
-- ✅ Links work without triggering drag (LinkedIn, etc)
-- ✅ Dropdown works without triggering drag (stage selector)
-
-**Performance Optimizations:**
-- ✅ Optimistic updates (useOptimistic) - Kanban updates instantly
-- ✅ Navigation loading states (useTransition) - Spinner feedback on clicks
-- ✅ Perceived performance 10x better (< 16ms UI updates)
-- ✅ Background server sync with automatic revert on error
-
-**Admin Panel Improvements:**
-- ✅ Clickable tenant cards with detail pages
-- ✅ Tenant statistics (jobs, candidates, pipeline)
-- ✅ Add users to existing tenants
-- ✅ View all users (admins + customers)
-- ✅ Quick navigation buttons
-
-**Impersonation & Audit:**
-- ✅ Admin impersonation with visual banner
-- ✅ Hidden admin panel when impersonating (true customer view)
-- ✅ Automatic audit logging (who, what, when, IP)
-- ✅ Admin UI for viewing audit logs (`/app/admin/audit-logs`)
-- ✅ Privacy policy updated with admin access disclosure
-- ✅ Operation restrictions framework (prevent sensitive ops during impersonation)
-
-**Database:**
-- ✅ Migration: `impersonation_logs` table with RLS
-- ✅ Migration: `must_change_password` column in profiles table
-- ✅ Ready to run: `supabase/migrations/20260127_add_impersonation_audit_log.sql`
-- ✅ Ready to run: `supabase/migrations/20260127_add_must_change_password.sql`
-
-**Documentation:**
-- ✅ SECURITY.md - Best practices and production checklist
-- ✅ lib/utils/RESTRICTIONS_README.md - Implementation guide
-- ✅ supabase/migrations/README.md - Migration instructions
-- ✅ TODO.md - Updated with audit logging levels
-
-**Polish:**
-- ✅ Browser tab titles include "- Mini ATS" suffix
-- ✅ Footer copyright updated with Klas Olsson + portfolio link (https://klasolsson.se)
-- ✅ Candidates page shows job assignments and stages (color-coded badges)
-- ✅ Swedish error messages for authentication
-
-**Security & Authentication:**
-- ✅ Force password change on first login for admin-created accounts
-- ✅ Change password page (`/change-password`) with professional UX:
-  - Password strength indicators (min 8 chars, letters, numbers)
-  - Password visibility toggles (show/hide)
-  - Confirm password matching validation
-  - Welcome message for first-time users
-  - Loading overlays during transitions
-- ✅ Middleware and app layout redirect logic
-- ✅ All admin create-user API endpoints set `must_change_password` flag
-- ✅ SECURITY DEFINER fix for infinite recursion in RLS
-- ✅ Swedish translations for all auth error messages
-
-**Critical Fixes:**
-- ✅ Fixed infinite recursion in `is_admin()` function
-  - Added SECURITY DEFINER to bypass RLS
-  - Prevents "stack depth limit exceeded" error
-  - Migration: 20260127_fix_infinite_recursion.sql
-- ✅ Admin users can now see all data correctly
-
-**Known Issues (MVP v0.1):**
-- ⚠️ Brief black screen (1-3 sec) during authentication redirects
-  - Cosmetic only - functionality works correctly
-  - Tracked for v0.2 improvement
-  - See KNOWN_ISSUES.md for details and planned fix
+Additional documentation in `docs/` folder:
+- `CODEREVIEW.md` - Code review findings
+- `FINAL_CHECKLIST.md` - Pre-deployment checklist
+- `KNOWN_ISSUES.md` - Known limitations
+- `SECURITY.md` - Security best practices
+- `TODO.md` - Feature roadmap
 
 ---
 
-### UI/UX Refresh (2026-01-27)
+## Key Commands
 
-**Sidebar Improvements:**
-- ✅ Wider sidebar (w-28) with text labels under each icon
-- ✅ User menu dropdown with:
-  - Language switcher (SV/EN)
-  - Change password link
-  - Account settings link
-  - Logout button
-- ✅ Cleaner navigation with visual feedback
-
-**User Settings:**
-- ✅ Account settings page (`/app/settings`)
-- ✅ Change password page (`/app/settings/password`) with:
-  - Current password verification
-  - Password strength validation (8+ chars, letters, numbers)
-  - Real-time match indicator
-  - Show/hide password toggles
-  - Modern glassmorphism styling
-- ✅ Server action for password change with proper error handling
-
-**Language/Locale:**
-- ✅ Automatic language detection based on IP (via Vercel headers)
-  - Sweden IP → Swedish (sv)
-  - Other countries → English (en)
-- ✅ Manual language switcher in user menu
-- ✅ Cookie-based persistence (NEXT_LOCALE)
-
-**Dashboard Enhancements:**
-- ✅ Open jobs count (e.g., "3 öppna") under Total Jobs KPI
-- ✅ Relative timestamps ("2h sedan", "Igår") in Recent Activity
-- ✅ "Needs Attention" section for stale candidates (>7 days in stage)
-- ✅ Conversion funnel metrics (Applied → Screening → Interview → Offer %)
-- ✅ Time-to-hire average (days for hired candidates)
-- ✅ Removed purple colors - now consistent cyan/blue/emerald theme
-
-**Policy Pages Updated:**
-- ✅ Privacy Policy - New tech styling, IP-based language detection disclosure
-- ✅ Cookie Policy - Complete cookie table, geo-location section
-- ✅ Both pages now match the app's glassmorphism design
-
-**New Files:**
-- `features/settings/change-password-form.tsx`
-- `app/app/settings/page.tsx`
-- `app/app/settings/password/page.tsx`
-- `features/dashboard/attention-needed.tsx`
-- `features/dashboard/conversion-metrics.tsx`
-
-**New Translations:**
-- `settings.*` namespace (language, changePassword, account, etc.)
-- `dashboard.openJobs`, `dashboard.attentionNeeded`, etc.
-- `dashboard.conversionFunnel`, `dashboard.timeToHire`, etc.
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run lint         # Run ESLint
+npm run test         # Run unit tests (Vitest)
+npm run test:e2e     # Run E2E tests (Playwright)
+```
 
 ---
 
-### Glassmorphism Design System (2026-01-27)
+## Making Changes
 
-**Complete UI Overhaul:**
-Unified the entire application with a cohesive glassmorphism design language.
-
-**New CSS Classes (globals.css):**
-- `glass-cyan` - Cyan/turquoise tinted glass (Pipeline, Jobs, Candidates, Admin)
-- `glass-blue` - Blue tinted glass (KPI cards, Recent Candidates, Tenant list)
-- `glass-amber` - Amber/yellow tinted glass (Quick Actions, Attention Needed)
-- `glass-violet` - Violet/purple tinted glass (Conversion Metrics, Create Admin)
-- `glass-emerald` - Green tinted glass (Recent Jobs, Time to Hire)
-- `glass-rose` - Pink tinted glass (available for future use)
-
-**Kanban Column Backgrounds:**
-- `kanban-col-sourced` - Slate/gray gradient
-- `kanban-col-applied` - Blue gradient
-- `kanban-col-screening` - Violet gradient
-- `kanban-col-interview` - Emerald gradient
-- `kanban-col-offer` - Amber gradient
-- `kanban-col-hired` - Orange gradient
-- `kanban-col-rejected` - Rose/pink gradient
-
-**Design Principles:**
-- All cards use colored gradients with 0.3-0.5 opacity
-- `backdrop-filter: blur(12px)` for frosted glass effect
-- Colored borders matching the card's theme (1.5-2px)
-- Consistent shadow and hover effects
-- Cards are transparent enough to show the background pattern
-
-**Updated Components:**
-- ✅ KPI Cards - Variant-based coloring (blue, emerald, cyan)
-- ✅ Quick Actions - Amber glass
-- ✅ Pipeline Stats - Cyan glass
-- ✅ Recent Activity - Emerald (jobs), Blue (candidates), Amber (impersonations)
-- ✅ Conversion Metrics - Violet glass
-- ✅ Attention Needed - Amber glass
-- ✅ Jobs List - Cyan gradient cards with strong borders
-- ✅ Candidates List - Cyan gradient cards with strong borders
-- ✅ Kanban Columns - Stage-specific colored backgrounds
-- ✅ Kanban Cards - White/transparent glass (inherits column color)
-- ✅ Admin Panel - Violet (Create Admin), Cyan (Create Tenant), Blue (Tenant list)
-- ✅ Admin Quick Actions - Gradient buttons with colored borders
-
-**Kanban UX Fix:**
-- ✅ Moved candidates always appear at bottom of new column
-- ✅ No more visual "jumping" after server revalidation
-- ✅ Optimistic update places candidate at end of array
-
-**Login Page:**
-- ✅ Custom background image (`/public/bg.png`)
-- ✅ Animated border effect on login card
-- ✅ Light sweep and pulse glow overlays
-- ✅ Forgot password link and flow
-
-**Forgot Password Flow:**
-- ✅ `/forgot-password` page with email input
-- ✅ `/reset-password` page for setting new password
-- ✅ Supabase password reset integration
-- ✅ Swedish translations for all states
-
----
+1. Follow existing patterns in the codebase
+2. Add translations before using text
+3. Use Server Actions for mutations
+4. Test RLS policies with both admin and customer users
+5. Run `npm run lint` before committing

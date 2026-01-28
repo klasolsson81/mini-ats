@@ -9,13 +9,14 @@ import {
   Briefcase,
   Users,
   Kanban as KanbanIcon,
-  Settings,
   LogOut,
   Loader2,
   ChevronUp,
   Key,
   User,
   Search,
+  Building2,
+  ScrollText,
 } from 'lucide-react';
 import { Profile } from '@/lib/types/database';
 import { logout } from '@/lib/actions/auth';
@@ -82,7 +83,33 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const navigation = [
+  // Separate navigation for Admin Portal vs Customer Portal
+  const adminNavigation = [
+    {
+      name: t('nav.dashboard'),
+      href: '/app',
+      icon: LayoutDashboard,
+      exact: true,
+    },
+    {
+      name: t('nav.tenants'),
+      href: '/app/admin',
+      icon: Building2,
+      exact: true,
+    },
+    {
+      name: t('nav.users'),
+      href: '/app/admin/users',
+      icon: Users,
+    },
+    {
+      name: t('nav.auditLogs'),
+      href: '/app/admin/audit-logs',
+      icon: ScrollText,
+    },
+  ];
+
+  const customerNavigation = [
     {
       name: t('nav.dashboard'),
       href: '/app',
@@ -111,21 +138,10 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
     },
   ];
 
-  // Hide search for admins who are not impersonating (they have no tenant to search)
-  if (isAdmin && !isImpersonating) {
-    // Remove search from navigation for admin without impersonation
-    const searchIndex = navigation.findIndex((n) => n.href === '/app/search');
-    if (searchIndex !== -1) {
-      navigation.splice(searchIndex, 1);
-    }
-
-    // Add Admin link
-    navigation.push({
-      name: t('nav.admin'),
-      href: '/app/admin',
-      icon: Settings,
-    });
-  }
+  // Admin without impersonation sees Admin Portal
+  // Admin with impersonation sees Customer Portal (acting as customer)
+  // Customer always sees Customer Portal
+  const navigation = (isAdmin && !isImpersonating) ? adminNavigation : customerNavigation;
 
   const handleLanguageChange = async (locale: 'sv' | 'en') => {
     await setLocale(locale);

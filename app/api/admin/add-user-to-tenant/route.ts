@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createClient as createServerClient } from '@supabase/supabase-js';
+import { logAuditEvent } from '@/lib/utils/audit-log';
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -82,6 +83,15 @@ export async function POST(request: Request) {
     await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
     return NextResponse.json({ error: profileError.message }, { status: 400 });
   }
+
+  // Log audit event
+  await logAuditEvent({
+    eventType: 'user.created',
+    targetType: 'user',
+    targetId: authData.user.id,
+    targetName: user_name,
+    metadata: { email: user_email, role: 'customer', tenantId: tenant_id },
+  });
 
   return NextResponse.json({
     success: true,
