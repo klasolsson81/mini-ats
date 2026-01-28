@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/utils/audit-log';
 
@@ -142,6 +143,104 @@ export async function deleteUser(userId: string) {
 
   revalidatePath('/app/admin/users');
   return { success: true, softDeleted: true };
+}
+
+/**
+ * Permanently delete a user (hard delete from Supabase Auth)
+ * This removes the user completely - they can be re-created with same email
+ */
+export async function permanentDeleteUser(userId: string) {
+  const supabase = await createClient();
+
+  // Verify caller is admin
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Ej inloggad' };
+  }
+
+  const { data: callerProfile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (callerProfile?.role !== 'admin') {
+    return { error: 'Endast administratörer kan ta bort användare permanent' };
+  }
+
+  // Prevent deleting yourself
+  if (userId === user.id) {
+    return { error: 'Du kan inte ta bort ditt eget konto' };
+  }
+
+  // Get target user info
+  const { data: targetUser } = await supabase
+    .from('profiles')
+    .select('role, full_name, email')
+    .eq('id', userId)
+    .single();
+
+  if (!targetUser) {
+    return { error: 'Användaren hittades inte' };
+  }
+
+  // Check if this is the last admin
+  if (targetUser.role === 'admin') {
+    const { count } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .eq('role', 'admin');
+
+    if (count && count <= 1) {
+      return { error: 'Kan inte ta bort den sista administratören' };
+    }
+  }
+
+  // Create Supabase admin client with service role key
+  const supabaseAdmin = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+
+  // Delete profile first (foreign key constraint)
+  const { error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .delete()
+    .eq('id', userId);
+
+  if (profileError) {
+    console.error('Delete profile error:', profileError);
+    return { error: 'Kunde inte ta bort användarprofil' };
+  }
+
+  // Delete from Supabase Auth
+  const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+
+  if (authError) {
+    console.error('Delete auth user error:', authError);
+    return { error: 'Kunde inte ta bort användare från autentisering' };
+  }
+
+  // Log audit event
+  await logAuditEvent({
+    eventType: 'user.permanently_deleted',
+    targetType: 'user',
+    targetId: userId,
+    targetName: targetUser.full_name,
+    metadata: { email: targetUser.email, role: targetUser.role },
+  });
+
+  revalidatePath('/app/admin/users');
+  return { success: true, permanentlyDeleted: true };
 }
 
 /**
