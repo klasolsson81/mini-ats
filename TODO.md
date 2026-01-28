@@ -148,10 +148,19 @@
 
 ---
 
-#### 13. Candidate Search Page
-**Varför:** Discovery, usability
-**Estimat:** 3-4 timmar
-**Område:** New page
+#### 13. Candidate Search Page ✅ KLART (2026-01-28)
+**Status:** IMPLEMENTERAT
+**Filer:** `app/app/search/page.tsx`, `features/search/candidate-search.tsx`
+
+**Funktioner:**
+- Sökning på namn, e-post, telefon, anteckningar
+- Filtrera efter jobb och stage
+- Visar kandidatkort med all info
+- Länk till Kanban för varje kandidat
+- Stöder impersonation (visar rätt tenant)
+
+**Ny navigation:**
+- Sök-länk i sidebaren
 
 ---
 

@@ -60,6 +60,7 @@
     "jobs": "Jobb",
     "candidates": "Kandidater",
     "kanban": "Kanban",
+    "search": "Sök",
     "admin": "Admin",
     "users": "Användare",
     "userMenu": "Användarmeny"
@@ -267,6 +268,19 @@
     "email": "E-post",
     "saveChanges": "Spara ändringar",
     "changesSaved": "Ändringar sparade"
+  },
+  "search": {
+    "title": "Sök Kandidater",
+    "subtitle": "Sök och filtrera kandidater över alla jobb",
+    "searchPlaceholder": "Sök på namn, e-post, telefon eller anteckningar...",
+    "allJobs": "Alla jobb",
+    "allStages": "Alla steg",
+    "results": "resultat",
+    "noResults": "Inga kandidater hittades",
+    "tryDifferentSearch": "Försök med andra sökord eller filter",
+    "noSearchYet": "Börja söka",
+    "startTyping": "Skriv för att söka bland kandidater",
+    "viewInKanban": "Visa i Kanban"
   },
   "footer": {
     "privacy": "Integritetspolicy",

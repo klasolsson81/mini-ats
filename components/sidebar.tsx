@@ -15,6 +15,7 @@ import {
   ChevronUp,
   Key,
   User,
+  Search,
 } from 'lucide-react';
 import { Profile } from '@/lib/types/database';
 import { logout } from '@/lib/actions/auth';
@@ -102,6 +103,11 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
       name: t('nav.candidates'),
       href: '/app/candidates',
       icon: Users,
+    },
+    {
+      name: t('nav.search'),
+      href: '/app/search',
+      icon: Search,
     },
   ];
 
