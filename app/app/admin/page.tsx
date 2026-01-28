@@ -51,10 +51,10 @@ export default async function AdminPage() {
     .order('created_at', { ascending: false });
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+    <div className="space-y-6 max-w-6xl overflow-hidden">
+      <div className="flex flex-col gap-4">
+        <div className="space-y-1 min-w-0">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
             {t('pageTitle')}
           </h1>
           <p className="text-gray-600 text-sm sm:text-lg">
@@ -64,31 +64,31 @@ export default async function AdminPage() {
 
         {/* Quick Actions */}
         <div className="flex flex-col sm:flex-row gap-2">
-          <Link href="/app/admin/users">
-            <button className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 backdrop-blur-sm border-2 border-cyan-300/50 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto">
-              <Users className="h-4 w-4 text-cyan-600" />
-              <span className="truncate">{t('viewAllUsers')}</span>
+          <Link href="/app/admin/users" className="w-full sm:w-auto">
+            <button className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 backdrop-blur-sm border-2 border-cyan-300/50 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md w-full">
+              <Users className="h-4 w-4 text-cyan-600 shrink-0" />
+              <span>{t('viewAllUsers')}</span>
             </button>
           </Link>
-          <Link href="/app/admin/audit-logs">
-            <button className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-violet-500/20 to-purple-500/20 hover:from-violet-500/30 hover:to-purple-500/30 backdrop-blur-sm border-2 border-violet-300/50 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto">
-              <Shield className="h-4 w-4 text-violet-600" />
-              <span className="truncate">{t('viewAuditLogs')}</span>
+          <Link href="/app/admin/audit-logs" className="w-full sm:w-auto">
+            <button className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-violet-500/20 to-purple-500/20 hover:from-violet-500/30 hover:to-purple-500/30 backdrop-blur-sm border-2 border-violet-300/50 text-xs sm:text-sm font-medium text-gray-700 hover:text-gray-900 transition-all duration-200 shadow-sm hover:shadow-md w-full">
+              <Shield className="h-4 w-4 text-violet-600 shrink-0" />
+              <span>{t('viewAuditLogs')}</span>
             </button>
           </Link>
         </div>
       </div>
 
       {/* Forms Grid */}
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-2">
         {/* Create Admin User */}
-        <div className="rounded-xl glass-violet border border-violet-300/50 shadow-sm">
-          <div className="p-5 space-y-4">
+        <div className="rounded-xl glass-violet border border-violet-300/50 shadow-sm overflow-hidden">
+          <div className="p-3 sm:p-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md">
-                <Shield className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md shrink-0">
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">
                 {t('createAdmin')}
               </h2>
             </div>
@@ -97,13 +97,13 @@ export default async function AdminPage() {
         </div>
 
         {/* Create Tenant */}
-        <div className="rounded-xl glass-cyan border border-cyan-300/50 shadow-sm">
-          <div className="p-5 space-y-4">
+        <div className="rounded-xl glass-cyan border border-cyan-300/50 shadow-sm overflow-hidden">
+          <div className="p-3 sm:p-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-md">
-                <Building2 className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-md shrink-0">
+                <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">
                 {t('createNewTenant')}
               </h2>
             </div>
@@ -113,18 +113,18 @@ export default async function AdminPage() {
       </div>
 
       {/* Existing Tenants - Table Style */}
-      <div className="rounded-2xl glass-blue shadow-sm">
-        <div className="p-5 space-y-4">
+      <div className="rounded-2xl glass-blue shadow-sm overflow-hidden">
+        <div className="p-3 sm:p-5 space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
-              <Building2 className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shrink-0">
+              <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">
                 {t('existingTenants')}
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 {tenants?.length || 0} {t('users').toLowerCase()}
               </p>
             </div>

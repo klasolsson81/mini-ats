@@ -108,17 +108,17 @@ export default async function AuditLogsPage() {
   const totalEvents = auditLogs?.length || 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 overflow-hidden">
       {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+      <div className="space-y-1 sm:space-y-2">
+        <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {t('auditLogs')}
         </h1>
-        <p className="text-gray-600 text-sm sm:text-lg">{t('auditLogsSubtitle')}</p>
+        <p className="text-gray-600 text-xs sm:text-lg">{t('auditLogsSubtitle')}</p>
       </div>
 
       {/* Statistics */}
-      <div className="grid gap-3 grid-cols-3 max-w-4xl">
+      <div className="grid gap-2 sm:gap-3 grid-cols-3 max-w-4xl">
         <KpiCard
           title={t('totalSessions')}
           value={totalSessions}
@@ -140,11 +140,11 @@ export default async function AuditLogsPage() {
       </div>
 
       {/* Impersonation History Table */}
-      <div className="rounded-2xl glass border border-white/30 shadow-sm">
-        <div className="p-5 border-b border-white/20">
-          <h2 className="text-lg font-semibold text-gray-900">{t('impersonationHistory')}</h2>
+      <div className="rounded-2xl glass border border-white/30 shadow-sm overflow-hidden">
+        <div className="p-3 sm:p-5 border-b border-white/20">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">{t('impersonationHistory')}</h2>
         </div>
-        <div className="p-5">
+        <div className="p-3 sm:p-5">
           {logs && logs.length > 0 ? (
             <div className="overflow-x-auto rounded-xl">
               <table className="w-full text-sm min-w-[600px]">
@@ -244,11 +244,11 @@ export default async function AuditLogsPage() {
       </div>
 
       {/* General Audit Logs Table */}
-      <div className="rounded-2xl glass border border-white/30 shadow-sm">
-        <div className="p-5 border-b border-white/20">
-          <h2 className="text-lg font-semibold text-gray-900">{t('generalAuditLogs')}</h2>
+      <div className="rounded-2xl glass border border-white/30 shadow-sm overflow-hidden">
+        <div className="p-3 sm:p-5 border-b border-white/20">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">{t('generalAuditLogs')}</h2>
         </div>
-        <div className="p-5">
+        <div className="p-3 sm:p-5">
           {auditLogs && auditLogs.length > 0 ? (
             <div className="overflow-x-auto rounded-xl">
               <table className="w-full text-sm min-w-[500px]">

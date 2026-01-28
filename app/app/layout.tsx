@@ -43,9 +43,9 @@ export default async function AppLayout({
         {impersonation.isImpersonating && (
           <ImpersonationBanner tenantName={impersonation.tenantName!} />
         )}
-        <main className="flex-1 overflow-y-auto relative z-10 animate-flow-main">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden relative z-10 animate-flow-main">
           <div className="min-h-full flex flex-col">
-            <div className="container mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:px-12 max-w-[1600px] flex-1">
+            <div className="w-full px-3 py-4 sm:px-6 sm:py-8 lg:px-12 lg:max-w-[1600px] lg:mx-auto flex-1">
               {children}
             </div>
             <Footer />
