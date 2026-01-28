@@ -26,14 +26,19 @@ Mini ATS is a complete applicant tracking system designed for small to medium bu
 ---
 
 ## Screenshots
+<img width="2752" height="1536" alt="MVP" src="https://github.com/user-attachments/assets/2f5eaad5-1644-43e6-bef8-82c6f45055dc" />
 
-| Dashboard | Kanban Board |
-|-----------|--------------|
-| Platform KPIs and quick actions | Drag-and-drop pipeline management |
+<img width="1992" height="1114" alt="image" src="https://github.com/user-attachments/assets/590a9740-1a6d-4dc1-9ba9-c58ef67e5631" />
 
-| Admin Portal | Audit Logs |
-|--------------|------------|
-| Tenant and user management | Track all admin activity |
+<img width="2320" height="1275" alt="image" src="https://github.com/user-attachments/assets/74b4a6b4-c950-4cb4-b5f4-174d4ce12bde" />
+<img width="2276" height="1249" alt="image" src="https://github.com/user-attachments/assets/89a2199a-d7fd-4f34-8764-797f78651d76" />
+<img width="2629" height="1274" alt="image" src="https://github.com/user-attachments/assets/42df154e-90c3-40e3-899b-0907828b98a0" />
+<img width="2610" height="1266" alt="image" src="https://github.com/user-attachments/assets/f23b2e07-bbdb-4a6f-a086-fcd79bd7050f" />
+<img width="2690" height="1278" alt="image" src="https://github.com/user-attachments/assets/b7f998b7-3fdb-41c6-add5-981ea3816271" />
+
+
+
+
 
 ---
 
@@ -315,14 +320,6 @@ npm run type-check
 
 ---
 
-## Demo Accounts
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@devotion.ventures | admin123 |
-| Customer | customer@devco.se | customer123 |
-
----
 
 ## Author
 
