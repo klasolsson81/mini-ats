@@ -227,7 +227,22 @@
     "duration": "Varaktighet",
     "ipAddress": "IP-adress",
     "active": "Aktiv",
-    "noAuditLogs": "Inga granskningsloggar än."
+    "noAuditLogs": "Inga granskningsloggar än.",
+    "userStatus": "Status",
+    "userActive": "Aktiv",
+    "userInactive": "Inaktiv",
+    "activate": "Aktivera",
+    "deactivate": "Inaktivera",
+    "deleteUser": "Ta bort",
+    "deleteUserConfirm": "Är du säker på att du vill inaktivera denna användare?",
+    "userActivated": "Användare aktiverad",
+    "userDeactivated": "Användare inaktiverad",
+    "userDeleted": "Användare borttagen",
+    "lastLogin": "Senast inloggad",
+    "neverLoggedIn": "Aldrig inloggad",
+    "cannotDeleteSelf": "Du kan inte ta bort ditt eget konto",
+    "cannotDeactivateSelf": "Du kan inte inaktivera ditt eget konto",
+    "lastAdminWarning": "Kan inte ta bort den sista administratören"
   },
   "settings": {
     "language": "Språk",

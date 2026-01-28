@@ -89,12 +89,27 @@ export async function login(formData: FormData) {
   // Clear rate limit on successful login
   clearRateLimit(clientIp);
 
-  // Check if user must change password
+  // Check if user is active and if they must change password
   const { data: profile } = await supabase
     .from('profiles')
-    .select('must_change_password')
+    .select('must_change_password, is_active')
     .eq('id', authData.user.id)
     .single();
+
+  // Check if account is deactivated
+  if (profile && profile.is_active === false) {
+    // Sign out the user since we don't want them logged in
+    await supabase.auth.signOut();
+    return {
+      error: 'Ditt konto har inaktiverats. Kontakta administratören.',
+    };
+  }
+
+  // Update last login timestamp
+  await supabase
+    .from('profiles')
+    .update({ last_login_at: new Date().toISOString() })
+    .eq('id', authData.user.id);
 
   revalidatePath('/', 'layout');
 

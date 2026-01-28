@@ -227,7 +227,22 @@
     "duration": "Duration",
     "ipAddress": "IP Address",
     "active": "Active",
-    "noAuditLogs": "No audit logs yet."
+    "noAuditLogs": "No audit logs yet.",
+    "userStatus": "Status",
+    "userActive": "Active",
+    "userInactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "deleteUser": "Delete",
+    "deleteUserConfirm": "Are you sure you want to deactivate this user?",
+    "userActivated": "User activated",
+    "userDeactivated": "User deactivated",
+    "userDeleted": "User deleted",
+    "lastLogin": "Last login",
+    "neverLoggedIn": "Never logged in",
+    "cannotDeleteSelf": "You cannot delete your own account",
+    "cannotDeactivateSelf": "You cannot deactivate your own account",
+    "lastAdminWarning": "Cannot delete the last administrator"
   },
   "settings": {
     "language": "Language",

@@ -2,8 +2,9 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { User, Building2, Shield } from 'lucide-react';
+import { User, Building2, Shield, Clock, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import { UserActions } from '@/features/admin/user-actions';
 
 export async function generateMetadata() {
   const t = await getTranslations('admin');
@@ -39,7 +40,10 @@ export default async function UsersPage() {
   const { data: users } = await supabase
     .from('profiles')
     .select('*, tenants(id, name)')
+    .order('is_active', { ascending: false })
     .order('created_at', { ascending: false });
+
+  const currentUserId = user.id;
 
   // Separate admins and customers
   const admins = users?.filter((u) => u.role === 'admin') || [];
@@ -102,25 +106,54 @@ export default async function UsersPage() {
         <CardContent>
           {admins.length > 0 ? (
             <div className="space-y-3">
-              {admins.map((u) => (
-                <div
-                  key={u.id}
-                  className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-full bg-blue-100 p-2">
-                      <Shield className="h-4 w-4 text-blue-600" />
+              {admins.map((u) => {
+                const isActive = u.is_active !== false;
+                const lastLogin = u.last_login_at
+                  ? new Date(u.last_login_at).toLocaleString('sv-SE')
+                  : null;
+
+                return (
+                  <div
+                    key={u.id}
+                    className={`flex items-center justify-between rounded-lg border p-4 ${
+                      isActive
+                        ? 'border-gray-200 bg-white'
+                        : 'border-gray-300 bg-gray-50 opacity-60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`rounded-full p-2 ${isActive ? 'bg-blue-100' : 'bg-gray-200'}`}>
+                        <Shield className={`h-4 w-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-900">{u.full_name}</p>
+                          {isActive ? (
+                            <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <XCircle className="h-3.5 w-3.5 text-red-500" />
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">{u.email}</p>
+                        <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                          <Clock className="h-3 w-3" />
+                          {lastLogin ? lastLogin : t('neverLoggedIn')}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{u.full_name}</p>
-                      <p className="text-sm text-gray-600">{u.email}</p>
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                        {t('roleAdmin')}
+                      </span>
+                      <UserActions
+                        userId={u.id}
+                        isActive={isActive}
+                        isSelf={u.id === currentUserId}
+                      />
                     </div>
                   </div>
-                  <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    {t('roleAdmin')}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <p className="text-sm text-gray-600">{t('noAdminUsers')}</p>
@@ -136,33 +169,63 @@ export default async function UsersPage() {
         <CardContent>
           {customers.length > 0 ? (
             <div className="space-y-3">
-              {customers.map((u) => (
-                <div
-                  key={u.id}
-                  className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-full bg-green-100 p-2">
-                      <User className="h-4 w-4 text-green-600" />
+              {customers.map((u) => {
+                const isActive = u.is_active !== false;
+                const lastLogin = u.last_login_at
+                  ? new Date(u.last_login_at).toLocaleString('sv-SE')
+                  : null;
+
+                return (
+                  <div
+                    key={u.id}
+                    className={`flex items-center justify-between rounded-lg border p-4 ${
+                      isActive
+                        ? 'border-gray-200 bg-white'
+                        : 'border-gray-300 bg-gray-50 opacity-60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`rounded-full p-2 ${isActive ? 'bg-green-100' : 'bg-gray-200'}`}>
+                        <User className={`h-4 w-4 ${isActive ? 'text-green-600' : 'text-gray-400'}`} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-gray-900">{u.full_name}</p>
+                          {isActive ? (
+                            <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                          ) : (
+                            <XCircle className="h-3.5 w-3.5 text-red-500" />
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">{u.email}</p>
+                        {u.tenants && (
+                          <Link
+                            href={`/app/admin/tenants/${u.tenants.id}`}
+                            className="text-sm text-blue-600 hover:underline"
+                          >
+                            <Building2 className="h-3 w-3 inline mr-1" />
+                            {u.tenants.name}
+                          </Link>
+                        )}
+                        <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                          <Clock className="h-3 w-3" />
+                          {lastLogin ? lastLogin : t('neverLoggedIn')}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{u.full_name}</p>
-                      <p className="text-sm text-gray-600">{u.email}</p>
-                      {u.tenants && (
-                        <Link
-                          href={`/app/admin/tenants/${u.tenants.id}`}
-                          className="text-sm text-blue-600 hover:underline"
-                        >
-                          {u.tenants.name}
-                        </Link>
-                      )}
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                        {t('roleCustomer')}
+                      </span>
+                      <UserActions
+                        userId={u.id}
+                        isActive={isActive}
+                        isSelf={u.id === currentUserId}
+                      />
                     </div>
                   </div>
-                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    {t('roleCustomer')}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <p className="text-sm text-gray-600">{t('noCustomerUsers')}</p>

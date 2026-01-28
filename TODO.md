@@ -122,15 +122,22 @@
 
 ---
 
-#### 11. User Lifecycle Management
-**Varför:** Admin efficiency, complete feature set
-**Estimat:** 4-6 timmar
-**Område:** Admin panel
+#### 11. User Lifecycle Management ✅ KLART (2026-01-28)
+**Status:** IMPLEMENTERAT
+**Filer:** `lib/actions/users.ts`, `features/admin/user-actions.tsx`, `app/app/admin/users/page.tsx`
 
-**Features:**
-- [ ] Deactivate user
-- [ ] Delete user (with cascade)
-- [ ] View last login
+**Lösning:**
+- Database migration: `is_active`, `last_login_at` kolumner
+- Server actions: toggleUserActive, deleteUser
+- UI: Status-ikoner, senast inloggad, aktivera/inaktivera knappar
+- Login uppdaterar last_login_at automatiskt
+- Inaktiva användare kan inte logga in
+
+**Implementerat:**
+- [x] Deactivate/Activate user (toggle)
+- [x] Delete user (soft delete via deactivate)
+- [x] View last login timestamp
+- [x] Skydd mot att ta bort sig själv eller sista admin
 
 ---
 
