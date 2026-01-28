@@ -206,6 +206,7 @@ export default async function AuditLogsPage() {
                             day: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit',
+                            timeZone: 'Europe/Stockholm',
                           })}
                         </td>
                         <td className="px-4 py-3">
@@ -221,6 +222,7 @@ export default async function AuditLogsPage() {
                                 day: 'numeric',
                                 hour: '2-digit',
                                 minute: '2-digit',
+                                timeZone: 'Europe/Stockholm',
                               })}
                             </span>
                           )}
@@ -311,6 +313,7 @@ export default async function AuditLogsPage() {
                           day: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit',
+                          timeZone: 'Europe/Stockholm',
                         })}
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-500 font-mono">
