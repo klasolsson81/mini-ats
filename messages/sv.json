@@ -65,7 +65,10 @@
     "tenants": "Kunder",
     "users": "Användare",
     "auditLogs": "Loggar",
-    "userMenu": "Användarmeny"
+    "userMenu": "Användarmeny",
+    "password": "Lösenord",
+    "account": "Konto",
+    "logout": "Logga ut"
   },
   "dashboard": {
     "title": "Dashboard",

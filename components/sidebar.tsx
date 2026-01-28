@@ -299,18 +299,18 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                   </button>
                 </div>
 
-                {/* Menu items - icons only */}
-                <div className="p-1">
+                {/* Menu items with labels */}
+                <div className="p-1.5 space-y-1">
                   <button
                     onClick={() => {
                       setIsUserMenuOpen(false);
                       router.push('/app/settings/password');
                     }}
-                    className="w-full flex items-center justify-center p-2 text-gray-600 hover:bg-cyan-50 hover:text-cyan-700 rounded-lg transition-colors"
-                    title={t('settings.changePassword')}
+                    className="w-full flex flex-col items-center justify-center p-2 text-gray-600 hover:bg-cyan-50 hover:text-cyan-700 rounded-lg transition-colors"
                     aria-label={t('settings.changePassword')}
                   >
-                    <Key className="w-5 h-5" aria-hidden="true" />
+                    <Key className="w-4 h-4" aria-hidden="true" />
+                    <span className="text-[9px] font-medium mt-1">{t('nav.password')}</span>
                   </button>
 
                   <button
@@ -318,11 +318,11 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                       setIsUserMenuOpen(false);
                       router.push('/app/settings');
                     }}
-                    className="w-full flex items-center justify-center p-2 text-gray-600 hover:bg-cyan-50 hover:text-cyan-700 rounded-lg transition-colors"
-                    title={t('settings.account')}
+                    className="w-full flex flex-col items-center justify-center p-2 text-gray-600 hover:bg-cyan-50 hover:text-cyan-700 rounded-lg transition-colors"
                     aria-label={t('settings.account')}
                   >
-                    <User className="w-5 h-5" aria-hidden="true" />
+                    <User className="w-4 h-4" aria-hidden="true" />
+                    <span className="text-[9px] font-medium mt-1">{t('nav.account')}</span>
                   </button>
 
                   <div className="border-t border-cyan-100 my-1" />
@@ -331,15 +331,15 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                     type="button"
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="w-full flex items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                    title={t('auth.logout')}
+                    className="w-full flex flex-col items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                     aria-label={t('auth.logout')}
                   >
                     {isLoggingOut ? (
-                      <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                      <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                     ) : (
-                      <LogOut className="w-5 h-5" aria-hidden="true" />
+                      <LogOut className="w-4 h-4" aria-hidden="true" />
                     )}
+                    <span className="text-[9px] font-medium mt-1">{t('nav.logout')}</span>
                   </button>
                 </div>
               </div>

@@ -65,7 +65,10 @@
     "tenants": "Tenants",
     "users": "Users",
     "auditLogs": "Logs",
-    "userMenu": "User menu"
+    "userMenu": "User menu",
+    "password": "Password",
+    "account": "Account",
+    "logout": "Log out"
   },
   "dashboard": {
     "title": "Dashboard",
