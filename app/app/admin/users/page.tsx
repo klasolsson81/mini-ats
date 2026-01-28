@@ -44,9 +44,10 @@ export default async function UsersPage() {
 
   const currentUserId = user.id;
 
-  // Separate admins and customers for stats
-  const admins = users?.filter((u) => u.role === 'admin') || [];
-  const customers = users?.filter((u) => u.role === 'customer') || [];
+  // Separate admins and customers for stats (only count active users)
+  const activeUsers = users?.filter((u) => u.is_active !== false) || [];
+  const admins = activeUsers.filter((u) => u.role === 'admin');
+  const customers = activeUsers.filter((u) => u.role === 'customer');
 
   // Transform users for BulkUsersManager
   const usersForManager = (users || []).map((u) => ({
@@ -73,7 +74,7 @@ export default async function UsersPage() {
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 max-w-4xl">
         <KpiCard
           title={t('totalUsers')}
-          value={users?.length || 0}
+          value={activeUsers.length}
           icon={User}
           variant="blue"
         />

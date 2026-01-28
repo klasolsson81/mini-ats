@@ -267,6 +267,8 @@
     "bulkDeactivate": "Deactivate",
     "bulkActivated": "{count} users activated",
     "bulkDeactivated": "{count} users deactivated",
+    "showInactiveUsers": "Show deleted ({count})",
+    "hideInactiveUsers": "Hide deleted",
     "generalAuditLogs": "Administration Logs",
     "totalEvents": "Total Events",
     "eventType": "Event",

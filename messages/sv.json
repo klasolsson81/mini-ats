@@ -267,6 +267,8 @@
     "bulkDeactivate": "Inaktivera",
     "bulkActivated": "{count} användare aktiverade",
     "bulkDeactivated": "{count} användare inaktiverade",
+    "showInactiveUsers": "Visa borttagna ({count})",
+    "hideInactiveUsers": "Dölj borttagna",
     "generalAuditLogs": "Administrationsloggar",
     "totalEvents": "Totalt Händelser",
     "eventType": "Händelse",

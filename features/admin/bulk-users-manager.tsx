@@ -13,6 +13,8 @@ import {
   PowerOff,
   Loader2,
   X,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -38,9 +40,18 @@ export function BulkUsersManager({ users, currentUserId }: BulkUsersManagerProps
   const t = useTranslations('admin');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isPending, startTransition] = useTransition();
+  const [showInactive, setShowInactive] = useState(false);
 
-  const admins = users.filter((u) => u.role === 'admin');
-  const customers = users.filter((u) => u.role === 'customer');
+  // Filter users based on showInactive toggle
+  const activeAdmins = users.filter((u) => u.role === 'admin' && u.is_active !== false);
+  const inactiveAdmins = users.filter((u) => u.role === 'admin' && u.is_active === false);
+  const activeCustomers = users.filter((u) => u.role === 'customer' && u.is_active !== false);
+  const inactiveCustomers = users.filter((u) => u.role === 'customer' && u.is_active === false);
+
+  const admins = showInactive ? users.filter((u) => u.role === 'admin') : activeAdmins;
+  const customers = showInactive ? users.filter((u) => u.role === 'customer') : activeCustomers;
+
+  const totalInactive = inactiveAdmins.length + inactiveCustomers.length;
 
   const toggleSelect = (id: string) => {
     const newSelected = new Set(selectedIds);
@@ -230,6 +241,29 @@ export function BulkUsersManager({ users, currentUserId }: BulkUsersManagerProps
               <X className="h-4 w-4" />
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Show Inactive Toggle */}
+      {totalInactive > 0 && (
+        <div className="flex items-center justify-end">
+          <button
+            onClick={() => setShowInactive(!showInactive)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              showInactive
+                ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {showInactive ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+            {showInactive
+              ? t('hideInactiveUsers')
+              : t('showInactiveUsers', { count: totalInactive })}
+          </button>
         </div>
       )}
 
