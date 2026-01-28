@@ -64,7 +64,7 @@ export function KanbanColumn({ stage, candidates }: KanbanColumnProps) {
   return (
     <div className="flex flex-col" ref={setNodeRef}>
       <div
-        className={`flex flex-col rounded-2xl ${columnBg} backdrop-blur-sm border border-white/30 h-full min-h-[500px] p-3 transition-all duration-300 ${
+        className={`flex flex-col rounded-2xl ${columnBg} backdrop-blur-sm border border-white/30 h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] p-3 transition-all duration-300 ${
           isOver
             ? 'ring-2 ring-[var(--primary)] ring-offset-2 scale-[1.02]'
             : ''

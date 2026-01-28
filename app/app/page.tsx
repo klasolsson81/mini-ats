@@ -267,7 +267,7 @@ export default async function DashboardPage() {
       <div className="space-y-8">
         {/* Page Header */}
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
             {t('adminTitle')}
           </h1>
           <p className="text-gray-600 text-lg">
@@ -276,7 +276,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Platform KPI Cards */}
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-4 max-w-6xl">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl">
           <KpiCard
             title={t('totalTenants')}
             value={tenantsCount}
@@ -321,7 +321,7 @@ export default async function DashboardPage() {
     <div className="space-y-8">
       {/* Page Header */}
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {t('title')}
         </h1>
         <p className="text-gray-600 text-lg">

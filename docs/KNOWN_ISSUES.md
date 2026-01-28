@@ -14,9 +14,11 @@ Changed from server-side `redirect()` to client-side `router.push()` for smooth 
 ## Functional Limitations (By Design)
 
 ### Mobile Experience
-- Desktop-first design
-- Works on mobile but optimized for larger screens
-- Consider mobile optimization in future release
+- Responsive design implemented for all screen sizes
+- Sidebar narrows on mobile (64px vs 112px on desktop)
+- Page titles scale down on smaller screens
+- Kanban columns stack on mobile, expand on larger screens
+- Dialogs have proper mobile padding and max-width
 
 ### Large Datasets
 - Not tested with 1000+ candidates per tenant

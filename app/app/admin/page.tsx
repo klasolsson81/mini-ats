@@ -53,7 +53,7 @@ export default async function AdminPage() {
     <div className="space-y-6 max-w-6xl">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
             {t('pageTitle')}
           </h1>
           <p className="text-gray-600 text-lg">

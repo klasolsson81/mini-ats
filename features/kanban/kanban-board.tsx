@@ -124,13 +124,13 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="rounded-2xl glass-cyan border border-cyan-300/50 shadow-sm p-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="rounded-2xl glass-cyan border border-cyan-300/50 shadow-sm p-3 sm:p-4">
+        <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
-              <Filter className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
+              <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <div className="w-48">
+            <div className="flex-1 sm:flex-none sm:w-48">
               <Select
                 value={selectedJobId}
                 onChange={(e) => setSelectedJobId(e.target.value)}
@@ -177,7 +177,7 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
         onDragEnd={handleDragEnd}
         onDragStart={(event) => setActiveId(event.active.id as string)}
       >
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
+        <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
           {STAGE_ORDER.map((stage) => (
             <KanbanColumn
               key={stage}

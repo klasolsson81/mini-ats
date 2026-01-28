@@ -20,10 +20,10 @@ export default function LoginPage() {
         <LanguageSwitcher />
       </div>
 
-      <div className="w-full max-w-md space-y-8 relative z-10">
+      <div className="w-full max-w-sm sm:max-w-md space-y-6 sm:space-y-8 relative z-10">
         {/* Logo text */}
         <div className="text-center">
-          <h1 className="text-5xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,200,255,0.5)] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,200,255,0.5)] tracking-tight">
             Mini <span className="text-cyan-300">ATS</span>
           </h1>
           <p className="mt-2 text-cyan-100/80 text-sm font-medium tracking-wide">

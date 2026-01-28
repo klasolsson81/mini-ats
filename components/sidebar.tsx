@@ -150,19 +150,19 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   };
 
   return (
-    <aside className="flex w-28 flex-col glass border-r border-white/20 relative z-10 overflow-visible animate-flow">
+    <aside className="flex w-16 sm:w-28 flex-col glass border-r border-white/20 relative z-10 overflow-visible animate-flow">
       {/* Logo */}
-      <div className="flex h-20 items-center justify-center px-2 border-b border-white/10">
+      <div className="flex h-16 sm:h-20 items-center justify-center px-1 sm:px-2 border-b border-white/10">
         <div className="flex flex-col items-center">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-cyan-600 flex items-center justify-center shadow-lg ring-2 ring-white/30">
-            <span className="text-white font-black text-base tracking-tight">ats</span>
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-cyan-600 flex items-center justify-center shadow-lg ring-2 ring-white/30">
+            <span className="text-white font-black text-xs sm:text-base tracking-tight">ats</span>
           </div>
-          <span className="text-[9px] font-semibold text-gray-600 mt-1 tracking-wider uppercase">mini</span>
+          <span className="text-[8px] sm:text-[9px] font-semibold text-gray-600 mt-1 tracking-wider uppercase">mini</span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 flex flex-col items-center py-6 px-2 space-y-2">
+      <nav className="flex-1 flex flex-col items-center py-4 sm:py-6 px-1 sm:px-2 space-y-1 sm:space-y-2">
         {navigation.map((item) => {
           const isActive = item.exact
             ? pathname === item.href
@@ -186,7 +186,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
               onClick={handleNavigate}
               disabled={isPending}
               className={cn(
-                'group relative flex flex-col items-center justify-center w-full py-3 px-2 rounded-xl transition-all duration-300',
+                'group relative flex flex-col items-center justify-center w-full py-2 sm:py-3 px-1 sm:px-2 rounded-xl transition-all duration-300',
                 isActive
                   ? 'bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] text-white shadow-lg glow-primary'
                   : 'bg-white/30 text-gray-600 hover:bg-white/50 hover:text-gray-900',
@@ -194,13 +194,13 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
               )}
             >
               {isNavigating ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
               ) : (
-                <item.icon className="w-5 h-5" />
+                <item.icon className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
               <span
                 className={cn(
-                  'text-[10px] font-medium mt-1 truncate max-w-full',
+                  'text-[8px] sm:text-[10px] font-medium mt-0.5 sm:mt-1 truncate max-w-full',
                   isActive ? 'text-white' : 'text-gray-600'
                 )}
               >
@@ -212,13 +212,13 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
       </nav>
 
       {/* User section with dropdown menu */}
-      <div className="border-t border-white/10 p-3 overflow-visible" ref={menuRef}>
+      <div className="border-t border-white/10 p-2 sm:p-3 overflow-visible" ref={menuRef}>
         <div className="relative overflow-visible">
           {/* User button */}
           <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
             className={cn(
-              'w-full flex flex-col items-center p-3 rounded-xl transition-all duration-200',
+              'w-full flex flex-col items-center p-2 sm:p-3 rounded-xl transition-all duration-200',
               isUserMenuOpen
                 ? 'bg-gradient-to-br from-cyan-100/80 to-blue-100/80 shadow-md ring-2 ring-cyan-300/50'
                 : 'bg-white/30 hover:bg-white/50'
@@ -227,16 +227,16 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
             aria-haspopup="menu"
             aria-label={t('nav.userMenu')}
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-md ring-2 ring-white/50">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold text-xs sm:text-sm shadow-md ring-2 ring-white/50">
               {profile.full_name?.charAt(0) || 'U'}
             </div>
-            <span className="text-[10px] font-medium text-gray-700 mt-1.5 truncate max-w-full">
+            <span className="text-[8px] sm:text-[10px] font-medium text-gray-700 mt-1 sm:mt-1.5 truncate max-w-full hidden sm:block">
               {profile.full_name?.split(' ')[0] || t('nav.users')}
             </span>
             {isAdmin && !isImpersonating && (
               <PillBadge
                 variant="primary"
-                className="mt-1 text-[8px] px-1.5 py-0.5"
+                className="mt-1 text-[7px] sm:text-[8px] px-1 sm:px-1.5 py-0.5 hidden sm:inline-flex"
               >
                 Admin
               </PillBadge>
