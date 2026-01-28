@@ -116,7 +116,7 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
     return (
       <div
         key={u.id}
-        className={`flex items-center justify-between rounded-xl border p-4 transition-all ${
+        className={`flex flex-col sm:flex-row sm:items-center sm:justify-between rounded-xl border p-3 sm:p-4 transition-all gap-3 ${
           isSelected
             ? 'border-blue-400 bg-blue-500/10 ring-1 ring-blue-400'
             : isActive
@@ -124,19 +124,19 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
               : 'bg-gray-100/50 border-gray-300/50 opacity-60'
         }`}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {/* Checkbox */}
           <input
             type="checkbox"
             checked={isSelected}
             disabled={isSelf}
             onChange={() => toggleSelect(u.id)}
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50 shrink-0"
             aria-label={`${t('selectUser')} ${u.full_name}`}
           />
 
           <div
-            className={`rounded-full p-2 ${
+            className={`rounded-full p-1.5 sm:p-2 shrink-0 ${
               isAdmin
                 ? isActive
                   ? 'bg-blue-100'
@@ -148,42 +148,42 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
           >
             {isAdmin ? (
               <Shield
-                className={`h-4 w-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`}
+                className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`}
               />
             ) : (
               <User
-                className={`h-4 w-4 ${isActive ? 'text-green-600' : 'text-gray-400'}`}
+                className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${isActive ? 'text-green-600' : 'text-gray-400'}`}
               />
             )}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <p className="font-medium text-gray-900">{u.full_name}</p>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{u.full_name}</p>
               {isActive ? (
-                <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-green-500 shrink-0" />
               ) : (
-                <XCircle className="h-3.5 w-3.5 text-red-500" />
+                <XCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-red-500 shrink-0" />
               )}
             </div>
-            <p className="text-sm text-gray-600">{u.email}</p>
+            <p className="text-xs sm:text-sm text-gray-600 truncate">{u.email}</p>
             {!isAdmin && u.tenants && (
               <Link
                 href={`/app/admin/tenants/${u.tenants.id}`}
-                className="text-sm text-blue-600 hover:underline"
+                className="text-xs sm:text-sm text-blue-600 hover:underline truncate block"
               >
                 <Building2 className="h-3 w-3 inline mr-1" />
                 {u.tenants.name}
               </Link>
             )}
-            <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-              <Clock className="h-3 w-3" />
-              {lastLogin ? lastLogin : t('neverLoggedIn')}
+            <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">
+              <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />
+              <span className="truncate">{lastLogin ? lastLogin : t('neverLoggedIn')}</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 pl-6 sm:pl-0">
           <span
-            className={`rounded-full px-3 py-1 text-xs font-medium ${
+            className={`rounded-full px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium whitespace-nowrap ${
               u.role === 'super_admin'
                 ? 'bg-purple-100 text-purple-800'
                 : isAdmin
@@ -209,42 +209,44 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
     <>
       {/* Bulk Actions Bar */}
       {selectedIds.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-          <div className="flex items-center gap-3 px-4 py-3 bg-gray-900 text-white rounded-xl shadow-2xl">
-            <span className="text-sm font-medium">
+        <div className="fixed bottom-4 sm:bottom-6 left-2 right-2 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 z-50">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 bg-gray-900 text-white rounded-xl shadow-2xl">
+            <span className="text-xs sm:text-sm font-medium">
               {t('selectedCount', { count: selectedIds.size })}
             </span>
-            <div className="h-6 w-px bg-gray-700" />
+            <div className="hidden sm:block h-6 w-px bg-gray-700" />
             <button
               onClick={handleBulkActivate}
               disabled={isPending}
-              className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-green-600 hover:bg-green-700 rounded-lg text-xs sm:text-sm font-medium transition-colors disabled:opacity-50"
             >
               {isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
               ) : (
-                <Power className="h-4 w-4" />
+                <Power className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               )}
-              {t('bulkActivate')}
+              <span className="hidden sm:inline">{t('bulkActivate')}</span>
+              <span className="sm:hidden">Aktivera</span>
             </button>
             <button
               onClick={handleBulkDeactivate}
               disabled={isPending}
-              className="flex items-center gap-2 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-amber-600 hover:bg-amber-700 rounded-lg text-xs sm:text-sm font-medium transition-colors disabled:opacity-50"
             >
               {isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
               ) : (
-                <PowerOff className="h-4 w-4" />
+                <PowerOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               )}
-              {t('bulkDeactivate')}
+              <span className="hidden sm:inline">{t('bulkDeactivate')}</span>
+              <span className="sm:hidden">Inaktivera</span>
             </button>
             <button
               onClick={deselectAll}
-              className="p-1.5 hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-1 sm:p-1.5 hover:bg-gray-800 rounded-lg transition-colors"
               aria-label={t('deselectAll')}
             >
-              <X className="h-4 w-4" />
+              <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
           </div>
         </div>
@@ -275,8 +277,8 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
 
       {/* Admins List */}
       <div className="rounded-2xl glass border border-white/30 shadow-sm">
-        <div className="flex items-center justify-between p-5 border-b border-white/20">
-          <h2 className="text-lg font-semibold text-gray-900">{t('adminUsers')}</h2>
+        <div className="flex items-center justify-between p-3 sm:p-5 border-b border-white/20">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">{t('adminUsers')}</h2>
           {admins.filter((u) => u.id !== currentUserId).length > 0 && (
             <button
               onClick={() => selectAll(admins)}
@@ -286,9 +288,9 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
             </button>
           )}
         </div>
-        <div className="p-5">
+        <div className="p-3 sm:p-5">
           {admins.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {admins.map((u) => renderUserRow(u, true))}
             </div>
           ) : (
@@ -299,8 +301,8 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
 
       {/* Customers List */}
       <div className="rounded-2xl glass border border-white/30 shadow-sm">
-        <div className="flex items-center justify-between p-5 border-b border-white/20">
-          <h2 className="text-lg font-semibold text-gray-900">{t('customerUsers')}</h2>
+        <div className="flex items-center justify-between p-3 sm:p-5 border-b border-white/20">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">{t('customerUsers')}</h2>
           {customers.length > 0 && (
             <button
               onClick={() => selectAll(customers)}
@@ -310,9 +312,9 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
             </button>
           )}
         </div>
-        <div className="p-5">
+        <div className="p-3 sm:p-5">
           {customers.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {customers.map((u) => renderUserRow(u, false))}
             </div>
           ) : (

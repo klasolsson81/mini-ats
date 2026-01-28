@@ -114,11 +114,11 @@ export default async function AuditLogsPage() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
           {t('auditLogs')}
         </h1>
-        <p className="text-gray-600 text-lg">{t('auditLogsSubtitle')}</p>
+        <p className="text-gray-600 text-sm sm:text-lg">{t('auditLogsSubtitle')}</p>
       </div>
 
       {/* Statistics */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 max-w-4xl">
+      <div className="grid gap-3 grid-cols-3 max-w-4xl">
         <KpiCard
           title={t('totalSessions')}
           value={totalSessions}
@@ -147,7 +147,7 @@ export default async function AuditLogsPage() {
         <div className="p-5">
           {logs && logs.length > 0 ? (
             <div className="overflow-x-auto rounded-xl">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[600px]">
                 <thead className="border-b border-gray-200/50 bg-white/30">
                   <tr>
                     <th className="px-4 py-3 text-left font-semibold text-gray-900">
@@ -251,7 +251,7 @@ export default async function AuditLogsPage() {
         <div className="p-5">
           {auditLogs && auditLogs.length > 0 ? (
             <div className="overflow-x-auto rounded-xl">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[500px]">
                 <thead className="border-b border-gray-200/50 bg-white/30">
                   <tr>
                     <th className="px-4 py-3 text-left font-semibold text-gray-900">
