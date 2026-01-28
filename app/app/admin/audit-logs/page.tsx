@@ -8,6 +8,7 @@ import {
   getEventTypeColor,
   type AuditEventType,
 } from '@/lib/utils/audit-log';
+import { isAdminRole } from '@/lib/utils/roles';
 
 interface ImpersonationLog {
   id: string;
@@ -77,7 +78,7 @@ export default async function AuditLogsPage() {
     .single();
 
   // Only admins can access
-  if (profile?.role !== 'admin') {
+  if (!isAdminRole(profile?.role)) {
     redirect('/app');
   }
 

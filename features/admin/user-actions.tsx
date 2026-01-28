@@ -2,17 +2,20 @@
 
 import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { Power, PowerOff, Trash2, Loader2, AlertTriangle } from 'lucide-react';
+import { Power, PowerOff, Trash2, Loader2, AlertTriangle, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import { toggleUserActive, deleteUser, permanentDeleteUser } from '@/lib/actions/users';
+import { canModifyUser } from '@/lib/utils/roles';
 
 interface UserActionsProps {
   userId: string;
   isActive: boolean;
   isSelf: boolean;
+  targetRole?: string;
+  callerRole?: string;
 }
 
-export function UserActions({ userId, isActive, isSelf }: UserActionsProps) {
+export function UserActions({ userId, isActive, isSelf, targetRole, callerRole }: UserActionsProps) {
   const t = useTranslations('admin');
   const [isPending, startTransition] = useTransition();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -78,6 +81,18 @@ export function UserActions({ userId, isActive, isSelf }: UserActionsProps) {
       <span className="text-xs text-gray-400 italic">
         (dig själv)
       </span>
+    );
+  }
+
+  // Check if caller can modify this user based on roles
+  const canModify = callerRole && targetRole ? canModifyUser(callerRole, targetRole) : true;
+
+  if (!canModify) {
+    return (
+      <div className="flex items-center gap-2 text-purple-600" title={t('protectedUser')}>
+        <Crown className="w-4 h-4" />
+        <span className="text-xs font-medium">{t('protected')}</span>
+      </div>
     );
   }
 

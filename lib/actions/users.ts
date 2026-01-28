@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 import { logAuditEvent } from '@/lib/utils/audit-log';
+import { isAdminRole, canModifyUser } from '@/lib/utils/roles';
 
 /**
  * Toggle user active status (activate/deactivate)
@@ -26,7 +27,7 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
     .eq('id', user.id)
     .single();
 
-  if (callerProfile?.role !== 'admin') {
+  if (!isAdminRole(callerProfile?.role)) {
     return { error: 'Endast administratörer kan ändra användarstatus' };
   }
 
@@ -35,12 +36,17 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
     return { error: 'Du kan inte inaktivera ditt eget konto' };
   }
 
-  // Get target user info for audit log
+  // Get target user info for audit log and permission check
   const { data: targetUser } = await supabase
     .from('profiles')
-    .select('full_name, email')
+    .select('full_name, email, role')
     .eq('id', userId)
     .single();
+
+  // Check if caller can modify target based on roles
+  if (targetUser && !canModifyUser(callerProfile.role, targetUser.role)) {
+    return { error: 'Du har inte behörighet att ändra denna användare' };
+  }
 
   // Update user status
   const { error } = await supabase
@@ -88,7 +94,7 @@ export async function deleteUser(userId: string) {
     .eq('id', user.id)
     .single();
 
-  if (callerProfile?.role !== 'admin') {
+  if (!isAdminRole(callerProfile?.role)) {
     return { error: 'Endast administratörer kan ta bort användare' };
   }
 
@@ -108,8 +114,13 @@ export async function deleteUser(userId: string) {
     return { error: 'Användaren hittades inte' };
   }
 
+  // Check if caller can modify target based on roles
+  if (!canModifyUser(callerProfile.role, targetUser.role)) {
+    return { error: 'Du har inte behörighet att ta bort denna användare' };
+  }
+
   // Check if this is the last admin
-  if (targetUser.role === 'admin') {
+  if (isAdminRole(targetUser.role)) {
     const { count } = await supabase
       .from('profiles')
       .select('*', { count: 'exact', head: true })
@@ -167,7 +178,7 @@ export async function permanentDeleteUser(userId: string) {
     .eq('id', user.id)
     .single();
 
-  if (callerProfile?.role !== 'admin') {
+  if (!isAdminRole(callerProfile?.role)) {
     return { error: 'Endast administratörer kan ta bort användare permanent' };
   }
 
@@ -187,8 +198,13 @@ export async function permanentDeleteUser(userId: string) {
     return { error: 'Användaren hittades inte' };
   }
 
+  // Check if caller can modify target based on roles
+  if (!canModifyUser(callerProfile.role, targetUser.role)) {
+    return { error: 'Du har inte behörighet att ta bort denna användare' };
+  }
+
   // Check if this is the last admin
-  if (targetUser.role === 'admin') {
+  if (isAdminRole(targetUser.role)) {
     const { count } = await supabase
       .from('profiles')
       .select('*', { count: 'exact', head: true })
@@ -264,14 +280,25 @@ export async function bulkToggleUserActive(userIds: string[], isActive: boolean)
     .eq('id', user.id)
     .single();
 
-  if (callerProfile?.role !== 'admin') {
+  if (!isAdminRole(callerProfile?.role)) {
     return { error: 'Endast administratörer kan ändra användarstatus' };
   }
 
+  // Get all target users to check permissions
+  const { data: targetUsers } = await supabase
+    .from('profiles')
+    .select('id, role')
+    .in('id', userIds);
+
+  // Filter out users the caller cannot modify (super_admins if caller is not super_admin)
+  const allowedIds = targetUsers
+    ?.filter((u) => canModifyUser(callerProfile.role, u.role))
+    .map((u) => u.id) || [];
+
   // Filter out self from deactivation
   const filteredIds = isActive
-    ? userIds
-    : userIds.filter((id) => id !== user.id);
+    ? allowedIds
+    : allowedIds.filter((id) => id !== user.id);
 
   if (filteredIds.length === 0) {
     return { error: 'Inga användare att uppdatera' };
@@ -279,24 +306,19 @@ export async function bulkToggleUserActive(userIds: string[], isActive: boolean)
 
   // Check for last admin protection when deactivating
   if (!isActive) {
-    const { data: targetUsers } = await supabase
-      .from('profiles')
-      .select('id, role')
-      .in('id', filteredIds);
-
-    const adminIds = targetUsers?.filter((u) => u.role === 'admin').map((u) => u.id) || [];
+    const adminIds = targetUsers?.filter((u) => isAdminRole(u.role) && filteredIds.includes(u.id)).map((u) => u.id) || [];
 
     if (adminIds.length > 0) {
       const { count: totalAdmins } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true })
-        .eq('role', 'admin')
+        .in('role', ['admin', 'super_admin'])
         .eq('is_active', true);
 
       const { count: selectedAdmins } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true })
-        .eq('role', 'admin')
+        .in('role', ['admin', 'super_admin'])
         .eq('is_active', true)
         .in('id', adminIds);
 

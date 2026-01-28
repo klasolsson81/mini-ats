@@ -6,6 +6,7 @@ import { CreateAdminForm } from '@/features/admin/create-admin-form';
 import { ImpersonateButton } from '@/components/impersonate-button';
 import Link from 'next/link';
 import { Users, Shield, Building2, ChevronRight } from 'lucide-react';
+import { isAdminRole } from '@/lib/utils/roles';
 
 interface TenantWithProfiles {
   id: string;
@@ -40,7 +41,7 @@ export default async function AdminPage() {
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin') {
+  if (!isAdminRole(profile?.role)) {
     redirect('/app');
   }
 

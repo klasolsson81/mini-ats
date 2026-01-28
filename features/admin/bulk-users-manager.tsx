@@ -20,12 +20,13 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import { UserActions } from './user-actions';
 import { bulkToggleUserActive } from '@/lib/actions/users';
+import { isAdminRole } from '@/lib/utils/roles';
 
 interface UserWithTenant {
   id: string;
   full_name: string;
   email: string;
-  role: 'admin' | 'customer';
+  role: 'super_admin' | 'admin' | 'customer';
   is_active: boolean;
   last_login_at: string | null;
   tenants: { id: string; name: string } | null;
@@ -34,21 +35,22 @@ interface UserWithTenant {
 interface BulkUsersManagerProps {
   users: UserWithTenant[];
   currentUserId: string;
+  currentUserRole: string;
 }
 
-export function BulkUsersManager({ users, currentUserId }: BulkUsersManagerProps) {
+export function BulkUsersManager({ users, currentUserId, currentUserRole }: BulkUsersManagerProps) {
   const t = useTranslations('admin');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isPending, startTransition] = useTransition();
   const [showInactive, setShowInactive] = useState(false);
 
   // Filter users based on showInactive toggle
-  const activeAdmins = users.filter((u) => u.role === 'admin' && u.is_active !== false);
-  const inactiveAdmins = users.filter((u) => u.role === 'admin' && u.is_active === false);
+  const activeAdmins = users.filter((u) => isAdminRole(u.role) && u.is_active !== false);
+  const inactiveAdmins = users.filter((u) => isAdminRole(u.role) && u.is_active === false);
   const activeCustomers = users.filter((u) => u.role === 'customer' && u.is_active !== false);
   const inactiveCustomers = users.filter((u) => u.role === 'customer' && u.is_active === false);
 
-  const admins = showInactive ? users.filter((u) => u.role === 'admin') : activeAdmins;
+  const admins = showInactive ? users.filter((u) => isAdminRole(u.role)) : activeAdmins;
   const customers = showInactive ? users.filter((u) => u.role === 'customer') : activeCustomers;
 
   const totalInactive = inactiveAdmins.length + inactiveCustomers.length;
@@ -182,17 +184,21 @@ export function BulkUsersManager({ users, currentUserId }: BulkUsersManagerProps
         <div className="flex items-center gap-3">
           <span
             className={`rounded-full px-3 py-1 text-xs font-medium ${
-              isAdmin
-                ? 'bg-blue-100 text-blue-800'
-                : 'bg-green-100 text-green-800'
+              u.role === 'super_admin'
+                ? 'bg-purple-100 text-purple-800'
+                : isAdmin
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-green-100 text-green-800'
             }`}
           >
-            {isAdmin ? t('roleAdmin') : t('roleCustomer')}
+            {u.role === 'super_admin' ? t('roleSuperAdmin') : isAdmin ? t('roleAdmin') : t('roleCustomer')}
           </span>
           <UserActions
             userId={u.id}
             isActive={isActive}
             isSelf={isSelf}
+            targetRole={u.role}
+            callerRole={currentUserRole}
           />
         </div>
       </div>

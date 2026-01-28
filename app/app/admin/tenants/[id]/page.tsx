@@ -5,6 +5,7 @@ import { ImpersonateButton } from '@/components/impersonate-button';
 import { AddUserToTenantForm } from '@/features/admin/add-user-to-tenant-form';
 import Link from 'next/link';
 import { ArrowLeft, Briefcase, Users, TrendingUp, User } from 'lucide-react';
+import { isAdminRole } from '@/lib/utils/roles';
 
 export async function generateMetadata({
   params: _params,
@@ -40,7 +41,7 @@ export default async function TenantDetailPage({
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin') {
+  if (!isAdminRole(profile?.role)) {
     redirect('/app');
   }
 

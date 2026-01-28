@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { logAuditEvent } from '@/lib/utils/audit-log';
+import { isAdminRole } from '@/lib/utils/roles';
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'admin') {
+    if (!isAdminRole(profile?.role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

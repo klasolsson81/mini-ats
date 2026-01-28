@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import { isAdminRole } from '@/lib/utils/roles';
 
 /**
  * Gets the effective tenant ID for the current user.
@@ -26,7 +27,7 @@ export async function getEffectiveTenantId(): Promise<{
     .eq('id', user.id)
     .single();
 
-  const isAdmin = profile?.role === 'admin';
+  const isAdmin = isAdminRole(profile?.role);
 
   // Check for impersonation
   if (isAdmin) {

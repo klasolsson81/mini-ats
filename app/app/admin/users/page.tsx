@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { User, Building2, Shield } from 'lucide-react';
 import { BulkUsersManager } from '@/features/admin/bulk-users-manager';
 import { KpiCard } from '@/components/ui/kpi-card';
+import { isAdminRole } from '@/lib/utils/roles';
 
 export async function generateMetadata() {
   const t = await getTranslations('admin');
@@ -31,7 +32,7 @@ export default async function UsersPage() {
     .single();
 
   // Only admins can access
-  if (profile?.role !== 'admin') {
+  if (!isAdminRole(profile?.role)) {
     redirect('/app');
   }
 
@@ -43,10 +44,11 @@ export default async function UsersPage() {
     .order('created_at', { ascending: false });
 
   const currentUserId = user.id;
+  const currentUserRole = profile.role;
 
   // Separate admins and customers for stats (only count active users)
   const activeUsers = users?.filter((u) => u.is_active !== false) || [];
-  const admins = activeUsers.filter((u) => u.role === 'admin');
+  const admins = activeUsers.filter((u) => isAdminRole(u.role));
   const customers = activeUsers.filter((u) => u.role === 'customer');
 
   // Transform users for BulkUsersManager
@@ -54,7 +56,7 @@ export default async function UsersPage() {
     id: u.id,
     full_name: u.full_name,
     email: u.email,
-    role: u.role as 'admin' | 'customer',
+    role: u.role as 'super_admin' | 'admin' | 'customer',
     is_active: u.is_active !== false,
     last_login_at: u.last_login_at,
     tenants: u.tenants,
@@ -93,7 +95,7 @@ export default async function UsersPage() {
       </div>
 
       {/* Users Lists with Bulk Actions */}
-      <BulkUsersManager users={usersForManager} currentUserId={currentUserId} />
+      <BulkUsersManager users={usersForManager} currentUserId={currentUserId} currentUserRole={currentUserRole} />
     </div>
   );
 }

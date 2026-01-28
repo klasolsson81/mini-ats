@@ -3,6 +3,7 @@
 import { cookies, headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { isAdminRole } from '@/lib/utils/roles';
 
 export async function impersonateTenant(tenantId: string) {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export async function impersonateTenant(tenantId: string) {
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin') {
+  if (!isAdminRole(profile?.role)) {
     return { error: 'Only admins can impersonate' };
   }
 

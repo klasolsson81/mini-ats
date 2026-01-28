@@ -22,6 +22,7 @@ import { Profile } from '@/lib/types/database';
 import { logout } from '@/lib/actions/auth';
 import { setLocale } from '@/lib/actions/locale';
 import { PillBadge } from './ui/pill-badge';
+import { isAdminRole } from '@/lib/utils/roles';
 
 interface SidebarProps {
   profile: Profile;
@@ -60,7 +61,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
     getServerLocale
   );
 
-  const isAdmin = profile.role === 'admin';
+  const isAdmin = isAdminRole(profile.role);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
