@@ -49,6 +49,7 @@ export function LanguageSwitcher() {
             : 'opacity-60 hover:opacity-100'
         )}
         title="Svenska"
+        aria-label="Byt till svenska"
       >
         <svg viewBox="0 0 16 10" className="w-full h-full">
           <rect width="16" height="10" fill="#006AA7"/>
@@ -66,6 +67,7 @@ export function LanguageSwitcher() {
             : 'opacity-60 hover:opacity-100'
         )}
         title="English"
+        aria-label="Switch to English"
       >
         <svg viewBox="0 0 60 30" className="w-full h-full">
           <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>

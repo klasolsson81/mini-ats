@@ -67,8 +67,9 @@ export function PolicyModal({ isOpen, onClose, type }: PolicyModalProps) {
               <button
                 onClick={onClose}
                 className="p-2 rounded-xl bg-white/20 hover:bg-white/40 transition-colors"
+                aria-label="Stäng"
               >
-                <X className="w-5 h-5 text-white" />
+                <X className="w-5 h-5 text-white" aria-hidden="true" />
               </button>
             </div>
 

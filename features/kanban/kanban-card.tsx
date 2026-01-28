@@ -111,8 +111,9 @@ export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps)
               className="flex items-center gap-1 text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => e.stopPropagation()}
+              aria-label="LinkedIn profil"
             >
-              <Linkedin className="h-3 w-3 flex-shrink-0" />
+              <Linkedin className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
             </a>
           )}
         </div>

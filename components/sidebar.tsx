@@ -183,6 +183,9 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                 ? 'bg-gradient-to-br from-cyan-100/80 to-blue-100/80 shadow-md ring-2 ring-cyan-300/50'
                 : 'bg-white/30 hover:bg-white/50'
             )}
+            aria-expanded={isUserMenuOpen}
+            aria-haspopup="menu"
+            aria-label={t('nav.userMenu')}
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-semibold text-sm shadow-md ring-2 ring-white/50">
               {profile.full_name?.charAt(0) || 'U'}
@@ -226,6 +229,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                         : 'opacity-60 hover:opacity-100'
                     )}
                     title="Svenska"
+                    aria-label="Byt till svenska"
                   >
                     <svg viewBox="0 0 16 10" className="w-full h-full">
                       <rect width="16" height="10" fill="#006AA7"/>
@@ -242,6 +246,7 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                         : 'opacity-60 hover:opacity-100'
                     )}
                     title="English"
+                    aria-label="Switch to English"
                   >
                     <svg viewBox="0 0 60 30" className="w-full h-full">
                       <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
@@ -263,8 +268,9 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                     }}
                     className="w-full flex items-center justify-center p-2 text-gray-600 hover:bg-cyan-50 hover:text-cyan-700 rounded-lg transition-colors"
                     title={t('settings.changePassword')}
+                    aria-label={t('settings.changePassword')}
                   >
-                    <Key className="w-5 h-5" />
+                    <Key className="w-5 h-5" aria-hidden="true" />
                   </button>
 
                   <button
@@ -274,8 +280,9 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                     }}
                     className="w-full flex items-center justify-center p-2 text-gray-600 hover:bg-cyan-50 hover:text-cyan-700 rounded-lg transition-colors"
                     title={t('settings.account')}
+                    aria-label={t('settings.account')}
                   >
-                    <User className="w-5 h-5" />
+                    <User className="w-5 h-5" aria-hidden="true" />
                   </button>
 
                   <div className="border-t border-cyan-100 my-1" />
@@ -285,8 +292,9 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
                       type="submit"
                       className="w-full flex items-center justify-center p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title={t('auth.logout')}
+                      aria-label={t('auth.logout')}
                     >
-                      <LogOut className="w-5 h-5" />
+                      <LogOut className="w-5 h-5" aria-hidden="true" />
                     </button>
                   </form>
                 </div>

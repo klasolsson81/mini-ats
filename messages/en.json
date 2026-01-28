@@ -61,7 +61,8 @@
     "candidates": "Candidates",
     "kanban": "Kanban",
     "admin": "Admin",
-    "users": "Users"
+    "users": "Users",
+    "userMenu": "User menu"
   },
   "dashboard": {
     "title": "Dashboard",

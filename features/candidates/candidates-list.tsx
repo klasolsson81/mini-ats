@@ -159,15 +159,17 @@ export function CandidatesList({ candidates, jobs }: CandidatesListProps) {
                   <button
                     onClick={() => setEditingCandidate(candidate)}
                     className="px-3 py-2 rounded-lg bg-white/50 hover:bg-white/70 border border-white/30 text-gray-700 hover:text-blue-600 transition-all duration-200"
+                    aria-label={t('common.edit')}
                   >
-                    <Edit className="w-3.5 h-3.5" />
+                    <Edit className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                   <button
                     onClick={() => handleDelete(candidate.id, candidate.full_name)}
                     disabled={isDeleting === candidate.id}
                     className="px-3 py-2 rounded-lg bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
+                    aria-label={t('common.delete')}
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </div>

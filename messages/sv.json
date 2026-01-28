@@ -61,7 +61,8 @@
     "candidates": "Kandidater",
     "kanban": "Kanban",
     "admin": "Admin",
-    "users": "Användare"
+    "users": "Användare",
+    "userMenu": "Användarmeny"
   },
   "dashboard": {
     "title": "Dashboard",
