@@ -56,7 +56,8 @@ Mini ATS is a complete applicant tracking system designed for small to medium bu
 |---------|-------------|
 | **Admin Portal** | Dedicated admin dashboard with platform KPIs |
 | **Tenant Management** | Create tenants, view stats, add users |
-| **User Management** | View all users, bulk activate/deactivate |
+| **User Management** | View all users, bulk activate/deactivate, soft/permanent delete |
+| **Super Admin Role** | Protected owner account that cannot be deleted |
 | **Impersonation** | Act as any customer for support with full audit trail |
 | **Audit Logging** | Track all impersonation sessions and admin actions |
 

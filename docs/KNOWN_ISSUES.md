@@ -1,4 +1,4 @@
-# Known Issues - Mini ATS MVP v0.1
+# Known Issues - Mini ATS MVP 1.0
 
 This document tracks known limitations in the current release.
 
@@ -8,6 +8,13 @@ This document tracks known limitations in the current release.
 
 ### Black Screen During Redirects - FIXED (2026-01-28)
 Changed from server-side `redirect()` to client-side `router.push()` for smooth transitions.
+
+### Tenant Required Error - FIXED (2026-01-28)
+When admin (without impersonation) attached a candidate to a job, it failed with "Tenant required".
+Fixed by using candidate's own tenant_id instead of effective tenant_id.
+
+### Super Admin RLS - FIXED (2026-01-28)
+Added `super_admin` to enum and updated `is_admin()` function to include both roles.
 
 ---
 

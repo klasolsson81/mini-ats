@@ -3,6 +3,8 @@
 You are Claude Code assisting with the Mini ATS (Applicant Tracking System) project.
 Goal: Maintain and improve a production-ready multi-tenant ATS.
 
+**Status: MVP 1.0 - Production Ready** ✅
+
 ---
 
 ## Tech Stack
@@ -147,8 +149,21 @@ The app has separate navigation for admin and customer users:
 
 ---
 
+## Role Hierarchy
+
+| Role | Can Delete | Protected By |
+|------|-----------|--------------|
+| `super_admin` | admins, customers | Cannot be deleted |
+| `admin` | customers | super_admin only |
+| `customer` | - | admin, super_admin |
+
+Use `isAdminRole()` from `lib/utils/roles.ts` to check for admin privileges.
+
+---
+
 ## Demo Accounts
 
+- **Super Admin:** klasolsson81@gmail.com (protected owner)
 - **Admin:** admin@devotion.ventures / admin123
 - **Customer:** customer@devco.se / customer123
 
