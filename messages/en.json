@@ -53,7 +53,13 @@
     "hasNumber": "Contains numbers",
     "passwordsMatch": "Passwords match",
     "passwordsDontMatch": "Passwords don't match",
-    "passwordRequirements": "Password doesn't meet requirements"
+    "passwordRequirements": "Password doesn't meet requirements",
+    "sessionTimeout": "Session timeout",
+    "sessionTimeoutDescription": "You've been inactive for a while.",
+    "loggingOutIn": "Logging out in",
+    "stayLoggedIn": "Stay logged in",
+    "logoutNow": "Log out",
+    "sessionExpired": "Your session has expired"
   },
   "nav": {
     "dashboard": "Dashboard",

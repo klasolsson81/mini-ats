@@ -53,7 +53,13 @@
     "hasNumber": "Innehåller siffror",
     "passwordsMatch": "Lösenorden matchar",
     "passwordsDontMatch": "Lösenorden matchar inte",
-    "passwordRequirements": "Lösenordet uppfyller inte kraven"
+    "passwordRequirements": "Lösenordet uppfyller inte kraven",
+    "sessionTimeout": "Session timeout",
+    "sessionTimeoutDescription": "Du har varit inaktiv ett tag.",
+    "loggingOutIn": "Loggas ut om",
+    "stayLoggedIn": "Stanna inloggad",
+    "logoutNow": "Logga ut",
+    "sessionExpired": "Din session har gått ut"
   },
   "nav": {
     "dashboard": "Översikt",
