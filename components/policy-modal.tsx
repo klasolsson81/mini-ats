@@ -147,8 +147,8 @@ function PrivacyContent() {
         </ul>
         <p className="text-gray-200 mt-2">
           Kontakta oss på:{' '}
-          <a href="mailto:privacy@miniats.se" className="text-cyan-400 hover:text-cyan-300 hover:underline">
-            privacy@miniats.se
+          <a href="mailto:klasolsson81@gmail.com" className="text-cyan-400 hover:text-cyan-300 hover:underline">
+            klasolsson81@gmail.com
           </a>
         </p>
       </section>
@@ -235,8 +235,8 @@ function CookiesContent() {
         <h3 className="text-base font-bold text-cyan-300 mb-2">5. Kontakt</h3>
         <p className="text-gray-200">
           För frågor om cookies, kontakta oss på:{' '}
-          <a href="mailto:privacy@miniats.se" className="text-cyan-400 hover:text-cyan-300 hover:underline">
-            privacy@miniats.se
+          <a href="mailto:klasolsson81@gmail.com" className="text-cyan-400 hover:text-cyan-300 hover:underline">
+            klasolsson81@gmail.com
           </a>
         </p>
       </section>

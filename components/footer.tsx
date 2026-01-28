@@ -29,7 +29,7 @@ export function Footer() {
                 {t('footer.cookies')}
               </button>
               <a
-                href="mailto:support@miniats.se"
+                href="mailto:klasolsson81@gmail.com"
                 className="text-sm text-gray-600 hover:text-gray-900 transition-colors underline-offset-4 hover:underline"
               >
                 {t('footer.contact')}

@@ -184,10 +184,10 @@ export default function CookiesPage() {
               <p className="text-gray-700">
                 För frågor om cookies, kontakta oss på:{' '}
                 <a
-                  href="mailto:privacy@miniats.se"
+                  href="mailto:klasolsson81@gmail.com"
                   className="text-cyan-600 hover:text-cyan-700 hover:underline"
                 >
-                  privacy@miniats.se
+                  klasolsson81@gmail.com
                 </a>
               </p>
             </section>

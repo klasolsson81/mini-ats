@@ -164,10 +164,10 @@ export default function PrivacyPage() {
               <p className="text-gray-700 mt-3">
                 För att utöva dina rättigheter, kontakta oss på:{' '}
                 <a
-                  href="mailto:privacy@miniats.se"
+                  href="mailto:klasolsson81@gmail.com"
                   className="text-cyan-600 hover:text-cyan-700 hover:underline"
                 >
-                  privacy@miniats.se
+                  klasolsson81@gmail.com
                 </a>
               </p>
             </section>
@@ -209,10 +209,10 @@ export default function PrivacyPage() {
               <p className="text-gray-700">
                 För frågor om integritet, kontakta oss på:{' '}
                 <a
-                  href="mailto:privacy@miniats.se"
+                  href="mailto:klasolsson81@gmail.com"
                   className="text-cyan-600 hover:text-cyan-700 hover:underline"
                 >
-                  privacy@miniats.se
+                  klasolsson81@gmail.com
                 </a>
               </p>
             </section>
