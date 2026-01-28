@@ -2,6 +2,12 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
+import {
+  checkRateLimit,
+  recordFailedAttempt,
+  clearRateLimit,
+} from '@/lib/utils/rate-limit';
 
 // Map common Supabase auth errors to user-friendly Swedish messages
 function translateAuthError(error: string): string {
@@ -17,7 +23,33 @@ function translateAuthError(error: string): string {
   return errorMap[error] || error;
 }
 
+// Get client IP from headers
+async function getClientIp(): Promise<string> {
+  const headersList = await headers();
+  // Try various headers (Vercel, Cloudflare, standard)
+  return (
+    headersList.get('x-real-ip') ||
+    headersList.get('x-forwarded-for')?.split(',')[0].trim() ||
+    headersList.get('cf-connecting-ip') ||
+    'unknown'
+  );
+}
+
 export async function login(formData: FormData) {
+  // Get client IP for rate limiting
+  const clientIp = await getClientIp();
+
+  // Check rate limit before attempting login
+  const rateLimitStatus = checkRateLimit(clientIp);
+  if (rateLimitStatus.isLimited) {
+    const minutes = Math.ceil(rateLimitStatus.resetInSeconds / 60);
+    return {
+      error: `För många inloggningsförsök. Försök igen om ${minutes} minuter.`,
+      rateLimited: true,
+      resetInSeconds: rateLimitStatus.resetInSeconds,
+    };
+  }
+
   const supabase = await createClient();
 
   // Clear any leftover impersonation cookies before login
@@ -35,8 +67,27 @@ export async function login(formData: FormData) {
   const { error, data: authData } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    return { error: translateAuthError(error.message) };
+    // Record failed attempt
+    recordFailedAttempt(clientIp);
+    const newStatus = checkRateLimit(clientIp);
+
+    if (newStatus.remainingAttempts > 0) {
+      return {
+        error: `${translateAuthError(error.message)} (${newStatus.remainingAttempts} försök kvar)`,
+        remainingAttempts: newStatus.remainingAttempts,
+      };
+    } else {
+      const minutes = Math.ceil(newStatus.resetInSeconds / 60);
+      return {
+        error: `För många inloggningsförsök. Försök igen om ${minutes} minuter.`,
+        rateLimited: true,
+        resetInSeconds: newStatus.resetInSeconds,
+      };
+    }
   }
+
+  // Clear rate limit on successful login
+  clearRateLimit(clientIp);
 
   // Check if user must change password
   const { data: profile } = await supabase

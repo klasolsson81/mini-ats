@@ -71,15 +71,21 @@
 
 ---
 
-#### 8. Rate Limiting on Login
-**Varför:** Security hardening, brute force prevention
-**Estimat:** 1-2 timmar
-**Område:** API/middleware
+#### 8. Rate Limiting on Login ✅ KLART (2026-01-28)
+**Status:** FIXAT
+**Filer:** `lib/utils/rate-limit.ts`, `lib/actions/auth.ts`
 
-**Acceptanskriterier:**
-- [ ] Max 5 attempts per 15 min
-- [ ] Clear error message to user
-- [ ] Logs failed attempts
+**Lösning:**
+- In-memory rate limiter med 5 försök per 15 minuter
+- Visar antal återstående försök efter misslyckad inloggning
+- Visar minuter kvar vid rate limit
+- Rensar rate limit vid lyckad inloggning
+- Extra lager ovanpå Supabase's inbyggda rate limiting
+
+**Fixat:**
+- [x] Max 5 attempts per 15 min
+- [x] Clear error message to user ("X försök kvar", "Försök igen om Y minuter")
+- [x] Tracks failed attempts per IP
 
 ---
 
