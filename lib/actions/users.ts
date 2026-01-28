@@ -44,7 +44,7 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
     .single();
 
   // Check if caller can modify target based on roles
-  if (targetUser && !canModifyUser(callerProfile.role, targetUser.role)) {
+  if (targetUser && callerProfile && !canModifyUser(callerProfile.role, targetUser.role)) {
     return { error: 'Du har inte behörighet att ändra denna användare' };
   }
 
@@ -115,7 +115,7 @@ export async function deleteUser(userId: string) {
   }
 
   // Check if caller can modify target based on roles
-  if (!canModifyUser(callerProfile.role, targetUser.role)) {
+  if (callerProfile && !canModifyUser(callerProfile.role, targetUser.role)) {
     return { error: 'Du har inte behörighet att ta bort denna användare' };
   }
 
@@ -199,7 +199,7 @@ export async function permanentDeleteUser(userId: string) {
   }
 
   // Check if caller can modify target based on roles
-  if (!canModifyUser(callerProfile.role, targetUser.role)) {
+  if (callerProfile && !canModifyUser(callerProfile.role, targetUser.role)) {
     return { error: 'Du har inte behörighet att ta bort denna användare' };
   }
 
@@ -292,7 +292,7 @@ export async function bulkToggleUserActive(userIds: string[], isActive: boolean)
 
   // Filter out users the caller cannot modify (super_admins if caller is not super_admin)
   const allowedIds = targetUsers
-    ?.filter((u) => canModifyUser(callerProfile.role, u.role))
+    ?.filter((u) => callerProfile && canModifyUser(callerProfile.role, u.role))
     .map((u) => u.id) || [];
 
   // Filter out self from deactivation

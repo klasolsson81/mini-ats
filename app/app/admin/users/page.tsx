@@ -44,7 +44,7 @@ export default async function UsersPage() {
     .order('created_at', { ascending: false });
 
   const currentUserId = user.id;
-  const currentUserRole = profile.role;
+  const currentUserRole = profile?.role || 'admin';
 
   // Separate admins and customers for stats (only count active users)
   const activeUsers = users?.filter((u) => u.is_active !== false) || [];

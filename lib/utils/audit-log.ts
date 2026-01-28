@@ -5,6 +5,7 @@ export type AuditEventType =
   // User Management
   | 'user.created'
   | 'user.deleted'
+  | 'user.permanently_deleted'
   | 'user.activated'
   | 'user.deactivated'
   | 'user.role_changed'
@@ -154,6 +155,7 @@ export function getEventTypeLabel(eventType: AuditEventType): string {
   const labels: Record<AuditEventType, string> = {
     'user.created': 'Användare skapad',
     'user.deleted': 'Användare borttagen',
+    'user.permanently_deleted': 'Användare permanent borttagen',
     'user.activated': 'Användare aktiverad',
     'user.deactivated': 'Användare inaktiverad',
     'user.role_changed': 'Roll ändrad',

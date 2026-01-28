@@ -298,9 +298,9 @@ export default async function AuditLogsPage() {
                         <p className="font-medium text-gray-900">
                           {log.target_name || '-'}
                         </p>
-                        {log.metadata?.email && (
+                        {typeof log.metadata === 'object' && log.metadata !== null && 'email' in log.metadata && (
                           <p className="text-xs text-gray-500">
-                            {String(log.metadata.email)}
+                            {String((log.metadata as Record<string, unknown>).email)}
                           </p>
                         )}
                       </td>

@@ -86,7 +86,7 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(t('bulkActivated', { count: result.updatedCount }));
+        toast.success(t('bulkActivated', { count: result.updatedCount || 0 }));
         setSelectedIds(new Set());
       }
     });
@@ -99,7 +99,7 @@ export function BulkUsersManager({ users, currentUserId, currentUserRole }: Bulk
       if (result.error) {
         toast.error(result.error);
       } else {
-        toast.success(t('bulkDeactivated', { count: result.updatedCount }));
+        toast.success(t('bulkDeactivated', { count: result.updatedCount || 0 }));
         setSelectedIds(new Set());
       }
     });

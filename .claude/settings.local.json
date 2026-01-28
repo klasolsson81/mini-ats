@@ -20,7 +20,14 @@
       "Bash(grep:*)",
       "Bash(npm run:*)",
       "Bash(!tenantId\"\n   - Admin panel only shows when NOT impersonating\n   - Prevents admin shortcuts from appearing in customer view\n\n2. Clear impersonation cookies on logout\n   - Logout now removes IMPERSONATE_TENANT_ID cookie\n   - Prevents leftover impersonation state after logout\n   - Fixes bug where customer sees \"Du agerar som...\" after admin logout\n\n3. Clear impersonation cookies on login\n   - Login now removes all impersonation cookies first\n   - Ensures clean slate for every new login\n   - Prevents stale impersonation state\n\nBugs Fixed:\n- ✅ Admin sees admin shortcuts when impersonating customer\n- ✅ Impersonation banner shows for real customer after admin logout\n- ✅ Stale impersonation cookies persist across sessions\n\nSecurity Impact:\n- Prevents confusion between admin and customer views\n- Ensures impersonation state is always intentional\n- Clean session management\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(git reset:*)",
+      "Bash(wc:*)",
+      "Bash(git restore:*)"
     ]
   }
 }
