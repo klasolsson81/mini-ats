@@ -1,6 +1,9 @@
 -- Add super_admin role support
 -- Super admins cannot be deleted or deactivated by regular admins
 
+-- First, add 'super_admin' to the user_role enum
+ALTER TYPE user_role ADD VALUE IF NOT EXISTS 'super_admin';
+
 -- Update Klas Olsson to super_admin
 UPDATE profiles
 SET role = 'super_admin'

@@ -99,17 +99,22 @@ export async function attachCandidateToJob(
     return { error: 'Unauthorized' };
   }
 
-  const { tenantId } = await getEffectiveTenantId();
+  // Get tenant_id from the candidate (not effective tenant) to support admin without impersonation
+  const { data: candidate } = await supabase
+    .from('candidates')
+    .select('tenant_id')
+    .eq('id', candidateId)
+    .single();
 
-  if (!tenantId) {
-    return { error: 'Tenant required' };
+  if (!candidate?.tenant_id) {
+    return { error: 'Kandidaten saknar koppling till en kund' };
   }
 
   const { error } = await supabase.from('job_candidates').insert({
     candidate_id: candidateId,
     job_id: jobId,
     stage,
-    tenant_id: tenantId,
+    tenant_id: candidate.tenant_id,
   });
 
   if (error) {
