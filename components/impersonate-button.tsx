@@ -12,7 +12,7 @@ interface ImpersonateButtonProps {
 
 export function ImpersonateButton({
   tenantId,
-  tenantName,
+  tenantName: _tenantName,
 }: ImpersonateButtonProps) {
   const t = useTranslations('admin');
   const [isPending, startTransition] = useTransition();

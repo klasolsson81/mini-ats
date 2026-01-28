@@ -52,7 +52,7 @@ export function AddUserToTenantForm({
         setOpen(false);
         setFormData({ user_name: '', user_email: '', user_password: '' });
         router.refresh();
-      } catch (error) {
+      } catch (_error) {
         toast.error(t('errorOccurred'));
       }
     });

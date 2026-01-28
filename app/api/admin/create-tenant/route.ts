@@ -103,10 +103,11 @@ export async function POST(request: Request) {
       tenant_id: tenant.id,
       user_id: authData.user.id,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Create tenant error:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

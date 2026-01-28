@@ -1,27 +1,37 @@
 'use client';
 
-import { useTransition, useEffect, useState } from 'react';
+import { useTransition, useSyncExternalStore } from 'react';
 import { type Locale } from '@/lib/constants/locales';
 import { setLocale } from '@/lib/actions/locale';
 import { cn } from '@/lib/utils/cn';
 
+function getLocaleFromCookie(): Locale {
+  const locale = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('NEXT_LOCALE='))
+    ?.split('=')[1];
+  return (locale === 'en' || locale === 'sv') ? locale : 'sv';
+}
+
+function subscribeToLocale(_callback: () => void) {
+  // No real subscription needed - locale only changes on page reload
+  return () => {};
+}
+
+function getServerSnapshot(): Locale {
+  return 'sv';
+}
+
 export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
-  const [currentLocale, setCurrentLocale] = useState<Locale>('sv');
-
-  useEffect(() => {
-    const locale = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('NEXT_LOCALE='))
-      ?.split('=')[1];
-    if (locale === 'en' || locale === 'sv') {
-      setCurrentLocale(locale);
-    }
-  }, []);
+  const currentLocale = useSyncExternalStore(
+    subscribeToLocale,
+    getLocaleFromCookie,
+    getServerSnapshot
+  );
 
   function handleChange(locale: Locale) {
     startTransition(async () => {
-      setCurrentLocale(locale);
       await setLocale(locale);
       window.location.reload();
     });

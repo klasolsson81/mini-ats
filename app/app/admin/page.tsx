@@ -7,6 +7,13 @@ import { ImpersonateButton } from '@/components/impersonate-button';
 import Link from 'next/link';
 import { Users, Shield, Building2, ChevronRight } from 'lucide-react';
 
+interface TenantWithProfiles {
+  id: string;
+  name: string;
+  created_at: string;
+  profiles: { count: number }[] | null;
+}
+
 export async function generateMetadata() {
   const t = await getTranslations('admin');
   return {
@@ -139,7 +146,7 @@ export default async function AdminPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/30">
-                  {tenants.map((tenant: any) => (
+                  {(tenants as TenantWithProfiles[]).map((tenant) => (
                     <tr key={tenant.id} className="hover:bg-white/30 transition-colors">
                       <td className="px-4 py-3">
                         <Link

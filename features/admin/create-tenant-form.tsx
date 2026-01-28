@@ -38,8 +38,9 @@ export function CreateTenantForm() {
 
       toast.success(t('admin.tenantCreated'));
       e.currentTarget.reset();
-    } catch (error: any) {
-      toast.error(error.message || t('admin.errorOccurred'));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : t('admin.errorOccurred');
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

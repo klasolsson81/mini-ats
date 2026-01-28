@@ -89,8 +89,8 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     const jobCandidateId = active.id as string;
     const newStage = over.id as Stage;
 
-    const originalCandidate = jobCandidates.find((jc) => jc.id === jobCandidateId);
-    const originalStage = originalCandidate?.stage;
+    // Keep reference for potential future rollback on error
+    const _originalCandidate = jobCandidates.find((jc) => jc.id === jobCandidateId);
 
     startTransition(async () => {
       updateOptimisticCandidates({ id: jobCandidateId, newStage });

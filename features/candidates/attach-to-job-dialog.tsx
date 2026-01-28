@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import { attachCandidateToJob } from '@/lib/actions/candidates';
 import { Candidate, Job } from '@/lib/types/database';
-import { STAGES, STAGE_ORDER } from '@/lib/constants/stages';
+import { STAGE_ORDER, type Stage } from '@/lib/constants/stages';
 import { toast } from 'sonner';
 
 interface AttachToJobDialogProps {
@@ -32,7 +32,7 @@ export function AttachToJobDialog({
 
     const formData = new FormData(e.currentTarget);
     const jobId = formData.get('job_id') as string;
-    const stage = formData.get('stage') as any;
+    const stage = formData.get('stage') as Stage;
 
     const result = await attachCandidateToJob(candidate.id, jobId, stage);
 

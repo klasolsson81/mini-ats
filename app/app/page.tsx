@@ -11,6 +11,43 @@ import { AttentionNeeded } from '@/features/dashboard/attention-needed';
 import { ConversionMetrics } from '@/features/dashboard/conversion-metrics';
 import { KpiCard } from '@/components/ui/kpi-card';
 
+interface RecentJob {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+}
+
+interface RecentCandidate {
+  id: string;
+  full_name: string;
+  email: string | null;
+  created_at: string;
+}
+
+interface ImpersonationLogRaw {
+  id: string;
+  started_at: string;
+  admin: { full_name: string } | null;
+  tenant: { name: string } | null;
+}
+
+interface PipelineItem {
+  stage: string;
+}
+
+interface HiredItem {
+  created_at: string;
+}
+
+interface StaleItem {
+  id: string;
+  stage: string;
+  created_at: string;
+  candidates: { full_name: string } | null;
+  jobs: { title: string } | null;
+}
+
 export async function generateMetadata() {
   const t = await getTranslations('nav');
   return {
@@ -42,9 +79,9 @@ export default async function DashboardPage() {
   let openJobsCount = 0;
   let candidatesCount = 0;
   let activeCount = 0;
-  let recentJobs: any[] = [];
-  let recentCandidates: any[] = [];
-  let recentImpersonations: any[] = [];
+  let recentJobs: RecentJob[] = [];
+  let recentCandidates: RecentCandidate[] = [];
+  let recentImpersonations: { id: string; started_at: string; admin_name: string; tenant_name: string }[] = [];
   let pipelineStats: { stage: string; count: number }[] = [];
   let stageCountsRecord: Record<string, number> = {};
   let avgDaysToHire: number | null = null;
@@ -135,7 +172,7 @@ export default async function DashboardPage() {
         .limit(3);
 
       recentImpersonations =
-        impersonationsData?.map((imp: any) => ({
+        (impersonationsData as ImpersonationLogRaw[] | null)?.map((imp) => ({
           id: imp.id,
           started_at: imp.started_at,
           admin_name: imp.admin?.full_name || 'Unknown',
@@ -154,7 +191,7 @@ export default async function DashboardPage() {
 
     // Group by stage and count
     const stageCounts: Record<string, number> = {};
-    pipelineData?.forEach((item: any) => {
+    (pipelineData as PipelineItem[] | null)?.forEach((item) => {
       stageCounts[item.stage] = (stageCounts[item.stage] || 0) + 1;
     });
     stageCountsRecord = stageCounts;
@@ -179,7 +216,7 @@ export default async function DashboardPage() {
 
     if (hiredData && hiredData.length > 0) {
       const now = new Date();
-      const totalDays = hiredData.reduce((sum: number, item: any) => {
+      const totalDays = (hiredData as HiredItem[]).reduce((sum: number, item) => {
         const createdAt = new Date(item.created_at);
         const days = Math.floor(
           (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24)
@@ -216,7 +253,7 @@ export default async function DashboardPage() {
     const { data: staleData } = await staleQuery;
 
     staleCandidates =
-      staleData?.map((item: any) => {
+      (staleData as StaleItem[] | null)?.map((item) => {
         const createdAt = new Date(item.created_at);
         const now = new Date();
         const daysInStage = Math.floor(

@@ -36,7 +36,7 @@ export default function PrivacyPage() {
                 1. Introduktion
               </h2>
               <p className="text-gray-700">
-                Mini ATS ("vi", "oss") värnar om din integritet. Denna policy
+                Mini ATS (&ldquo;vi&rdquo;, &ldquo;oss&rdquo;) värnar om din integritet. Denna policy
                 beskriver hur vi samlar in, använder och skyddar dina
                 personuppgifter i enlighet med GDPR.
               </p>
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>
                   <strong>Impersonation (Agera som):</strong> Administratörer
-                  kan "agera som" din organisation för att se systemet från ditt
+                  kan &ldquo;agera som&rdquo; din organisation för att se systemet från ditt
                   perspektiv och hjälpa till med problem.
                 </li>
                 <li>

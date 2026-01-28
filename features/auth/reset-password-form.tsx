@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { resetPassword } from '@/lib/actions/auth';

@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
-import { useTransition, useState, useRef, useEffect } from 'react';
+import { useTransition, useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import { cn } from '@/lib/utils/cn';
 import {
   LayoutDashboard,
@@ -13,10 +13,8 @@ import {
   LogOut,
   Loader2,
   ChevronUp,
-  Globe,
   Key,
   User,
-  Check,
 } from 'lucide-react';
 import { Profile } from '@/lib/types/database';
 import { logout } from '@/lib/actions/auth';
@@ -28,6 +26,22 @@ interface SidebarProps {
   isImpersonating?: boolean;
 }
 
+function getLocaleFromCookie(): 'sv' | 'en' {
+  const locale = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('NEXT_LOCALE='))
+    ?.split('=')[1];
+  return (locale === 'en' || locale === 'sv') ? locale : 'sv';
+}
+
+function subscribeToLocale() {
+  return () => {};
+}
+
+function getServerLocale(): 'sv' | 'en' {
+  return 'sv';
+}
+
 export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   const t = useTranslations();
   const pathname = usePathname();
@@ -35,8 +49,13 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   const [isPending, startTransition] = useTransition();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [currentLocale, setCurrentLocale] = useState<'sv' | 'en'>('sv');
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const currentLocale = useSyncExternalStore(
+    subscribeToLocale,
+    getLocaleFromCookie,
+    getServerLocale
+  );
 
   const isAdmin = profile.role === 'admin';
 
@@ -49,17 +68,6 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Get current locale from cookie
-  useEffect(() => {
-    const locale = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('NEXT_LOCALE='))
-      ?.split('=')[1];
-    if (locale === 'en' || locale === 'sv') {
-      setCurrentLocale(locale);
-    }
   }, []);
 
   const navigation = [
@@ -96,9 +104,9 @@ export function Sidebar({ profile, isImpersonating = false }: SidebarProps) {
   }
 
   const handleLanguageChange = async (locale: 'sv' | 'en') => {
-    setCurrentLocale(locale);
     await setLocale(locale);
     setIsUserMenuOpen(false);
+    window.location.reload();
   };
 
   return (

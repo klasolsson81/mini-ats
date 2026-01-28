@@ -1,5 +1,174 @@
 # TODO - Mini ATS
 
+---
+
+## 🚨 Pre-Delivery Fixes (Code Review 2026-01-27)
+
+### P0 - MÅSTE fixas innan leverans
+
+#### 1. TypeScript `any` Types (9 instanser)
+**Varför:** Type safety, prevents runtime errors, professional code quality
+**Estimat:** 45 min
+**Filer:**
+- `app/api/admin/create-tenant/route.ts:106`
+- `app/api/admin/create-admin/route.ts:99`
+- `app/app/admin/audit-logs/page.tsx:141`
+- `app/app/admin/page.tsx:142`
+- `app/app/page.tsx:45,46,47,138,157,182,219`
+
+**Acceptanskriterier:**
+- [ ] Alla `any` ersatta med proper interfaces
+- [ ] `npm run lint` visar inga `any` warnings
+- [ ] TypeScript strict mode passar
+
+---
+
+#### 2. React Hooks Anti-patterns
+**Varför:** Memory leak risk, React strict mode warnings
+**Estimat:** 30 min
+**Filer:**
+- `components/language-switcher.tsx:18` - setState i useEffect
+- `components/sidebar.tsx:61` - setState i useEffect
+
+**Acceptanskriterier:**
+- [ ] useEffect patterns korrigerade eller motiverade
+- [ ] Inga React warnings i konsolen
+- [ ] Hydration fungerar korrekt
+
+---
+
+#### 3. HTML Escape Sequences
+**Varför:** Visual bug, unprofessional appearance
+**Estimat:** 15 min
+**Filer:**
+- `app/privacy/page.tsx:39,112`
+- `components/policy-modal.tsx:92`
+
+**Acceptanskriterier:**
+- [ ] `&amp;` ersatt med `&`
+- [ ] Text visas korrekt i browser
+
+---
+
+#### 4. Verify .env Security
+**Varför:** Kritiskt - service role key får inte exponeras
+**Estimat:** 5 min
+**Fil:** `.gitignore`
+
+**Acceptanskriterier:**
+- [ ] `.env.local` finns i `.gitignore`
+- [ ] `.env*` pattern täcker alla varianter
+- [ ] Inget secrets i git history
+
+---
+
+### P1 - Bör fixas inom 1 vecka
+
+#### 5. E2E Test: Login Flow
+**Varför:** Regression prevention, critical user path
+**Estimat:** 2 timmar
+**Område:** Playwright tests
+
+**Acceptanskriterier:**
+- [ ] Test för successful login
+- [ ] Test för failed login (fel lösenord)
+- [ ] Test för first-login password change
+- [ ] CI pipeline kör tester
+
+---
+
+#### 6. E2E Test: Tenant Isolation
+**Varför:** Security verification, RLS confidence
+**Estimat:** 2 timmar
+**Område:** Playwright tests
+
+**Acceptanskriterier:**
+- [ ] Customer A kan inte se Customer B data
+- [ ] Admin kan se båda
+- [ ] Test körs i CI
+
+---
+
+#### 7. Fix Black Screen During Redirects
+**Varför:** UX polish, professional feel
+**Estimat:** 2-4 timmar
+**Filer:** `app/login/page.tsx`, `app/change-password/page.tsx`
+
+**Acceptanskriterier:**
+- [ ] Smooth transition utan black screen
+- [ ] Loading indicator under redirect
+- [ ] Fungerar i alla browsers
+
+---
+
+#### 8. Rate Limiting on Login
+**Varför:** Security hardening, brute force prevention
+**Estimat:** 1-2 timmar
+**Område:** API/middleware
+
+**Acceptanskriterier:**
+- [ ] Max 5 attempts per 15 min
+- [ ] Clear error message to user
+- [ ] Logs failed attempts
+
+---
+
+#### 9. Accessibility: aria-labels
+**Varför:** A11y compliance, screen reader support
+**Estimat:** 1 timme
+**Filer:** buttons, links, icons without text
+
+**Acceptanskriterier:**
+- [ ] Alla knappar har aria-label eller text
+- [ ] Icons har sr-only text
+- [ ] Tab navigation fungerar
+
+---
+
+### P2 - Nice to have (Post-MVP)
+
+#### 10. Unit Tests: Filter Logic
+**Varför:** Code confidence, refactoring safety
+**Estimat:** 2 timmar
+**Fil:** `features/kanban/kanban-board.tsx`
+
+---
+
+#### 11. User Lifecycle Management
+**Varför:** Admin efficiency, complete feature set
+**Estimat:** 4-6 timmar
+**Område:** Admin panel
+
+**Features:**
+- [ ] Deactivate user
+- [ ] Delete user (with cascade)
+- [ ] View last login
+
+---
+
+#### 12. Bulk Actions
+**Varför:** Admin efficiency
+**Estimat:** 2-3 timmar
+**Område:** Admin panel
+
+---
+
+#### 13. Candidate Search Page
+**Varför:** Discovery, usability
+**Estimat:** 3-4 timmar
+**Område:** New page
+
+---
+
+#### 14. Level 2 Audit Logging
+**Varför:** Compliance, full audit trail
+**Estimat:** 4-6 timmar
+**Område:** Database + UI
+
+---
+
+---
+
 ## Admin Panel - Kritiska Förbättringar
 
 Baserat på kundkrav och nuvarande gaps i funktionalitet.

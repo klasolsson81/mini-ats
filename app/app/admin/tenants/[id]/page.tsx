@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { ArrowLeft, Briefcase, Users, TrendingUp, User } from 'lucide-react';
 
 export async function generateMetadata({
-  params,
+  params: _params,
 }: {
   params: Promise<{ id: string }>;
 }) {

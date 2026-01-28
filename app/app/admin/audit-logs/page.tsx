@@ -4,6 +4,15 @@ import { redirect } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Clock, User, Building2 } from 'lucide-react';
 
+interface ImpersonationLog {
+  id: string;
+  started_at: string;
+  ended_at: string | null;
+  ip_address: string | null;
+  admin: { full_name: string; email: string } | null;
+  tenant: { name: string } | null;
+}
+
 export async function generateMetadata() {
   const t = await getTranslations('admin');
   return {
@@ -138,7 +147,7 @@ export default async function AuditLogsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {logs.map((log: any) => {
+                  {(logs as ImpersonationLog[]).map((log) => {
                     const isActive = !log.ended_at;
                     return (
                       <tr
@@ -182,7 +191,7 @@ export default async function AuditLogsPage() {
                             </span>
                           ) : (
                             <span className="text-gray-700">
-                              {new Date(log.ended_at).toLocaleString('sv-SE', {
+                              {new Date(log.ended_at!).toLocaleString('sv-SE', {
                                 year: 'numeric',
                                 month: 'short',
                                 day: 'numeric',

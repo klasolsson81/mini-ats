@@ -7,6 +7,21 @@ import { Eye, EyeOff, Check, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { changePassword } from '@/lib/actions/auth';
 
+function ValidationItem({ valid, text }: { valid: boolean; text: string }) {
+  return (
+    <div className="flex items-center gap-2 text-sm">
+      {valid ? (
+        <Check className="w-4 h-4 text-emerald-500" />
+      ) : (
+        <X className="w-4 h-4 text-gray-300" />
+      )}
+      <span className={valid ? 'text-emerald-600' : 'text-gray-500'}>
+        {text}
+      </span>
+    </div>
+  );
+}
+
 export function ChangePasswordForm() {
   const t = useTranslations('settings');
   const router = useRouter();
@@ -48,25 +63,6 @@ export function ChangePasswordForm() {
       }
     });
   };
-
-  const ValidationItem = ({
-    valid,
-    text,
-  }: {
-    valid: boolean;
-    text: string;
-  }) => (
-    <div className="flex items-center gap-2 text-sm">
-      {valid ? (
-        <Check className="w-4 h-4 text-emerald-500" />
-      ) : (
-        <X className="w-4 h-4 text-gray-300" />
-      )}
-      <span className={valid ? 'text-emerald-600' : 'text-gray-500'}>
-        {text}
-      </span>
-    </div>
-  );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

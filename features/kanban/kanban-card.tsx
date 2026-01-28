@@ -43,7 +43,8 @@ const ICON_COLORS: Record<string, string> = {
 };
 
 export function KanbanCard({ jobCandidate, isOverlay = false }: KanbanCardProps) {
-  const t = useTranslations();
+  // Translation hook available for future use
+  const _t = useTranslations();
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({

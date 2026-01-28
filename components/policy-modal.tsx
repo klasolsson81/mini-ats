@@ -89,7 +89,7 @@ function PrivacyContent() {
       <section>
         <h3 className="text-base font-bold text-cyan-300 mb-2">1. Introduktion</h3>
         <p className="text-gray-200">
-          Mini ATS ("vi", "oss") värnar om din integritet. Denna policy beskriver hur vi
+          Mini ATS (&ldquo;vi&rdquo;, &ldquo;oss&rdquo;) värnar om din integritet. Denna policy beskriver hur vi
           samlar in, använder och skyddar dina personuppgifter i enlighet med GDPR.
         </p>
       </section>
