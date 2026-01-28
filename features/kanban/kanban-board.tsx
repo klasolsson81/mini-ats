@@ -15,6 +15,7 @@ import {
   DragOverlay,
   closestCenter,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -77,6 +78,12 @@ export function KanbanBoard({ jobCandidates, jobs }: KanbanBoardProps) {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
       },
     })
   );
